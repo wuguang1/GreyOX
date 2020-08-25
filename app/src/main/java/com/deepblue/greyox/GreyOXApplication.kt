@@ -18,6 +18,7 @@ class GreyOXApplication : Application() {
 
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
+
         MultiDex.install(this)
     }
 
