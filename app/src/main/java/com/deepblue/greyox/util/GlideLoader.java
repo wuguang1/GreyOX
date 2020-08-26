@@ -22,17 +22,17 @@ public class GlideLoader {
                 .placeholder(img.getDrawable()).into(img);
     }
 
-    public static void loadImageRotated(String url, ImageView img, float rotateRotationAngle) {
-        Glide.with(Frame.CONTEXT)
-                .load(url)
-                .transform(new RotateTransformation(Frame.CONTEXT, rotateRotationAngle))
-                .into(img);
-    }
-
-    public static void loadImageCrop(String url, ImageView img) {
-        Glide.with(Frame.CONTEXT)
-                .load(url)
-                .transform(new CropTransformation(Frame.CONTEXT))
-                .into(img);
-    }
+//    public static void loadImageRotated(String url, ImageView img, float rotateRotationAngle) {
+//        Glide.with(Frame.CONTEXT)
+//                .load(url)
+//                .transform(new RotateTransformation(Frame.CONTEXT, rotateRotationAngle))
+//                .into(img);
+//    }
+//
+//    public static void loadImageCrop(String url, ImageView img) {
+//        Glide.with(Frame.CONTEXT)
+//                .load(url)
+//                .transform(new CropTransformation(Frame.CONTEXT))
+//                .into(img);
+//    }
 }
