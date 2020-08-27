@@ -9,19 +9,15 @@
 
 */
 
-package com.deepblue.greyox.frg;
+package com.deepblue.greyox.ui.fragment;
 import android.os.Bundle;
 
 import com.deepblue.greyox.R;
 
-import android.widget.LinearLayout;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import com.deepblue.greyox.frg.BaseFrg
 
 
-
-class FrgHome : BaseFrg() {
+class HomeFragment : BaseFrg() {
 
   override fun create(savedInstanceState: Bundle?) {
            setContentView(R.layout.frg_home)
