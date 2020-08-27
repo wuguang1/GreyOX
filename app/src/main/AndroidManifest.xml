@@ -22,11 +22,11 @@
         android:networkSecurityConfig="@xml/network_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        tools:replace="theme"
-        android:theme="@style/AppTheme_pub">
+        android:theme="@style/AppTheme_pub"
+        tools:replace="theme">
         <activity
             android:name="com.deepblue.greyox.act.ActLoading"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:theme="@style/actNNS">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,18 +38,18 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:fitsSystemWindows="true"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name="com.mdx.framework.activity.TitleAct"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <!-- 百度地图sdk  AK-->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="ITtatGwdPyuROSbiNLGasAszweQjgjSZ" />
+            android:value="AlKH2xKElPGfNMOUo6ssOZMgaGeSbDsW" />
         <!-- 百度地图定位服务-->
         <service
             android:name="com.baidu.location.f"
