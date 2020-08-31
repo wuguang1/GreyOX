@@ -1,3 +1,4 @@
+include ':planbmsg'
 include ':app'
 rootProject.name = "GreyOX"
 

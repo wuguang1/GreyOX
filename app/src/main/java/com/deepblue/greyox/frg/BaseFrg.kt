@@ -11,14 +11,15 @@
 
 package com.deepblue.greyox.frg;
 
-import android.util.Log
-import android.view.View;
+import android.content.Context
+import android.view.View
 import android.widget.LinearLayout
-
-import com.mdx.framework.activity.MFragment;
+import com.deepblue.greyox.GreyOXApplication
+import com.deepblue.library.planbmsg.Request
+import com.mdx.framework.activity.MFragment
 
 abstract class BaseFrg : MFragment(), View.OnClickListener {
-
+    val greyOXApplication by lazy { activity?.application as GreyOXApplication }
 
     final override fun initV(view: View) {
         initView()
@@ -32,11 +33,27 @@ abstract class BaseFrg : MFragment(), View.OnClickListener {
 
     open fun onSuccess(data: String?, method: String) {
 
-
     }
+
+    override fun disposeMsg(type: Int, obj: Any?) {
+        super.disposeMsg(type, obj)
+        when (type) {
+
+        }
+    }
+
+    fun sendwebSocket(request: Request, context: Context?, isShowLoading: Boolean = false, isCanceledOnTouchOutside: Boolean = false) {
+        greyOXApplication.webSocketClient?.sendMessage(request, context, isShowLoading, isCanceledOnTouchOutside)
+    }
+
     override fun setActionBar(actionBar: LinearLayout?) {
 //        mHead = Head(context)
 //        mHead.canGoBack()
 //        actionBar?.addView(mHead, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        greyOXApplication.webSocketClient?.loadDialog?.dismissDiaolog()
     }
 }

@@ -5,8 +5,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import com.deepblue.greyox.R
-import com.deepblue.greyox.ui.fragment.LoginFragment
-import com.deepblue.greyox.ui.fragment.SelfCheckFragment
+import com.deepblue.greyox.frg.SelfCheckFragment
 import com.mdx.framework.activity.IndexAct
 import com.mdx.framework.utility.Helper
 
@@ -28,8 +27,8 @@ class ActLoading : Activity() {
 //            } else {
 //                Helper.startActivity(this, FrgHome::class.java, IndexAct::class.java)
 //            }
-            finish()
-        }, 10000)
+//            finish()
+        }, 5000)
     }
 
 }

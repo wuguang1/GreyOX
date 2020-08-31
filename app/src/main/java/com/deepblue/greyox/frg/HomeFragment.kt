@@ -9,7 +9,7 @@
 
 */
 
-package com.deepblue.greyox.ui.fragment;
+package com.deepblue.greyox.frg;
 import android.os.Bundle;
 
 import com.deepblue.greyox.R;

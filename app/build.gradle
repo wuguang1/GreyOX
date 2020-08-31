@@ -56,4 +56,6 @@ dependencies {
     implementation 'com.github.phx1314:Frame:4.6'
     implementation 'com.android.support:multidex:1.0.3'
     implementation files('libs/BaiduLBS_Android.jar')
+
+    api project(':planbmsg')
 }
