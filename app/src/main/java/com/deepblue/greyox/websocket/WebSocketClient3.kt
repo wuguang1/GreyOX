@@ -11,7 +11,6 @@ import java.util.concurrent.TimeUnit
 class WebSocketClient3(url: String) {
     private var mWebSocket: WebSocket? = null
     private var client: OkHttpClient? = null
-//    private var currentType: Int = 0
     var loadDialog: LoadingDialog? = null
 
     @JvmField
@@ -99,6 +98,9 @@ class WebSocketClient3(url: String) {
     }
 
     fun sendMessage(request: com.deepblue.library.planbmsg.Request, context: Context? = null, isShowLoading: Boolean = false, isCanceledOnTouchOutside: Boolean = false) {
+        if (isShowLoading) {
+            dismissLoadDialog(-1)
+        }
         context?.let {
             loadDialog = LoadingDialog(it)
             if (isShowLoading && !loadDialog!!.isShowing) {
