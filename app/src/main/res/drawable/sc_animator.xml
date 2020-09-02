@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/icon_selfcheck_pro_bg">
+    <target
+        android:name="c2"
+        android:animation="@anim/selfcheck_animator" />
+</animated-vector>

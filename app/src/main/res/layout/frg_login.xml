@@ -1,35 +1,392 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff"
+    android:background="@mipmap/app_bg"
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/tv_yhdl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="登录"
-        android:textSize="22sp" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="84dp"
+        android:text="用户登录"
+        android:textColor="#ffffffff"
+        android:textSize="36sp" />
 
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/rl_login_etuser"
+        android:layout_width="452dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_below="@+id/tv_yhdl"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="42dp"
+        android:background="@mipmap/icon_login_user_bg"
+        android:orientation="horizontal"
+        android:paddingStart="25dp"
+        android:paddingEnd="25dp">
 
-        <TextView
-            android:id="@+id/tv_user"
+        <ImageView
+            android:id="@+id/iv_tx"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="选择用户" />
+            android:layout_marginEnd="21dp"
+            android:src="@mipmap/icon_login_user" />
+
+        <TextView
+            android:id="@+id/tv_login_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/iv_tx"
+            android:text="admin"
+            android:textColor="#ffffffff"
+            android:textSize="30sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/down" />
 
     </RelativeLayout>
+
+    <com.deepblue.greyox.view.MaxHeightRecyclerView
+        android:id="@+id/recycleview_users"
+        android:layout_width="452dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_login_etuser"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/users_background"
+        android:scrollbarSize="4dp"
+        android:scrollbarThumbVertical="@color/colorcommon"
+        android:scrollbars="vertical"
+        app:maxHeight="277dp" />
+
+    <LinearLayout
+        android:id="@+id/ll_pw"
+        android:layout_width="wrap_content"
+        android:layout_height="69dp"
+        android:layout_below="@+id/rl_login_etuser"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="29dp">
+
+        <EditText
+            android:id="@+id/btn_pwone"
+            android:layout_width="59dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/edit_background"
+            android:gravity="center"
+            android:inputType="numberPassword"
+            android:maxLength="1"
+            android:textColor="#21A5FE"
+            android:textCursorDrawable="@drawable/cursor_purl"
+            android:textSize="30sp" />
+
+        <EditText
+            android:id="@+id/btn_pwtwo"
+            android:layout_width="59dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="18dp"
+            android:background="@drawable/edit_background"
+            android:gravity="center"
+            android:inputType="numberPassword"
+            android:maxLength="1"
+            android:textColor="#21A5FE"
+            android:textCursorDrawable="@drawable/cursor_purl"
+            android:textSize="30sp" />
+
+        <EditText
+            android:id="@+id/btn_pwthree"
+            android:layout_width="59dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="18dp"
+            android:background="@drawable/edit_background"
+            android:gravity="center"
+            android:inputType="numberPassword"
+            android:maxLength="1"
+            android:textColor="#21A5FE"
+            android:textCursorDrawable="@drawable/cursor_purl"
+            android:textSize="30sp" />
+
+        <EditText
+            android:id="@+id/btn_pwfour"
+            android:layout_width="59dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="18dp"
+            android:background="@drawable/edit_background"
+            android:gravity="center"
+            android:inputType="numberPassword"
+            android:maxLength="1"
+            android:textColor="#21A5FE"
+            android:textCursorDrawable="@drawable/cursor_purl"
+            android:textSize="30sp" />
+
+        <EditText
+            android:id="@+id/btn_pwfive"
+            android:layout_width="59dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="18dp"
+            android:background="@drawable/edit_background"
+            android:gravity="center"
+            android:inputType="numberPassword"
+            android:maxLength="1"
+            android:textColor="#21A5FE"
+            android:textCursorDrawable="@drawable/cursor_purl"
+            android:textSize="30sp" />
+
+        <EditText
+            android:id="@+id/btn_pwsix"
+            android:layout_width="59dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="18dp"
+            android:background="@drawable/edit_background"
+            android:gravity="center"
+            android:inputType="numberPassword"
+            android:maxLength="1"
+            android:textColor="#21A5FE"
+            android:textCursorDrawable="@drawable/cursor_purl"
+            android:textSize="30sp" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view_pwd"
+        android:layout_width="wrap_content"
+        android:layout_height="69dp"
+        android:layout_below="@+id/rl_login_etuser"
+        android:layout_marginLeft="270dp"
+        android:layout_marginTop="29dp"
+        android:layout_marginRight="270dp" />
 
     <Button
         android:id="@+id/btn_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="登录" />
+        android:layout_below="@+id/view_pwd"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="48dp"
+        android:background="@drawable/ic_rectangle_2"
+        android:text="登录"
+        android:textColor="#fff"
+        android:textSize="29sp" />
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_keyboard"
+        android:layout_width="448dp"
+        android:layout_height="245dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="#27ffffff"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_login1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="1"
+                android:textColor="@drawable/sel_tvkeyboard"
+                android:textSize="30sp" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#33ffffff" />
+
+            <TextView
+                android:id="@+id/tv_login2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="2"
+                android:textColor="@drawable/sel_tvkeyboard"
+                android:textSize="30sp" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#33ffffff" />
+
+            <TextView
+                android:id="@+id/tv_login3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="3"
+                android:textColor="@drawable/sel_tvkeyboard"
+                android:textSize="30sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#33ffffff" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_login4"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="4"
+                android:textColor="@drawable/sel_tvkeyboard"
+                android:textSize="30sp" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#33ffffff" />
+
+            <TextView
+                android:id="@+id/tv_login5"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="5"
+                android:textColor="@drawable/sel_tvkeyboard"
+                android:textSize="30sp" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#33ffffff" />
+
+            <TextView
+                android:id="@+id/tv_login6"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="6"
+                android:textColor="@drawable/sel_tvkeyboard"
+                android:textSize="30sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#33ffffff" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_login7"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="7"
+                android:textColor="@drawable/sel_tvkeyboard"
+                android:textSize="30sp" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#33ffffff" />
+
+            <TextView
+                android:id="@+id/tv_login8"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="8"
+                android:textColor="@drawable/sel_tvkeyboard"
+                android:textSize="30sp" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#33ffffff" />
+
+            <TextView
+                android:id="@+id/tv_login9"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="9"
+                android:textColor="@drawable/sel_tvkeyboard"
+                android:textSize="30sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#33ffffff" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_login_cancel"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="取消"
+                android:textColor="@drawable/sel_tvkeyboard"
+                android:textSize="20sp" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#33ffffff" />
+
+            <TextView
+                android:id="@+id/tv_login0"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="@drawable/sel_tvkeyboard"
+                android:textSize="30sp" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#33ffffff" />
+
+            <ImageView
+                android:id="@+id/tv_login_delete"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:scaleType="center"
+                android:src="@mipmap/icon_login_delete" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

@@ -28,7 +28,7 @@ class ActLoading : Activity() {
 //                Helper.startActivity(this, FrgHome::class.java, IndexAct::class.java)
 //            }
 //            finish()
-        }, 5000)
+        }, 2000)
     }
 
 }
