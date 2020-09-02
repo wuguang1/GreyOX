@@ -1,8 +1,12 @@
 package com.deepblue.greyox
 
 import android.content.Context
+import android.media.MediaPlayer
+import android.net.Uri
 import android.preference.PreferenceManager
 import android.util.TypedValue
+import android.view.SurfaceHolder
+import android.view.SurfaceView
 import com.google.gson.Gson
 import com.mdx.framework.Frame
 
@@ -46,6 +50,36 @@ object F {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), Frame.CONTEXT.getResources().getDisplayMetrics()).toInt()
     }
 
+
+    fun play(context: Context, mediaPlayer: MediaPlayer, surfaceView: SurfaceView, path: String) {
+        surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
+            override fun surfaceChanged(
+                holder: SurfaceHolder?,
+                format: Int,
+                width: Int,
+                height: Int
+            ) {
+                try {
+                    mediaPlayer.run {
+                        reset()
+                        setDisplay(holder)
+                        setDataSource(context, Uri.parse(path))
+                        setOnPreparedListener { start() }
+                        setOnCompletionListener { start() }
+                        prepare()
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+
+            override fun surfaceDestroyed(holder: SurfaceHolder?) {
+            }
+
+            override fun surfaceCreated(holder: SurfaceHolder?) {
+            }
+        })
+    }
 
 }
 

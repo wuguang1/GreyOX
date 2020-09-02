@@ -2,15 +2,19 @@ package com.deepblue.greyox.act
 
 import android.app.Activity
 import android.graphics.Color
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
+import com.deepblue.greyox.F.play
 import com.deepblue.greyox.R
 import com.deepblue.greyox.frg.SelfCheckFragment
 import com.mdx.framework.activity.IndexAct
 import com.mdx.framework.utility.Helper
+import kotlinx.android.synthetic.main.act_loading.*
 
-class ActLoading : Activity() {
-
+class ActLoading : BaseAct() {
+    var mediaPlayer: MediaPlayer? = null
+    var timeOut = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.navigationBarColor = Color.BLUE; //写法一
@@ -18,16 +22,23 @@ class ActLoading : Activity() {
         loaddata()
     }
 
+    override fun disposeMsg(type: Int, obj: Any) {
+        super.disposeMsg(type, obj)
+        if (timeOut) {
+            Helper.startActivity(this, SelfCheckFragment::class.java, IndexAct::class.java)
+            finish()
+        }
+    }
 
     fun loaddata() {
+        mediaPlayer = MediaPlayer()
+        val uri = "android.resource://" + packageName.toString() + "/" + R.raw.welcome
+        play(this.applicationContext, mediaPlayer!!, sv_welcome, uri)
+
         Handler().postDelayed({
+            timeOut = true
             Helper.startActivity(this, SelfCheckFragment::class.java, IndexAct::class.java)
-//            if (mModellogin == null) {
-//                Helper.startActivity(this, FrgLogin::class.java, IndexAct::class.java)
-//            } else {
-//                Helper.startActivity(this, FrgHome::class.java, IndexAct::class.java)
-//            }
-//            finish()
+            finish()
         }, 2000)
     }
 
