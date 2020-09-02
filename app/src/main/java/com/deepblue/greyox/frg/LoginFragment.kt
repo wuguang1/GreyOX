@@ -99,6 +99,8 @@ class LoginFragment : BaseFrg() {
                         ll_pw.visibility = View.GONE
                         btn_login.visibility = View.GONE
                         ll_keyboard.visibility = View.GONE
+
+
                     }
                 } else {
                     Helper.toast("当前无用户")
