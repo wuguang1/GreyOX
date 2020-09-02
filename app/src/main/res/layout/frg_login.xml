@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/iv_tx"
-            android:text="admin"
+            android:text="@string/login_tips"
             android:textColor="#ffffffff"
             android:textSize="30sp" />
 
@@ -55,19 +55,6 @@
             android:src="@mipmap/down" />
 
     </RelativeLayout>
-
-    <com.deepblue.greyox.view.MaxHeightRecyclerView
-        android:id="@+id/recycleview_users"
-        android:layout_width="452dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/rl_login_etuser"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/users_background"
-        android:scrollbarSize="4dp"
-        android:scrollbarThumbVertical="@color/colorcommon"
-        android:scrollbars="vertical"
-        app:maxHeight="277dp" />
 
     <LinearLayout
         android:id="@+id/ll_pw"
@@ -164,6 +151,20 @@
         android:layout_marginLeft="270dp"
         android:layout_marginTop="29dp"
         android:layout_marginRight="270dp" />
+
+    <com.deepblue.greyox.view.MaxHeightRecyclerView
+        android:id="@+id/recycleview_users"
+        android:layout_width="452dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_login_etuser"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/users_background"
+        android:scrollbarSize="4dp"
+        android:scrollbarThumbVertical="@color/colorcommon"
+        android:scrollbars="vertical"
+        android:visibility="gone"
+        app:maxHeight="277dp" />
 
     <Button
         android:id="@+id/btn_login"

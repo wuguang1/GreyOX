@@ -2,17 +2,18 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rl_all"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
+    android:layout_height="wrap_content"
     android:background="@drawable/sel_user">
 
     <TextView
         android:id="@+id/tv_name"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="55dp"
-        android:textColor="#f0f0f0"
-        android:textSize="26sp" />
+        android:layout_height="59dp"
+        android:layout_marginStart="72dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:textColor="#fff"
+        android:textSize="27sp" />
 
 </RelativeLayout>
 

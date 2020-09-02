@@ -6,11 +6,17 @@ import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.deepblue.greyox.Const
 import com.deepblue.greyox.R
 import com.deepblue.greyox.ada.BaseAdapter
 import com.deepblue.greyox.ada.LoginUsersAdapter
+import com.deepblue.library.planbmsg.JsonUtils
+import com.deepblue.library.planbmsg.Response
 import com.deepblue.library.planbmsg.bean.UserInfo
+import com.deepblue.library.planbmsg.msg2000.LoginReq
+import com.deepblue.library.planbmsg.msg2000.LoginRes
 import com.mdx.framework.Frame
+import com.mdx.framework.activity.IndexAct
 import com.mdx.framework.utility.Helper
 import kotlinx.android.synthetic.main.frg_login.*
 
@@ -40,14 +46,11 @@ class LoginFragment : BaseFrg() {
         tv_login9.setOnClickListener(this)
         tv_login_cancel.setOnClickListener(this)
         tv_login_delete.setOnClickListener(this)
+        btn_login.setOnClickListener(this)
 
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         recycleview_users.layoutManager = layoutManager
-        recycleview_users.addItemDecoration(
-            DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
-        )
-
         initAdapter(context!!)
     }
 
@@ -74,6 +77,30 @@ class LoginFragment : BaseFrg() {
     }
 
     override fun loaddata() {
+        //TODO
+        usersDataList.clear()
+        val userInfo = UserInfo()
+        userInfo.name = "wuguang"
+        val userInfo1 = UserInfo()
+        userInfo1.name = "wuguang1"
+        val userInfo2 = UserInfo()
+        userInfo2.name = "wuguang2"
+        val userInfo3 = UserInfo()
+        userInfo3.name = "wuguang3"
+        val userInfo4 = UserInfo()
+        userInfo4.name = "wuguang4"
+        val userInfo5 = UserInfo()
+        userInfo5.name = "wuguang5"
+        val userInfo6 = UserInfo()
+        userInfo6.name = "wuguang6"
+        usersDataList.add(userInfo)
+        usersDataList.add(userInfo1)
+        usersDataList.add(userInfo2)
+        usersDataList.add(userInfo3)
+        usersDataList.add(userInfo5)
+        usersDataList.add(userInfo4)
+        usersDataList.add(userInfo6)
+        mAdapter.notifyDataSetChanged()
     }
 
     override fun onClick(v: View) {
@@ -99,8 +126,6 @@ class LoginFragment : BaseFrg() {
                         ll_pw.visibility = View.GONE
                         btn_login.visibility = View.GONE
                         ll_keyboard.visibility = View.GONE
-
-
                     }
                 } else {
                     Helper.toast("当前无用户")
@@ -190,6 +215,43 @@ class LoginFragment : BaseFrg() {
                 if (passwords.size > 0) {
                     passwords.removeAt(passwords.size - 1)
                     uiChange()
+                }
+            }
+            R.id.btn_login -> {
+                //TODO
+                Helper.startActivity(context, HomeFragment::class.java, IndexAct::class.java)
+                finish()
+
+                val name = tv_login_user.text.toString()
+                if (passwords.size > 5 && tv_login_user.text.toString().isNotEmpty() && (getText(R.string.login_tips).toString() != name)) {
+                    val passwd = StringBuffer()
+                    for (j in passwords.indices) {
+                        passwd.append(passwords[j])
+                    }
+                    sendwebSocket(LoginReq().robot2(tv_login_user.text.toString(), passwd.toString()), context)
+                } else {
+                    Helper.toast("请填写正确信息")
+                }
+            }
+        }
+    }
+
+    override fun disposeMsg(type: Int, obj: Any?) {
+        super.disposeMsg(type, obj)
+        when (type) {
+            12003 -> {
+                val loginRes = JsonUtils.fromJson(obj.toString(), LoginRes::class.java)
+                if (loginRes?.error_code == 0 || loginRes?.error_code == -3) {
+                    Const.user = loginRes.getJson()
+                    if (Const.user?.user_type == UserInfo.USER) {
+                        Helper.startActivity(context, HomeFragment::class.java, IndexAct::class.java)
+                        finish()
+                    } else {
+//                        startActivity<AdminAccountActivity>()
+//                        finish()
+                    }
+                } else if (loginRes?.error_code == -1) {
+                    Helper.toast("密码错误")
                 }
             }
         }

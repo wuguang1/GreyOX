@@ -47,10 +47,7 @@ abstract class BaseAdapter<T>(
         convert(mContext, holder, mDatas[position], position)
         if (mItemClickListener != null) {
             holder.mItemView.setOnClickListener { v ->
-                mItemClickListener!!.onItemClick(
-                    v,
-                    position
-                )
+                mItemClickListener!!.onItemClick(v, position)
             }
         }
         if (mLongItemClickListener != null) {
