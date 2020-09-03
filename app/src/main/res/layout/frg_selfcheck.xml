@@ -19,11 +19,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
+        <!--        <ImageView-->
+        <!--            android:id="@+id/iv_selfcheck_center_bg"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:src="@drawable/sc_animator" />-->
         <ImageView
             android:id="@+id/iv_selfcheck_center_bg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/sc_animator" />
+            android:src="@drawable/icon_selfcheck_pro_bg" />
 
         <ImageView
             android:id="@+id/iv_selfcheck_center"

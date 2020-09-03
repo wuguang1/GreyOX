@@ -6,4 +6,5 @@
 
     <string name="selfcheck1" translatable="false">M0,115L398.2,115.28M622.17,115.28L1024,115</string>
     <string name="selfcheck2" translatable="false">M395,115L398.2,115.28M622.17,115.28L625,115</string>
+
 </resources>

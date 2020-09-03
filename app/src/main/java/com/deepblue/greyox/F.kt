@@ -1,6 +1,7 @@
 package com.deepblue.greyox
 
 import android.content.Context
+import android.content.res.AssetManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.preference.PreferenceManager
@@ -9,6 +10,8 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import com.google.gson.Gson
 import com.mdx.framework.Frame
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 
 object F {
@@ -81,6 +84,27 @@ object F {
         })
     }
 
+    fun fileToJsonString(filename: String): String? {
+        try {
+            val assetManager: AssetManager = Frame.CONTEXT.assets //获得assets资源管理器（assets中的文件无法直接访问，可以使用AssetManager访问）
+
+            val inputStreamReader = InputStreamReader(assetManager.open(filename), "UTF-8") //使用IO流读取json文件内容
+
+            val br = BufferedReader(inputStreamReader) //使用字符高效流
+
+            var line: String?
+            val builder = StringBuilder()
+            while (br.readLine().also { line = it } != null) {
+                builder.append(line)
+            }
+            br.close()
+            inputStreamReader.close()
+            return builder.toString()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return ""
+        }
+    }
 }
 
 

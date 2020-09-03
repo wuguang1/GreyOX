@@ -42,4 +42,9 @@ class ActLoading : BaseAct() {
         }, 2000)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer?.stop()
+        mediaPlayer?.release()
+    }
 }

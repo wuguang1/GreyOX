@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="AppTheme_pub" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_pub" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:statusBarColor">#001110</item>
         <item name="android:colorPrimaryDark">#001110</item>
         <item name="android:windowBackground">@color/black</item>
@@ -9,6 +9,7 @@
         <!--        <item name="android:windowTranslucentNavigation">true</item>-->
         <item name="android:navigationBarColor">@android:color/black</item>
     </style>
+
     <style name="actNNS" parent="AppTheme_pub">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>

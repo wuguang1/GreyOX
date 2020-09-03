@@ -61,8 +61,8 @@ class SelfCheckFragment : BaseFrg() {
     }
 
     override fun initView() {
-        val drawable: AnimatedVectorDrawable = (iv_selfcheck_center_bg.drawable) as AnimatedVectorDrawable
-        if (drawable.isRunning) drawable.stop() else drawable.start()
+//        val drawable: AnimatedVectorDrawable = (iv_selfcheck_center_bg.drawable) as AnimatedVectorDrawable
+//        if (drawable.isRunning) drawable.stop() else drawable.start()
 
         rotate.interpolator = LinearInterpolator() //设置插值器
         rotate.duration = 3000 //设置动画持续周期

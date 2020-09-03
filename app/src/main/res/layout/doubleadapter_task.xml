@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#00000000">
+
+    <TextView
+        android:id="@+id/tv_doubleadapter_task"
+        android:layout_width="match_parent"
+        android:layout_height="51dp"
+        android:layout_marginTop="10dp"
+        android:background="#33ffffff"
+        android:gravity="center_vertical"
+        android:paddingStart="14dp"
+        android:textColor="#fff"
+        android:textSize="19sp" />
+
+    <ImageView
+        android:id="@+id/iv_doubleadapter_task"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="26dp"
+        android:layout_marginRight="28dp"
+        android:src="@mipmap/icon_toright" />
+
+</RelativeLayout>
+
