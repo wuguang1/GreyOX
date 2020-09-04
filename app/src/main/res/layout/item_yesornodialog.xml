@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#00000000"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/YesOrNo_relativeLayout"
+        android:layout_width="224dp"
+        android:layout_height="112dp"
+        android:background="@drawable/shape_white_radius">
+
+        <TextView
+            android:id="@+id/tv_YesOrNo_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="22dp"
+            android:gravity="center"
+            android:maxLines="2"
+            android:text="提示信息"
+            android:textColor="#ff303030"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_YesOrNo_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="29dp"
+            android:layout_marginBottom="17dp"
+            android:gravity="center"
+            android:text="@string/str_sure"
+            android:textColor="#ff009eb5"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_YesOrNo_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="22dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:paddingBottom="4dp"
+            android:text="@string/str_chance"
+            android:textColor="#fff8feff"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_YesOrNo_center"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:paddingBottom="4dp"
+            android:text="@string/str_ckxq"
+            android:textColor="#fff8feff"
+            android:textSize="14sp"
+            android:visibility="gone" />
+    </RelativeLayout>
+</LinearLayout>
+

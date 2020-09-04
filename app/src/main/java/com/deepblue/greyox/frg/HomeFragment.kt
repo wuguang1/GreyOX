@@ -12,6 +12,7 @@ import com.deepblue.greyox.ada.HomeLineAdapter
 import com.deepblue.greyox.ada.TaskDoubleAdapter
 import com.deepblue.greyox.bean.GetOXMapInfoModel
 import com.deepblue.greyox.bean.OXStartTaskReq
+import com.deepblue.greyox.view.TimeDownDialog
 import com.deepblue.library.planbmsg.JsonUtils
 import com.deepblue.library.planbmsg.Response
 import com.deepblue.library.planbmsg.bean.TaskBasicInfo.Companion.EXECUTATION_TYPE_IMMEDIATELY
@@ -128,15 +129,23 @@ class HomeFragment : BaseFrg() {
         }
     }
 
+    private val edialog: TimeDownDialog by lazy {
+        TimeDownDialog(context!!)
+    }
+
     override fun onClick(v: View) {
         super.onClick(v)
         when (v.id) {
             R.id.btn_home_start -> {
+                if (mCurrentGroup < 0 && mCurrentChlid < 0) {
+                    Helper.toast("请选择地图")
+                    return
+                }
                 if (mGroupList[mCurrentGroup].greyPointList.size <= 0) {
                     Helper.toast("该地图没有预置返回点")
                     return
                 }
-                if (mCurrentGroup != -1 && mCurrentChlid != -1) {
+                edialog.setOnDismissListener {
                     val oxStartTaskReq = OXStartTaskReq()
                     oxStartTaskReq.task_basic_info.task_id = 0
                     oxStartTaskReq.task_basic_info.task_type = TASK_TYPE_CLEAN
@@ -154,12 +163,11 @@ class HomeFragment : BaseFrg() {
                     oxStartTaskReq.rebackId = mGroupList[mCurrentGroup].greyPointList[0].id
                     if (oxStartTaskReq.lineIdList.size <= 0) {
                         Helper.toast("请选择任务")
-                    }else{
-                        sendwebSocket(oxStartTaskReq,context,true)
+                    } else {
+                        sendwebSocket(oxStartTaskReq, context, false)
                     }
-                } else {
-                    Helper.toast("请选择地图")
                 }
+                edialog.show()
             }
         }
     }
