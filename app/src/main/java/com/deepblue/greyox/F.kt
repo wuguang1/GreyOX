@@ -105,6 +105,25 @@ object F {
             return ""
         }
     }
+
+    private val distanceArr =
+        intArrayOf(20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 25000, 50000, 100000, 200000, 500000, 1000000, 2000000, 5000000, 10000000)
+    private val levelArr = intArrayOf(21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3)
+
+    /**
+     * 计算自适应缩放比例
+     */
+    private fun getLevel(distance: Int): Int {
+        var level = -1
+        var min = 10000000
+        for (i in distanceArr.indices) {
+            if (distanceArr[i] - distance in 1 until min) {
+                min = distanceArr[i] - distance
+                level = i
+            }
+        }
+        return levelArr[if (level == 0) 0 else level - 1]
+    }
 }
 
 

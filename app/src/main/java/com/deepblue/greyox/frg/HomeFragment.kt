@@ -1,10 +1,19 @@
 package com.deepblue.greyox.frg;
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.ExpandableListView
+import android.widget.ImageView
+import android.widget.ZoomControls
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.baidu.mapapi.map.BaiduMap.OnMapLoadedCallback
+import com.baidu.mapapi.map.MapStatus
+import com.baidu.mapapi.map.MapStatusUpdateFactory
+import com.baidu.mapapi.map.Polyline
+import com.baidu.mapapi.map.PolylineOptions
+import com.baidu.mapapi.model.LatLng
 import com.deepblue.greyox.F
 import com.deepblue.greyox.R
 import com.deepblue.greyox.ada.BaseAdapter
@@ -12,6 +21,7 @@ import com.deepblue.greyox.ada.HomeLineAdapter
 import com.deepblue.greyox.ada.TaskDoubleAdapter
 import com.deepblue.greyox.bean.GetOXMapInfoModel
 import com.deepblue.greyox.bean.OXStartTaskReq
+import com.deepblue.greyox.util.BaiduMapUtil
 import com.deepblue.greyox.view.TimeDownDialog
 import com.deepblue.library.planbmsg.JsonUtils
 import com.deepblue.library.planbmsg.Response
@@ -25,6 +35,12 @@ import kotlinx.android.synthetic.main.frg_home.*
 
 
 class HomeFragment : BaseFrg() {
+    private val mMap by lazy { map_home.map }
+
+    private val mEdgePolylineWith = 3  //路沿宽度
+    private val mEdgePolylineColor = Color.parseColor("#0080FF")  //路沿颜色
+
+
     var mGroupList = ArrayList<GetOXMapInfoModel.MapInfoBean>()
     var mChildList = ArrayList<ArrayList<GetOXMapInfoModel.MapInfoBean.GreyAddrListBean>>()
     var mLinesList = ArrayList<GetOXMapInfoModel.MapInfoBean.GreyLineListBean>()
@@ -41,65 +57,56 @@ class HomeFragment : BaseFrg() {
     }
 
     override fun initView() {
+        val p1 = LatLng(31.209933, 121.608515)
+        val p2 = LatLng(30.905841, 121.927665)
+        val p3 = LatLng(31.049502, 121.432088)
+        val p4 = LatLng(31.160318, 121.434962)
+        val p5 = LatLng(34.283806, 117.198051)
+        val p6 = LatLng(29.545097, 106.568581)
+        val p7 = LatLng(34.358342, 108.922285)
+        val points: MutableList<LatLng> = ArrayList()
+        points.add(p1)
+        points.add(p2)
+        points.add(p3)
+        points.add(p4)
+//        points.add(p5)
+//        points.add(p6)
+//        points.add(p7)
+
+
         btn_home_start.setOnClickListener(this)
 
-        val layoutManager = LinearLayoutManager(context)
-        layoutManager.orientation = LinearLayoutManager.VERTICAL
-        recycleview_line.layoutManager = layoutManager
-        initAdapter(context!!)
-
-        mDoubleAdapter = TaskDoubleAdapter(mGroupList, mChildList, context)
-        expandableListView_home_task.setAdapter(mDoubleAdapter)
-
-        expandableListView_home_task.setOnGroupClickListener { parent, v, groupPosition, id ->
-            val groupExpanded = parent.isGroupExpanded(groupPosition)
-            if (groupExpanded) {
-                parent.collapseGroup(groupPosition)
-            } else {
-                parent.expandGroup(groupPosition, true)
-            }
-            mDoubleAdapter.setIndicatorState(groupPosition, groupExpanded)
-            true
+        initRecycleView()
+        initExpandList()
+        var builder = MapStatus.Builder()
+//        mMap.compassPosition = Point(110, 265) //指南针位置
+        mMap.setMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()))
+//        mMap.mapType = BaiduMap.MAP_TYPE_SATELLITE //地图卫星
+//        mMap.isTrafficEnabled = true  //交通
+        val child = map_home.getChildAt(1)//设置地图 logo 显示/隐藏
+        if (child != null && (child is ImageView || child is ZoomControls)) {
+            child.visibility = View.INVISIBLE
         }
-        expandableListView_home_task.setOnChildClickListener { parent, v, groupPosition, childPosition, id ->
-            mCurrentGroup = groupPosition
-            mCurrentChlid = childPosition
-            /*   更新当前位置   */
-            mChildList.forEach {
-                it.forEach { aa ->
-                    aa.isOXSelect = false
-                }
-            }
-            mChildList[groupPosition][childPosition].isOXSelect = true
-            expandableListView_home_task.collapseGroup(groupPosition)
-            expandableListView_home_task.expandGroup(groupPosition)
-            /* expandableListView子item选中状态   ------    点击子item  更新右侧预置line列表 */
-            mLinesList.clear()
-            val greyLineList = mGetOXMapInfoModel.map_info[groupPosition].greyLineList//字典
-            val lineIdList = mChildList[groupPosition][childPosition].lineIdList
-            lineIdList.forEach { _lineId ->
-                greyLineList.forEach { _greyLinebean ->
-                    _greyLinebean.isOXLineCheck = false
-                    if (_greyLinebean.lineId == _lineId.id) {
-                        mLinesList.add(_greyLinebean)
-                    }
-                }
-            }
-            mLineAdapter.notifyDataSetChanged()
-            true
-        }
-        expandableListView_home_task.setOnGroupExpandListener(object : ExpandableListView.OnGroupExpandListener {
-            override fun onGroupExpand(groupPosition: Int) {
-                mCurrentGroup = groupPosition
-                val count: Int = mDoubleAdapter.groupCount
-                for (i in 0 until count) {
-                    if (i != groupPosition) {
-                        expandableListView_home_task.collapseGroup(i)
-                    }
-                }
-            }
+        map_home.showScaleControl(false)//比例尺 显示/隐藏
+        map_home.showZoomControls(false)//缩放按钮 显示/隐藏
+
+//        var builder1 = LatLngBounds.Builder()
+//        for (p in points) {
+//            builder1 = builder1.include(p)
+//        }
+//        val mapStatusUpdate = MapStatusUpdateFactory.newLatLngBounds(builder1.build())//在合适视野范围内显示所有的点
+//        mMap.setMapStatus(mapStatusUpdate)
+//        val msu = MapStatusUpdateFactory.zoomTo(13F)
+//        mMap.setMapStatus(msu)
+
+//        mMap.addOverlay(BaiduMapUtil().Polyline(points))
+//        if (isFrist) {
+        mMap.setOnMapLoadedCallback(OnMapLoadedCallback {
+            mMap.animateMapStatus(BaiduMapUtil().setLatLngBounds(points, map_home))
         })
-
+//        } else {
+//            mMap.animateMapStatus(BaiduMapUtil().setLatLngBounds(points, map_home));
+//        }
     }
 
     private fun initAdapter(contexts: Context) {
@@ -188,5 +195,66 @@ class HomeFragment : BaseFrg() {
                 }
             }
         }
+    }
+
+    private fun initRecycleView() {
+        val layoutManager = LinearLayoutManager(context)
+        layoutManager.orientation = LinearLayoutManager.VERTICAL
+        recycleview_line.layoutManager = layoutManager
+        initAdapter(context!!)
+    }
+
+    private fun initExpandList() {
+        mDoubleAdapter = TaskDoubleAdapter(mGroupList, mChildList, context)
+        expandableListView_home_task.setAdapter(mDoubleAdapter)
+
+        expandableListView_home_task.setOnGroupClickListener { parent, v, groupPosition, id ->
+            val groupExpanded = parent.isGroupExpanded(groupPosition)
+            if (groupExpanded) {
+                parent.collapseGroup(groupPosition)
+            } else {
+                parent.expandGroup(groupPosition, true)
+            }
+            mDoubleAdapter.setIndicatorState(groupPosition, groupExpanded)
+            true
+        }
+        expandableListView_home_task.setOnChildClickListener { parent, v, groupPosition, childPosition, id ->
+            mCurrentGroup = groupPosition
+            mCurrentChlid = childPosition
+            /*   更新当前位置   */
+            mChildList.forEach {
+                it.forEach { aa ->
+                    aa.isOXSelect = false
+                }
+            }
+            mChildList[groupPosition][childPosition].isOXSelect = true
+            expandableListView_home_task.collapseGroup(groupPosition)
+            expandableListView_home_task.expandGroup(groupPosition)
+            /* expandableListView子item选中状态   ------    点击子item  更新右侧预置line列表 */
+            mLinesList.clear()
+            val greyLineList = mGetOXMapInfoModel.map_info[groupPosition].greyLineList//字典
+            val lineIdList = mChildList[groupPosition][childPosition].lineIdList
+            lineIdList.forEach { _lineId ->
+                greyLineList.forEach { _greyLinebean ->
+                    _greyLinebean.isOXLineCheck = false
+                    if (_greyLinebean.lineId == _lineId.id) {
+                        mLinesList.add(_greyLinebean)
+                    }
+                }
+            }
+            mLineAdapter.notifyDataSetChanged()
+            true
+        }
+        expandableListView_home_task.setOnGroupExpandListener(object : ExpandableListView.OnGroupExpandListener {
+            override fun onGroupExpand(groupPosition: Int) {
+                mCurrentGroup = groupPosition
+                val count: Int = mDoubleAdapter.groupCount
+                for (i in 0 until count) {
+                    if (i != groupPosition) {
+                        expandableListView_home_task.collapseGroup(i)
+                    }
+                }
+            }
+        })
     }
 }
