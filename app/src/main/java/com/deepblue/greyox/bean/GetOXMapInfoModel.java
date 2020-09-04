@@ -86,6 +86,10 @@ public class GetOXMapInfoModel extends Response {
                  */
 
                 public int id;
+
+                public LineIdListBean(int id) {
+                    this.id = id;
+                }
             }
         }
 

@@ -20,9 +20,9 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
-            android:groupIndicator="@null"
             android:background="@drawable/home_background"
             android:choiceMode="multipleChoice"
+            android:groupIndicator="@null"
             android:listSelector="#00000000" />
 
         <com.baidu.mapapi.map.MapView
@@ -41,7 +41,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@+id/btn_home_start"
-                android:background="@drawable/home_background" />
+                android:background="@drawable/home_background"
+                android:paddingTop="12dp" />
 
             <LinearLayout
                 android:id="@+id/btn_home_start"

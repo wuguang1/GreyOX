@@ -122,7 +122,7 @@ class WebSocketClient3(url: String) {
     fun dismissLoadDialog(currentType: Int) {
         loadDialog?.let {
             if (it.isShowing && (currentType == it.currentType || currentType == -1)) {
-                it.dismiss()
+                it.dismissDiaolog()
             }
         }
     }

@@ -16,6 +16,7 @@ import android.view.View
 import android.widget.LinearLayout
 import com.deepblue.greyox.Const.mInitData
 import com.deepblue.greyox.GreyOXApplication
+import com.deepblue.greyox.view.LoadingDialog
 import com.deepblue.library.planbmsg.JsonUtils
 import com.deepblue.library.planbmsg.Request
 import com.deepblue.library.planbmsg.msg2000.GetAllUsersRes
@@ -24,6 +25,7 @@ import com.mdx.framework.activity.MFragment
 
 abstract class BaseFrg : MFragment(), View.OnClickListener {
     val greyOXApplication by lazy { activity?.application as GreyOXApplication }
+    val loadDialog by lazy { context?.let { LoadingDialog(it) } }
 
     final override fun initV(view: View) {
         initView()
@@ -53,6 +55,18 @@ abstract class BaseFrg : MFragment(), View.OnClickListener {
 
     fun sendwebSocket(request: Request, context: Context?, isShowLoading: Boolean = false, isCanceledOnTouchOutside: Boolean = false) {
         greyOXApplication.webSocketClient?.sendMessage(request, context, isShowLoading, isCanceledOnTouchOutside)
+    }
+
+    fun showLoading() {
+        if (loadDialog != null && !loadDialog!!.isShowing) {
+            loadDialog!!.show()
+        }
+    }
+
+    fun dismissLoading() {
+        if (loadDialog != null && loadDialog!!.isShowing) {
+            loadDialog!!.dismissDiaolog()
+        }
     }
 
     override fun setActionBar(actionBar: LinearLayout?) {
