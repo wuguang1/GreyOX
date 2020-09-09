@@ -17,9 +17,11 @@ import com.deepblue.greyox.R
 import com.deepblue.greyox.ada.BaseAdapter
 import com.deepblue.greyox.ada.HomeLineAdapter
 import com.deepblue.greyox.ada.TaskDoubleAdapter
+import com.deepblue.greyox.bean.GetMapInfoReq
 import com.deepblue.greyox.bean.GetOXMapInfoModel
 import com.deepblue.greyox.bean.OXStartTaskReq
 import com.deepblue.greyox.util.BaiduMapUtil
+import com.deepblue.greyox.util.BaiduMapUtil.drawMarker
 import com.deepblue.greyox.util.BaiduMapUtil.mEdgePolylineColor
 import com.deepblue.greyox.util.BaiduMapUtil.mEdgePolylineWith
 import com.deepblue.greyox.util.BaiduMapUtil.mPolylineColor
@@ -32,7 +34,6 @@ import com.deepblue.library.planbmsg.bean.TaskBasicInfo.Companion.EXECUTATION_TY
 import com.deepblue.library.planbmsg.bean.TaskBasicInfo.Companion.TASK_MODE_ONCE
 import com.deepblue.library.planbmsg.bean.TaskBasicInfo.Companion.TASK_PRIORITY_NORMAL
 import com.deepblue.library.planbmsg.bean.TaskBasicInfo.Companion.TASK_TYPE_CLEAN
-import com.deepblue.library.planbmsg.msg7000.GetMapInfoReq
 import com.mdx.framework.utility.Helper
 import kotlinx.android.synthetic.main.frg_home.*
 
@@ -246,6 +247,7 @@ class HomeFragment : BaseFrg() {
             val minPos = LatLng(mGetOXMapInfoModel.map_info[groupPosition].min_pos.y, mGetOXMapInfoModel.map_info[groupPosition].min_pos.x)
             val maxPos = LatLng(mGetOXMapInfoModel.map_info[groupPosition].max_pos.y, mGetOXMapInfoModel.map_info[groupPosition].max_pos.x)
             mMap.animateMapStatus(setLatLngBounds(arrayListOf(minPos, maxPos), map_home))
+//            drawMarker(mMap,R.mipmap.icon_map_point,10,)
             true
         }
         expandableListView_home_task.setOnGroupExpandListener(object : ExpandableListView.OnGroupExpandListener {
