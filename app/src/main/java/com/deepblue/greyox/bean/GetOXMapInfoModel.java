@@ -1,5 +1,8 @@
 package com.deepblue.greyox.bean;
 
+import com.baidu.mapapi.map.Polyline;
+import com.baidu.mapapi.model.LatLng;
+import com.deepblue.greyox.util.BaiduMapUtil;
 import com.deepblue.library.planbmsg.Response;
 
 import java.util.List;
@@ -86,10 +89,6 @@ public class GetOXMapInfoModel extends Response {
                  */
 
                 public int id;
-
-                public LineIdListBean(int id) {
-                    this.id = id;
-                }
             }
         }
 
@@ -112,10 +111,17 @@ public class GetOXMapInfoModel extends Response {
             public int distanceInfo;
             public double timeInfo;
             public String pathName;
-            public boolean isOXLineCheck = false;
             public List<PrepointListBean> prepointList;
-            public List<Path1ListBean> path1List;
-            public List<Path2ListBean> path2List;
+            public List<PrepointListBean> path1List;
+            public List<PrepointListBean> path2List;
+
+            public boolean isOXLineCheck = false;
+            public Polyline polyline;
+            public Polyline edgpolyline1;
+            public Polyline edgpolyline2;
+            public List<LatLng> map_poly_points;
+            public List<LatLng> map_edg1_points;
+            public List<LatLng> map_edg2_points;
 
             public static class PrepointListBean {
                 /**
@@ -145,6 +151,17 @@ public class GetOXMapInfoModel extends Response {
 
                 public double x;
                 public double y;
+            }
+        }
+    }
+
+    public void initdata() {
+        for (int i = 0; i < this.map_info.size(); i++) {
+            for (int j = 0; j < this.map_info.get(i).greyLineList.size(); j++) {
+                this.map_info.get(i).greyLineList.get(j).map_poly_points = BaiduMapUtil.INSTANCE.loadBaiDuData2(this.map_info.get(i).greyLineList.get(j).prepointList);
+                this.map_info.get(i).greyLineList.get(j).map_edg1_points = BaiduMapUtil.INSTANCE.loadBaiDuData2(this.map_info.get(i).greyLineList.get(j).path1List);
+                this.map_info.get(i).greyLineList.get(j).map_edg2_points = BaiduMapUtil.INSTANCE.loadBaiDuData2(this.map_info.get(i).greyLineList.get(j).path2List);
+
             }
         }
     }

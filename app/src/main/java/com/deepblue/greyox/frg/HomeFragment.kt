@@ -11,8 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.baidu.mapapi.map.BaiduMap.OnMapLoadedCallback
 import com.baidu.mapapi.map.MapStatus
 import com.baidu.mapapi.map.MapStatusUpdateFactory
-import com.baidu.mapapi.map.Polyline
-import com.baidu.mapapi.map.PolylineOptions
 import com.baidu.mapapi.model.LatLng
 import com.deepblue.greyox.F
 import com.deepblue.greyox.R
@@ -22,6 +20,11 @@ import com.deepblue.greyox.ada.TaskDoubleAdapter
 import com.deepblue.greyox.bean.GetOXMapInfoModel
 import com.deepblue.greyox.bean.OXStartTaskReq
 import com.deepblue.greyox.util.BaiduMapUtil
+import com.deepblue.greyox.util.BaiduMapUtil.mEdgePolylineColor
+import com.deepblue.greyox.util.BaiduMapUtil.mEdgePolylineWith
+import com.deepblue.greyox.util.BaiduMapUtil.mPolylineColor
+import com.deepblue.greyox.util.BaiduMapUtil.mPolylineWith
+import com.deepblue.greyox.util.BaiduMapUtil.setLatLngBounds
 import com.deepblue.greyox.view.TimeDownDialog
 import com.deepblue.library.planbmsg.JsonUtils
 import com.deepblue.library.planbmsg.Response
@@ -37,10 +40,6 @@ import kotlinx.android.synthetic.main.frg_home.*
 class HomeFragment : BaseFrg() {
     private val mMap by lazy { map_home.map }
 
-    private val mEdgePolylineWith = 3  //路沿宽度
-    private val mEdgePolylineColor = Color.parseColor("#0080FF")  //路沿颜色
-
-
     var mGroupList = ArrayList<GetOXMapInfoModel.MapInfoBean>()
     var mChildList = ArrayList<ArrayList<GetOXMapInfoModel.MapInfoBean.GreyAddrListBean>>()
     var mLinesList = ArrayList<GetOXMapInfoModel.MapInfoBean.GreyLineListBean>()
@@ -51,29 +50,15 @@ class HomeFragment : BaseFrg() {
     private lateinit var mGetOXMapInfoModel: GetOXMapInfoModel
     private lateinit var mDoubleAdapter: TaskDoubleAdapter
     private lateinit var mLineAdapter: HomeLineAdapter
+    private val edialog: TimeDownDialog by lazy {
+        TimeDownDialog(context!!)
+    }
 
     override fun create(savedInstanceState: Bundle?) {
         setContentView(R.layout.frg_home)
     }
 
     override fun initView() {
-        val p1 = LatLng(31.209933, 121.608515)
-        val p2 = LatLng(30.905841, 121.927665)
-        val p3 = LatLng(31.049502, 121.432088)
-        val p4 = LatLng(31.160318, 121.434962)
-        val p5 = LatLng(34.283806, 117.198051)
-        val p6 = LatLng(29.545097, 106.568581)
-        val p7 = LatLng(34.358342, 108.922285)
-        val points: MutableList<LatLng> = ArrayList()
-        points.add(p1)
-        points.add(p2)
-        points.add(p3)
-        points.add(p4)
-//        points.add(p5)
-//        points.add(p6)
-//        points.add(p7)
-
-
         btn_home_start.setOnClickListener(this)
 
         initRecycleView()
@@ -90,23 +75,6 @@ class HomeFragment : BaseFrg() {
         map_home.showScaleControl(false)//比例尺 显示/隐藏
         map_home.showZoomControls(false)//缩放按钮 显示/隐藏
 
-//        var builder1 = LatLngBounds.Builder()
-//        for (p in points) {
-//            builder1 = builder1.include(p)
-//        }
-//        val mapStatusUpdate = MapStatusUpdateFactory.newLatLngBounds(builder1.build())//在合适视野范围内显示所有的点
-//        mMap.setMapStatus(mapStatusUpdate)
-//        val msu = MapStatusUpdateFactory.zoomTo(13F)
-//        mMap.setMapStatus(msu)
-
-//        mMap.addOverlay(BaiduMapUtil().Polyline(points))
-//        if (isFrist) {
-        mMap.setOnMapLoadedCallback(OnMapLoadedCallback {
-            mMap.animateMapStatus(BaiduMapUtil().setLatLngBounds(points, map_home))
-        })
-//        } else {
-//            mMap.animateMapStatus(BaiduMapUtil().setLatLngBounds(points, map_home));
-//        }
     }
 
     private fun initAdapter(contexts: Context) {
@@ -116,7 +84,39 @@ class HomeFragment : BaseFrg() {
         mLineAdapter.setOnItemClickListener(object : BaseAdapter.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 mLinesList[position].isOXLineCheck = !mLinesList[position].isOXLineCheck
+                if (mLinesList[position].isOXLineCheck) {
+                    /*   绘制地图   */
+                    val drawLine = BaiduMapUtil.drawLine(
+                        mMap, mPolylineWith, mPolylineColor, 8,
+                        mLinesList[position].map_poly_points
+                    )
+                    val edgLine1 = BaiduMapUtil.drawLine(
+                        mMap, mEdgePolylineWith, mEdgePolylineColor, 8,
+                        mLinesList[position].map_edg1_points
+                    )
+                    val edgLine2 = BaiduMapUtil.drawLine(
+                        mMap, mEdgePolylineWith, mEdgePolylineColor, 8,
+                        mLinesList[position].map_edg2_points
+                    )
+                    mLinesList[position].polyline = drawLine
+                    mLinesList[position].edgpolyline1 = edgLine1
+                    mLinesList[position].edgpolyline2 = edgLine2
+//                    /*   定位缩放地图   */
+//                    val list = ArrayList<LatLng>()
+//                    mMap.animateMapStatus(setLatLngBounds(mLinesList[position].map_poly_points, map_home))
+                } else {
+                    mLinesList[position].polyline?.remove()
+                    mLinesList[position].edgpolyline1?.remove()
+                    mLinesList[position].edgpolyline2?.remove()
+                }
                 mLineAdapter.notifyDataSetChanged()
+//                if (false) {
+//                    mMap.setOnMapLoadedCallback(OnMapLoadedCallback {
+//                        mMap.animateMapStatus(setLatLngBounds(loadBaiDuData2(mLinesList[position].path1List), map_home))
+//                    })
+//                } else {
+//                    mMap.animateMapStatus(setLatLngBounds(loadBaiDuData2(mLinesList[position].path1List), map_home))
+//                }
             }
         })
     }
@@ -127,6 +127,7 @@ class HomeFragment : BaseFrg() {
         val jsonbuilder = F.fileToJsonString("test.json")
 
         mGetOXMapInfoModel = JsonUtils.fromJson(jsonbuilder!!, GetOXMapInfoModel::class.java)!!
+        mGetOXMapInfoModel.initdata()
         mGroupList.clear()
         mChildList.clear()
         mGroupList.addAll(mGetOXMapInfoModel.map_info)
@@ -134,10 +135,6 @@ class HomeFragment : BaseFrg() {
         mGroupList.forEach {
             mChildList.add(it.greyAddrList as ArrayList<GetOXMapInfoModel.MapInfoBean.GreyAddrListBean>)
         }
-    }
-
-    private val edialog: TimeDownDialog by lazy {
-        TimeDownDialog(context!!)
     }
 
     override fun onClick(v: View) {
@@ -164,7 +161,9 @@ class HomeFragment : BaseFrg() {
                     oxStartTaskReq.task_basic_info.map_id = mGroupList[mCurrentGroup].mapId
                     mLinesList.forEach {
                         if (it.isOXLineCheck) {
-                            oxStartTaskReq.lineIdList.add(GetOXMapInfoModel.MapInfoBean.GreyAddrListBean.LineIdListBean(it.lineId))
+                            val lineIdListBean = GetOXMapInfoModel.MapInfoBean.GreyAddrListBean.LineIdListBean()
+                            lineIdListBean.id = it.lineId
+                            oxStartTaskReq.lineIdList.add(lineIdListBean)
                         }
                     }
                     oxStartTaskReq.rebackId = mGroupList[mCurrentGroup].greyPointList[0].id
@@ -243,6 +242,10 @@ class HomeFragment : BaseFrg() {
                 }
             }
             mLineAdapter.notifyDataSetChanged()
+
+            val minPos = LatLng(mGetOXMapInfoModel.map_info[groupPosition].min_pos.y, mGetOXMapInfoModel.map_info[groupPosition].min_pos.x)
+            val maxPos = LatLng(mGetOXMapInfoModel.map_info[groupPosition].max_pos.y, mGetOXMapInfoModel.map_info[groupPosition].max_pos.x)
+            mMap.animateMapStatus(setLatLngBounds(arrayListOf(minPos, maxPos), map_home))
             true
         }
         expandableListView_home_task.setOnGroupExpandListener(object : ExpandableListView.OnGroupExpandListener {

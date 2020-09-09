@@ -8,21 +8,21 @@
     <TextView
         android:id="@+id/tv_doubleadapter_task"
         android:layout_width="match_parent"
-        android:layout_height="51dp"
+        android:layout_height="48dp"
         android:layout_marginTop="10dp"
         android:background="#33ffffff"
         android:gravity="center_vertical"
-        android:paddingStart="14dp"
+        android:paddingStart="12dp"
         android:textColor="#fff"
-        android:textSize="19sp" />
+        android:textSize="18sp" />
 
     <ImageView
         android:id="@+id/iv_doubleadapter_task"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="26dp"
-        android:layout_marginRight="28dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="26dp"
         android:src="@mipmap/icon_toright" />
 
 </RelativeLayout>

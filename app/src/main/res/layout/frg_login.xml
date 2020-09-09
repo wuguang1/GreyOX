@@ -12,29 +12,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="84dp"
+        android:layout_marginTop="80dp"
         android:text="用户登录"
         android:textColor="#ffffffff"
-        android:textSize="36sp" />
+        android:textSize="34sp" />
 
     <RelativeLayout
         android:id="@+id/rl_login_etuser"
-        android:layout_width="452dp"
+        android:layout_width="428dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_yhdl"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="42dp"
+        android:layout_marginTop="38dp"
         android:background="@mipmap/icon_login_user_bg"
         android:orientation="horizontal"
-        android:paddingStart="25dp"
-        android:paddingEnd="25dp">
+        android:paddingStart="23dp"
+        android:paddingEnd="23dp">
 
         <ImageView
             android:id="@+id/iv_tx"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="21dp"
+            android:layout_marginEnd="19dp"
             android:src="@mipmap/icon_login_user" />
 
         <TextView
@@ -45,12 +45,12 @@
             android:layout_toEndOf="@+id/iv_tx"
             android:text="@string/login_tips"
             android:textColor="#ffffffff"
-            android:textSize="30sp" />
+            android:textSize="28sp" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:src="@mipmap/down" />
 
@@ -59,14 +59,14 @@
     <LinearLayout
         android:id="@+id/ll_pw"
         android:layout_width="wrap_content"
-        android:layout_height="69dp"
+        android:layout_height="70dp"
         android:layout_below="@+id/rl_login_etuser"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="29dp">
+        android:layout_marginTop="26dp">
 
         <EditText
             android:id="@+id/btn_pwone"
-            android:layout_width="59dp"
+            android:layout_width="60dp"
             android:layout_height="match_parent"
             android:background="@drawable/edit_background"
             android:gravity="center"
@@ -74,97 +74,97 @@
             android:maxLength="1"
             android:textColor="#21A5FE"
             android:textCursorDrawable="@drawable/cursor_purl"
-            android:textSize="30sp" />
+            android:textSize="29sp" />
 
         <EditText
             android:id="@+id/btn_pwtwo"
-            android:layout_width="59dp"
+            android:layout_width="60dp"
             android:layout_height="match_parent"
-            android:layout_marginStart="18dp"
+            android:layout_marginStart="13dp"
             android:background="@drawable/edit_background"
             android:gravity="center"
             android:inputType="numberPassword"
             android:maxLength="1"
             android:textColor="#21A5FE"
             android:textCursorDrawable="@drawable/cursor_purl"
-            android:textSize="30sp" />
+            android:textSize="29sp" />
 
         <EditText
             android:id="@+id/btn_pwthree"
-            android:layout_width="59dp"
+            android:layout_width="60dp"
             android:layout_height="match_parent"
-            android:layout_marginStart="18dp"
+            android:layout_marginStart="13dp"
             android:background="@drawable/edit_background"
             android:gravity="center"
             android:inputType="numberPassword"
             android:maxLength="1"
             android:textColor="#21A5FE"
             android:textCursorDrawable="@drawable/cursor_purl"
-            android:textSize="30sp" />
+            android:textSize="29sp" />
 
         <EditText
             android:id="@+id/btn_pwfour"
-            android:layout_width="59dp"
+            android:layout_width="60dp"
             android:layout_height="match_parent"
-            android:layout_marginStart="18dp"
+            android:layout_marginStart="13dp"
             android:background="@drawable/edit_background"
             android:gravity="center"
             android:inputType="numberPassword"
             android:maxLength="1"
             android:textColor="#21A5FE"
             android:textCursorDrawable="@drawable/cursor_purl"
-            android:textSize="30sp" />
+            android:textSize="29sp" />
 
         <EditText
             android:id="@+id/btn_pwfive"
-            android:layout_width="59dp"
+            android:layout_width="60dp"
             android:layout_height="match_parent"
-            android:layout_marginStart="18dp"
+            android:layout_marginStart="13dp"
             android:background="@drawable/edit_background"
             android:gravity="center"
             android:inputType="numberPassword"
             android:maxLength="1"
             android:textColor="#21A5FE"
             android:textCursorDrawable="@drawable/cursor_purl"
-            android:textSize="30sp" />
+            android:textSize="29sp" />
 
         <EditText
             android:id="@+id/btn_pwsix"
-            android:layout_width="59dp"
+            android:layout_width="60dp"
             android:layout_height="match_parent"
-            android:layout_marginStart="18dp"
+            android:layout_marginStart="13dp"
             android:background="@drawable/edit_background"
             android:gravity="center"
             android:inputType="numberPassword"
             android:maxLength="1"
             android:textColor="#21A5FE"
             android:textCursorDrawable="@drawable/cursor_purl"
-            android:textSize="30sp" />
+            android:textSize="29sp" />
 
     </LinearLayout>
 
     <View
         android:id="@+id/view_pwd"
         android:layout_width="wrap_content"
-        android:layout_height="69dp"
+        android:layout_height="70dp"
         android:layout_below="@+id/rl_login_etuser"
-        android:layout_marginLeft="270dp"
-        android:layout_marginTop="29dp"
-        android:layout_marginRight="270dp" />
+        android:layout_marginLeft="290dp"
+        android:layout_marginTop="26dp"
+        android:layout_marginRight="290dp" />
 
     <com.deepblue.greyox.view.MaxHeightRecyclerView
         android:id="@+id/recycleview_users"
-        android:layout_width="452dp"
+        android:layout_width="428dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/rl_login_etuser"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/users_background"
         android:scrollbarSize="4dp"
         android:scrollbarThumbVertical="@color/colorcommon"
         android:scrollbars="vertical"
         android:visibility="gone"
-        app:maxHeight="277dp" />
+        app:maxHeight="262dp" />
 
     <Button
         android:id="@+id/btn_login"
@@ -172,16 +172,16 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/view_pwd"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="45dp"
         android:background="@drawable/ic_rectangle_2"
         android:text="登录"
         android:textColor="#fff"
-        android:textSize="29sp" />
+        android:textSize="27sp" />
 
     <LinearLayout
         android:id="@+id/ll_keyboard"
-        android:layout_width="448dp"
-        android:layout_height="245dp"
+        android:layout_width="424dp"
+        android:layout_height="240dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:background="#27ffffff"
@@ -202,7 +202,7 @@
                 android:gravity="center"
                 android:text="1"
                 android:textColor="@drawable/sel_tvkeyboard"
-                android:textSize="30sp" />
+                android:textSize="29sp" />
 
             <View
                 android:layout_width="1dp"
@@ -217,7 +217,7 @@
                 android:gravity="center"
                 android:text="2"
                 android:textColor="@drawable/sel_tvkeyboard"
-                android:textSize="30sp" />
+                android:textSize="29sp" />
 
             <View
                 android:layout_width="1dp"
@@ -232,7 +232,7 @@
                 android:gravity="center"
                 android:text="3"
                 android:textColor="@drawable/sel_tvkeyboard"
-                android:textSize="30sp" />
+                android:textSize="29sp" />
         </LinearLayout>
 
         <View
@@ -254,7 +254,7 @@
                 android:gravity="center"
                 android:text="4"
                 android:textColor="@drawable/sel_tvkeyboard"
-                android:textSize="30sp" />
+                android:textSize="29sp" />
 
             <View
                 android:layout_width="1dp"
@@ -269,7 +269,7 @@
                 android:gravity="center"
                 android:text="5"
                 android:textColor="@drawable/sel_tvkeyboard"
-                android:textSize="30sp" />
+                android:textSize="29sp" />
 
             <View
                 android:layout_width="1dp"
@@ -284,7 +284,7 @@
                 android:gravity="center"
                 android:text="6"
                 android:textColor="@drawable/sel_tvkeyboard"
-                android:textSize="30sp" />
+                android:textSize="29sp" />
         </LinearLayout>
 
         <View
@@ -306,7 +306,7 @@
                 android:gravity="center"
                 android:text="7"
                 android:textColor="@drawable/sel_tvkeyboard"
-                android:textSize="30sp" />
+                android:textSize="29sp" />
 
             <View
                 android:layout_width="1dp"
@@ -321,7 +321,7 @@
                 android:gravity="center"
                 android:text="8"
                 android:textColor="@drawable/sel_tvkeyboard"
-                android:textSize="30sp" />
+                android:textSize="29sp" />
 
             <View
                 android:layout_width="1dp"
@@ -336,7 +336,7 @@
                 android:gravity="center"
                 android:text="9"
                 android:textColor="@drawable/sel_tvkeyboard"
-                android:textSize="30sp" />
+                android:textSize="29sp" />
         </LinearLayout>
 
         <View
@@ -358,7 +358,7 @@
                 android:gravity="center"
                 android:text="取消"
                 android:textColor="@drawable/sel_tvkeyboard"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
             <View
                 android:layout_width="1dp"
@@ -373,7 +373,7 @@
                 android:gravity="center"
                 android:text="0"
                 android:textColor="@drawable/sel_tvkeyboard"
-                android:textSize="30sp" />
+                android:textSize="29sp" />
 
             <View
                 android:layout_width="1dp"
