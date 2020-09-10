@@ -37,6 +37,7 @@ class ActLoading : BaseAct() {
         play(this.applicationContext, mediaPlayer!!, sv_welcome, uri)
 
         Handler().postDelayed({
+
             timeOut = true
         }, 3000)
     }
