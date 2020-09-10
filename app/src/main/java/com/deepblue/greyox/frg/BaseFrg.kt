@@ -63,7 +63,6 @@ abstract class BaseFrg : MFragment(), View.OnClickListener {
             }
             11002 -> {
 
-
                 val robotBattery =
                     JsonUtils.fromJson(obj.toString(), GetBatteryRes::class.java)
                 Const.systemPower = robotBattery?.getJson()!!.battery_level
