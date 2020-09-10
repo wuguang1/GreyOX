@@ -1,15 +1,18 @@
 package com.deepblue.greyox
 
+import android.app.Dialog
 import android.content.Context
 import android.content.res.AssetManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.preference.PreferenceManager
 import android.util.TypedValue
-import android.view.SurfaceHolder
-import android.view.SurfaceView
+import android.view.*
+import android.widget.LinearLayout
+import androidx.fragment.app.FragmentActivity
 import com.google.gson.Gson
 import com.mdx.framework.Frame
+import com.mdx.framework.view.CallBackOnly
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
@@ -123,6 +126,32 @@ object F {
             }
         }
         return levelArr[if (level == 0) 0 else level - 1]
+    }
+    //隐藏SystemUI
+      fun hideNavigation() {
+        try {
+            val command =
+                "LD_LIBRARY_PATH=/vendor/lib:/system/lib service call activity 42 s16 com.android.systemui"
+            val proc = Runtime.getRuntime().exec(arrayOf("su", "-c", command))
+            proc.waitFor()
+        } catch (ex: java.lang.Exception) {
+        }
+    }
+
+    fun showLeftMenu(context: Context, view: View? ) {
+        val mDialog = Dialog(context,  R.style.full_dialog)
+        mDialog.setContentView(view!!, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+        val windowManager = (context as FragmentActivity).windowManager
+        val display = windowManager.defaultDisplay
+        val lp = mDialog.window!!.attributes
+        // lp.alpha = 0.7f;
+//        lp.width = display.width  // 设置宽度
+        lp.height = display.height
+        lp.gravity = Gravity.LEFT
+        mDialog.window!!.attributes = lp
+        mDialog.window!!.setWindowAnimations(R.style.mystyle) //添加动画
+        mDialog.show()
+        mDialog.setCanceledOnTouchOutside(true)
     }
 }
 

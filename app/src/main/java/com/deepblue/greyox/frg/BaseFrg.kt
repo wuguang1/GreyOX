@@ -15,7 +15,11 @@ import android.content.Context
 import android.view.View
 import android.widget.LinearLayout
 import com.deepblue.greyox.Const.mInitData
+import com.deepblue.greyox.F.hideNavigation
 import com.deepblue.greyox.GreyOXApplication
+import com.deepblue.greyox.item.DialogLeft
+import com.deepblue.greyox.item.Head
+import com.deepblue.greyox.pop.PopShowSet
 import com.deepblue.greyox.view.LoadingDialog
 import com.deepblue.library.planbmsg.JsonUtils
 import com.deepblue.library.planbmsg.Request
@@ -26,7 +30,8 @@ import com.mdx.framework.activity.MFragment
 abstract class BaseFrg : MFragment(), View.OnClickListener {
     val greyOXApplication by lazy { activity?.application as GreyOXApplication }
     val loadDialog by lazy { context?.let { LoadingDialog(it) } }
-
+    lateinit var mHead: Head
+    fun isHeadInit() = ::mHead.isInitialized
     final override fun initV(view: View) {
         initView()
         loaddata()
@@ -53,8 +58,13 @@ abstract class BaseFrg : MFragment(), View.OnClickListener {
         }
     }
 
-    fun sendwebSocket(request: Request, context: Context?, isShowLoading: Boolean = false, isCanceledOnTouchOutside: Boolean = false) {
+    fun sendwebSocket(request: Request, context: Context? = getContext(), isShowLoading: Boolean = false, isCanceledOnTouchOutside: Boolean = false) {
         greyOXApplication.webSocketClient?.sendMessage(request, context, isShowLoading, isCanceledOnTouchOutside)
+    }
+
+    fun showMenu() {
+        var mPopShowSet = PopShowSet(context!!, mHead, DialogLeft(context))
+        mPopShowSet.show()
     }
 
     fun showLoading() {
@@ -70,9 +80,9 @@ abstract class BaseFrg : MFragment(), View.OnClickListener {
     }
 
     override fun setActionBar(actionBar: LinearLayout?) {
-//        mHead = Head(context)
+        mHead = Head(context)
 //        mHead.canGoBack()
-//        actionBar?.addView(mHead, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        actionBar?.addView(mHead, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
     }
 
     override fun onDestroy() {

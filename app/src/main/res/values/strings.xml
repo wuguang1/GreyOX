@@ -9,5 +9,18 @@
 
     <string name="selfcheck1" translatable="false">M0,115L398.2,115.28M622.17,115.28L1024,115</string>
     <string name="selfcheck2" translatable="false">M395,115L398.2,115.28M622.17,115.28L625,115</string>
+    <string name="i_czy">操作员：</string>
+    <string name="i_ghzylc">规划清扫作业里程：</string>
+    <string name="i_sjqszylc">实际清扫作业里程：</string>
+    <string name="i_ghqszymj">规划清扫作业面积：</string>
+    <string name="i_sjqszymj">实际清扫作业面积：</string>
+    <string name="i_sjqszywcd">实际清扫作业完成度：</string>
+    <string name="i_wqszymj">未清扫作业面积：</string>
+    <string name="I_ghqszysc">规划清扫作业时长：</string>
+    <string name="i_sjqszysc">实际清扫作业时长：</string>
+    <string name="i_dcqszynh">单次清扫作业能耗：</string>
+    <string name="i_zqszynh">总清扫作业能耗：</string>
+    <string name="i_sydcdl">剩余电池电量：</string>
+    <string name="i_zqslc">总清扫里程：</string>
 
 </resources>

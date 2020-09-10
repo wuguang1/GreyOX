@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+
     <style name="AppTheme_pub" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:statusBarColor">#001110</item>
         <item name="android:colorPrimaryDark">#001110</item>
@@ -17,6 +18,7 @@
         <!--        <item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
         <item name="android:windowTranslucentNavigation">true</item>
     </style>
+
     <style name="actNN" parent="AppTheme_pub">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
@@ -24,12 +26,14 @@
         <!--          &lt;!&ndash;        <item name="android:windowDrawsSystemBarBackgrounds">true</item>&ndash;&gt;-->
         <!--          <item name="android:windowTranslucentNavigation">true</item>-->
     </style>
+
     <style name="MyActivitySiwtchAnimation">
         <item name="android:activityOpenEnterAnimation">@anim/slide_in_from_right</item>
         <item name="android:activityOpenExitAnimation">@anim/hold</item>
         <!--<item name="android:activityCloseEnterAnimation">@anim/push_left_in</item>-->
         <item name="android:activityCloseExitAnimation">@anim/slide_out_to_right</item>
     </style>
+
     <style name="loadingDialogStyle" parent="android:Theme.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowFrame">@null</item>
