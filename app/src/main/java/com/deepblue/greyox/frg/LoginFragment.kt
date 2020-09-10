@@ -28,7 +28,6 @@ class LoginFragment : BaseFrg() {
 
     override fun create(var1: Bundle?) {
         setContentView(R.layout.frg_login)
-        Frame.HANDLES.closeWidthOut("LoginFragment")
     }
 
     override fun initView() {

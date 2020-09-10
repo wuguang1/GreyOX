@@ -32,7 +32,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="14dp"
         android:layout_toRightOf="@+id/mImageButton_menu"
-        android:background="@mipmap/logo_blue" />
+        android:background="@drawable/ic_logo_blue" />
 
     <TextView
         android:id="@+id/mTextView_title"

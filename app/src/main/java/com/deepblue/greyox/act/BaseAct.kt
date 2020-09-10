@@ -11,6 +11,7 @@ package com.deepblue.greyox.act
 import android.app.Activity
 import android.os.Bundle
 import android.view.View
+import com.deepblue.greyox.GreyOXApplication
 import com.mdx.framework.Frame
 import com.mdx.framework.utility.handle.MHandler
 

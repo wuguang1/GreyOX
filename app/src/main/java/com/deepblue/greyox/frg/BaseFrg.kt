@@ -18,6 +18,7 @@ import com.deepblue.greyox.Const
 import com.deepblue.greyox.Const.mInitData
 import com.deepblue.greyox.F.hideNavigation
 import com.deepblue.greyox.GreyOXApplication
+import com.deepblue.greyox.bean.GetBatteryRes
 import com.deepblue.greyox.item.DialogLeft
 import com.deepblue.greyox.item.Head
 import com.deepblue.greyox.pop.PopShowSet
@@ -26,7 +27,6 @@ import com.deepblue.library.planbmsg.HeartbeatRes
 import com.deepblue.library.planbmsg.JsonUtils
 import com.deepblue.library.planbmsg.Request
 import com.deepblue.library.planbmsg.Response
-import com.deepblue.library.planbmsg.msg1000.GetBatteryRes
 import com.deepblue.library.planbmsg.msg1000.GetNetworkRes
 import com.deepblue.library.planbmsg.msg2000.GetAllUsersRes
 import com.deepblue.library.planbmsg.msg2000.GetErrorHistoryRes

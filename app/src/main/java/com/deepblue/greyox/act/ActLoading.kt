@@ -25,6 +25,7 @@ class ActLoading : BaseAct() {
     override fun disposeMsg(type: Int, obj: Any) {
         super.disposeMsg(type, obj)
         if (timeOut) {
+            timeOut = false
             Helper.startActivity(this, SelfCheckFragment::class.java, IndexAct::class.java)
             finish()
         }
@@ -37,9 +38,7 @@ class ActLoading : BaseAct() {
 
         Handler().postDelayed({
             timeOut = true
-            Helper.startActivity(this, SelfCheckFragment::class.java, IndexAct::class.java)
-            finish()
-        }, 2000)
+        }, 3000)
     }
 
     override fun onDestroy() {
