@@ -45,7 +45,7 @@
                 android:background="@drawable/home_background"
                 android:paddingTop="10dp" />
 
-            <LinearLayout
+            <TextView
                 android:id="@+id/btn_home_start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -54,16 +54,9 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/ic_rectangle_3"
                 android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="开始清扫作业"
-                    android:textColor="#ffffffff"
-                    android:textSize="18sp" />
-
-            </LinearLayout>
+                android:text="开始清扫作业"
+                android:textColor="#ffffffff"
+                android:textSize="17sp" />
 
         </RelativeLayout>
 

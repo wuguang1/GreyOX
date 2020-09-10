@@ -1,14 +1,12 @@
 package com.deepblue.greyox.frg;
 
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.ExpandableListView
 import android.widget.ImageView
 import android.widget.ZoomControls
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.baidu.mapapi.map.BaiduMap.OnMapLoadedCallback
 import com.baidu.mapapi.map.MapStatus
 import com.baidu.mapapi.map.MapStatusUpdateFactory
 import com.baidu.mapapi.model.LatLng
@@ -34,6 +32,7 @@ import com.deepblue.library.planbmsg.bean.TaskBasicInfo.Companion.EXECUTATION_TY
 import com.deepblue.library.planbmsg.bean.TaskBasicInfo.Companion.TASK_MODE_ONCE
 import com.deepblue.library.planbmsg.bean.TaskBasicInfo.Companion.TASK_PRIORITY_NORMAL
 import com.deepblue.library.planbmsg.bean.TaskBasicInfo.Companion.TASK_TYPE_CLEAN
+import com.mdx.framework.activity.TitleAct
 import com.mdx.framework.utility.Helper
 import kotlinx.android.synthetic.main.frg_home.*
 
@@ -123,7 +122,7 @@ class HomeFragment : BaseFrg() {
     }
 
     override fun loaddata() {
-        sendwebSocket(GetMapInfoReq().reqUpload(), context = context)
+        sendwebSocket(GetMapInfoReq().reqUpload(), context, true)
 
         val jsonbuilder = F.fileToJsonString("test.json")
 
@@ -171,7 +170,9 @@ class HomeFragment : BaseFrg() {
                     if (oxStartTaskReq.lineIdList.size <= 0) {
                         Helper.toast("请选择任务")
                     } else {
-                        sendwebSocket(oxStartTaskReq, context, false)
+                        sendwebSocket(oxStartTaskReq, context, true)
+                        //TODO
+                        Helper.startActivity(context, WorkFragment::class.java, TitleAct::class.java)
                     }
                 }
                 edialog.show()
@@ -244,10 +245,13 @@ class HomeFragment : BaseFrg() {
             }
             mLineAdapter.notifyDataSetChanged()
 
+            mMap.clear()
             val minPos = LatLng(mGetOXMapInfoModel.map_info[groupPosition].min_pos.y, mGetOXMapInfoModel.map_info[groupPosition].min_pos.x)
             val maxPos = LatLng(mGetOXMapInfoModel.map_info[groupPosition].max_pos.y, mGetOXMapInfoModel.map_info[groupPosition].max_pos.x)
             mMap.animateMapStatus(setLatLngBounds(arrayListOf(minPos, maxPos), map_home))
-//            drawMarker(mMap,R.mipmap.icon_map_point,10,)
+            mGetOXMapInfoModel.map_info[groupPosition].greyPointList.forEach {
+                val drawMarker = drawMarker(mMap, R.mipmap.icon_map_point, 10, LatLng(it.y, it.x))
+            }
             true
         }
         expandableListView_home_task.setOnGroupExpandListener(object : ExpandableListView.OnGroupExpandListener {

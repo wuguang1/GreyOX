@@ -73,6 +73,6 @@ object BaiduMapUtil {
             builder2 = builder2.include(p)
         }
         val latlngBounds = builder2.build()
-        return MapStatusUpdateFactory.newLatLngBounds(latlngBounds, mMapView.width - 150, mMapView.height - 150)
+        return MapStatusUpdateFactory.newLatLngBounds(latlngBounds, mMapView.width - 100, mMapView.height - 100)
     }
 }

@@ -10,7 +10,12 @@ import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
 import android.widget.ImageView
+import android.widget.LinearLayout
+import com.deepblue.greyox.Const
 import com.deepblue.greyox.R
+import com.deepblue.library.planbmsg.JsonUtils
+import com.deepblue.library.planbmsg.msg2000.GetAllUsersReq
+import com.deepblue.library.planbmsg.msg2000.GetAllUsersRes
 import com.mdx.framework.activity.IndexAct
 import com.mdx.framework.utility.Helper
 import kotlinx.android.synthetic.main.frg_selfcheck.*
@@ -86,27 +91,51 @@ class SelfCheckFragment : BaseFrg() {
     }
 
     private fun do100Percent() {
-        iv_vcu.setImageResource(R.mipmap.icon_selfcheck_right)
-        iv_sensor.setImageResource(R.mipmap.icon_selfcheck_right)
-        iv_ACU.setImageResource(R.mipmap.icon_selfcheck_right)
-        iv_aa.setImageResource(R.mipmap.icon_selfcheck_right)
-        iv_network.setImageResource(R.mipmap.icon_selfcheck_right)
-        cleanAllAnimator()
+        if (Const.mInitData != null && Const.mInitData!!.init_info.size > 0) {
+            Const.mInitData!!.init_info.forEach {
+                when (it.name) {
+                    "VCU" -> {
+                        iv_vcu.setImageResource(if (it.status) R.mipmap.icon_selfcheck_right else R.mipmap.icon_selfcheck_warn)
+                    }
+                    "Sensor" -> {
+                        iv_sensor.setImageResource(if (it.status) R.mipmap.icon_selfcheck_right else R.mipmap.icon_selfcheck_warn)
+                    }
+                    "ACU" -> {
+                        iv_ACU.setImageResource(if (it.status) R.mipmap.icon_selfcheck_right else R.mipmap.icon_selfcheck_warn)
+                    }
+                    "Autopilot algorithm" -> {
+                        iv_aa.setImageResource(if (it.status) R.mipmap.icon_selfcheck_right else R.mipmap.icon_selfcheck_warn)
+                    }
+                    "Network" -> {
+                        iv_network.setImageResource(if (it.status) R.mipmap.icon_selfcheck_right else R.mipmap.icon_selfcheck_warn)
+                    }
+                }
+            }
+
+//            cleanAllAnimator()
+//
+//            handler.postDelayed({
+//                Helper.startActivity(context, LoginFragment::class.java, IndexAct::class.java)
+//                finish()
+//            }, 2000)
+        } else {
+            Helper.toast("没有自检结果,请自行检查机器")
+        }
+
+        //TODO
+        if (iv_vcu != null || iv_sensor != null || iv_ACU != null || iv_aa != null || iv_network != null) {
+            cleanAllAnimator()
+        }
 
         handler.postDelayed({
             Helper.startActivity(context, LoginFragment::class.java, IndexAct::class.java)
             finish()
-        },2000)
-    }
-
-    override fun onClick(v: View) {
-        super.onClick(v)
-        when (v.id) {
-        }
+        }, 2000)
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        handler.removeCallbacks(runnable1)
         if (iv_vcu != null || iv_sensor != null || iv_ACU != null || iv_aa != null || iv_network != null) {
             cleanAllAnimator()
         }
@@ -118,5 +147,8 @@ class SelfCheckFragment : BaseFrg() {
         iv_ACU.clearAnimation()
         iv_aa.clearAnimation()
         iv_network.clearAnimation()
+    }
+
+    override fun setActionBar(actionBar: LinearLayout?) {
     }
 }

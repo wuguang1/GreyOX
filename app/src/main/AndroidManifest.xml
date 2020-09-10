@@ -38,15 +38,29 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:fitsSystemWindows="true"
             android:label="@string/app_name"
-            android:theme="@style/actNNS"
             android:screenOrientation="landscape"
+            android:theme="@style/actNNS"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name="com.mdx.framework.activity.TitleAct"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
-            android:theme="@style/actNNS"
             android:screenOrientation="landscape"
+            android:theme="@style/actNNS"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity
+            android:name=".act.IndexActSpecial"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape"
+            android:theme="@style/actNNS"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity
+            android:name=".act.TitleActSpecial"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape"
+            android:theme="@style/actNNS"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <!-- 百度地图sdk  AK-->
         <meta-data

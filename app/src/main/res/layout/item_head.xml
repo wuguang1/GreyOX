@@ -5,7 +5,7 @@
     android:id="@+id/mRelativeLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#000102"
+    android:background="#00ffffff"
     android:paddingTop="14dp"
     android:paddingBottom="14dp">
 
@@ -32,7 +32,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="14dp"
         android:layout_toRightOf="@+id/mImageButton_menu"
-        android:background="@drawable/ic_logo_blue" />
+        android:background="@mipmap/logo_blue" />
 
     <TextView
         android:id="@+id/mTextView_title"
