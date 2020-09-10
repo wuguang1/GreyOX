@@ -6,8 +6,8 @@
 
 
 /**
-   
-*/
+
+ */
 
 package com.deepblue.greyox.ada;
 
@@ -17,8 +17,9 @@ import android.view.ViewGroup;
 import android.view.View;
 
 import com.deepblue.greyox.item.ErrorList;
+import com.deepblue.library.planbmsg.bean.ErrorInfo
 
-class AdaErrorList (context: Context?, list: List<String>) : MAdapter<String>(context, list) {
+class AdaErrorList(context: Context?, list: List<ErrorInfo>?) : MAdapter<ErrorInfo>(context, list) {
 
 
     override fun getview(position: Int, convertView: View?, parent: ViewGroup): View? {
@@ -28,7 +29,7 @@ class AdaErrorList (context: Context?, list: List<String>) : MAdapter<String>(co
             convertView = ErrorList(context)
         }
         try {
-            (convertView as ErrorList).set(item)
+            (convertView as ErrorList).set(item, position)
         } catch (e: Exception) {
             e.printStackTrace()
         }

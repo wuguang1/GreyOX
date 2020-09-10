@@ -18,6 +18,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/ic_tab"
             android:gravity="center"
             android:text="电机"
             android:textColor="#ffffff"
@@ -65,13 +66,19 @@
 
     </LinearLayout>
 
-
-    <ListView
-        android:id="@+id/mListView"
-        android:layout_width="match_parent"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/mSwipeRefreshLayout"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:cacheColorHint="#00000000"
-        android:divider="@null"
-        android:listSelector="#00000000"
-        android:scrollbars="none" />
+        android:layout_below="@+id/title_ll">
+
+        <ListView
+            android:id="@+id/mListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:cacheColorHint="#00000000"
+            android:divider="@null"
+            android:listSelector="#00000000"
+            android:scrollbars="none" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>

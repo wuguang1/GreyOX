@@ -7,6 +7,7 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/mLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:orientation="horizontal">
@@ -22,12 +23,12 @@
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/mTextView_dc"
+            android:id="@+id/mTextView_cwlx"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="电池"
+            android:text="错误类型"
             android:textColor="#ffffff"
             android:textSize="20sp" />
 
@@ -37,7 +38,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="传感器"
+            android:text="错误代码"
             android:textColor="#ffffff"
             android:textSize="20sp" />
 
@@ -50,7 +51,7 @@
             android:gravity="center_vertical"
             android:paddingLeft="90dp"
             android:singleLine="true"
-            android:text="车辆控制单元"
+            android:text="错误描述"
             android:textColor="#ffffff"
             android:textSize="20sp" />
 
@@ -58,12 +59,4 @@
     </LinearLayout>
 
 
-    <ListView
-        android:id="@+id/mListView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:cacheColorHint="#00000000"
-        android:divider="@null"
-        android:listSelector="#00000000"
-        android:scrollbars="none" />
 </LinearLayout>

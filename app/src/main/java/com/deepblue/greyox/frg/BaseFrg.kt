@@ -14,6 +14,7 @@ package com.deepblue.greyox.frg;
 import android.content.Context
 import android.view.View
 import android.widget.LinearLayout
+import com.deepblue.greyox.Const
 import com.deepblue.greyox.Const.mInitData
 import com.deepblue.greyox.F.hideNavigation
 import com.deepblue.greyox.GreyOXApplication
@@ -21,17 +22,22 @@ import com.deepblue.greyox.item.DialogLeft
 import com.deepblue.greyox.item.Head
 import com.deepblue.greyox.pop.PopShowSet
 import com.deepblue.greyox.view.LoadingDialog
+import com.deepblue.library.planbmsg.HeartbeatRes
 import com.deepblue.library.planbmsg.JsonUtils
 import com.deepblue.library.planbmsg.Request
+import com.deepblue.library.planbmsg.Response
+import com.deepblue.library.planbmsg.msg1000.GetBatteryRes
+import com.deepblue.library.planbmsg.msg1000.GetNetworkRes
 import com.deepblue.library.planbmsg.msg2000.GetAllUsersRes
+import com.deepblue.library.planbmsg.msg2000.GetErrorHistoryRes
 import com.deepblue.library.planbmsg.push.InitDataRes
 import com.mdx.framework.activity.MFragment
+import kotlinx.android.synthetic.main.frg_error_list.*
 
 abstract class BaseFrg : MFragment(), View.OnClickListener {
     val greyOXApplication by lazy { activity?.application as GreyOXApplication }
     val loadDialog by lazy { context?.let { LoadingDialog(it) } }
-    lateinit var mHead: Head
-    fun isHeadInit() = ::mHead.isInitialized
+    var mHead: Head? = null
     final override fun initV(view: View) {
         initView()
         loaddata()
@@ -55,6 +61,29 @@ abstract class BaseFrg : MFragment(), View.OnClickListener {
                     mInitData = it.getJson()
                 }
             }
+            11002 -> {
+                val robotBattery =
+                    JsonUtils.fromJson(obj.toString(), GetBatteryRes::class.java)
+                Const.systemPower = robotBattery?.getJson()!!.battery_level
+            }
+            11008 -> {
+                val network =
+                    JsonUtils.fromJson(obj.toString(), GetNetworkRes::class.java)
+                Const.system4G = network?.getJson()!!.network_status
+            }
+            10999 -> {
+                val heartbeatRes =
+                    JsonUtils.fromJson(obj.toString(), HeartbeatRes::class.java)
+                val json = heartbeatRes?.getJson()
+                Const.systemTime = json?.time!! * 1000
+                mHead?.refData()
+            }
+            12028 -> {
+                var getErrorHistoryRes = JsonUtils.fromJson(obj.toString(), GetErrorHistoryRes::class.java)
+                if (getErrorHistoryRes?.getJson()?.error_msgs !== null && getErrorHistoryRes?.getJson()?.error_msgs?.size!! > 0) {
+                    Const.systemError = true
+                }
+            }
         }
     }
 
@@ -62,10 +91,6 @@ abstract class BaseFrg : MFragment(), View.OnClickListener {
         greyOXApplication.webSocketClient?.sendMessage(request, context, isShowLoading, isCanceledOnTouchOutside)
     }
 
-    fun showMenu() {
-        var mPopShowSet = PopShowSet(context!!, mHead, DialogLeft(context))
-        mPopShowSet.show()
-    }
 
     fun showLoading() {
         if (loadDialog != null && !loadDialog!!.isShowing) {

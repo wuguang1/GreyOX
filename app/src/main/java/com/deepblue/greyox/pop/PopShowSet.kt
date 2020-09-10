@@ -13,7 +13,7 @@ import com.mdx.framework.activity.BaseActivity
 import kotlin.math.roundToInt
 
 
-class PopShowSet(var context: Context, val view: View, popview: View) {
+class PopShowSet(var context: Context, val view: View , popview: View) {
     private val popwindow: PopupWindow
 
     val isShow: Boolean

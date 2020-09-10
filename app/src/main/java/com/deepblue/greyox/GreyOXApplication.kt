@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.multidex.MultiDex
 import com.baidu.mapapi.CoordType
 import com.baidu.mapapi.SDKInitializer
+import com.deepblue.greyox.bean.OXErrorListReq
 import com.deepblue.greyox.websocket.WebSocketClient3
 import com.deepblue.library.planbmsg.HeartbeatReq
 import com.deepblue.library.planbmsg.msg1000.GetBatteryReq
@@ -31,8 +32,6 @@ class GreyOXApplication : Application() {
     var tims = 0
     var heartTimes: Int = 0
     var lockTime: Int = 0
-    var needLoc: Boolean = true
-    var needLock: Boolean = true
     var connect_status: Int = DEFAULT_STATUS
 
     override fun onCreate() {
@@ -55,10 +54,16 @@ class GreyOXApplication : Application() {
                         heartTimes = 0
                         continue
                     }
-                    if (lockTime > 30 && needLock) {
+                    if (lockTime > 30) {
                         Frame.HANDLES.sentAll(10002, "backLoack")
                         lockTime = 0
                     }
+                    Thread.sleep(100)
+                    webSocketClient!!.sendMessage(GetNetworkReq())
+                    Thread.sleep(100)
+                    webSocketClient!!.sendMessage(GetBatteryReq())
+                    Thread.sleep(100)
+                    webSocketClient!!.sendMessage(OXErrorListReq())
 //                    if (webSocketClient!!.isConnected()) {
 //                        Thread.sleep(100)
 //                        val robotStatusReq = GetRobotStatusReq().toString()
