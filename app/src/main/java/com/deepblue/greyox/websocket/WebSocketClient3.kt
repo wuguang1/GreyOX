@@ -119,9 +119,10 @@ class WebSocketClient3(url: String) {
         }
     }
 
-    fun dismissLoadDialog(currentType: Int) {
+    fun dismissLoadDialog(res_type: Int) {
+        var aa = loadDialog?.currentType
         loadDialog?.let {
-            if (it.isShowing && (currentType == it.currentType || currentType == -1)) {
+            if (it.isShowing && (res_type.toString().contains(it.currentType.toString()) || res_type == -1)) {
                 it.dismissDiaolog()
             }
         }

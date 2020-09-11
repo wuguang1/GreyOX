@@ -24,7 +24,7 @@ class ActLoading : BaseAct() {
 
     override fun disposeMsg(type: Int, obj: Any) {
         super.disposeMsg(type, obj)
-        if (timeOut) {
+        if (type == 10999 && timeOut) {
             timeOut = false
             Helper.startActivity(this, SelfCheckFragment::class.java, IndexAct::class.java)
             finish()
