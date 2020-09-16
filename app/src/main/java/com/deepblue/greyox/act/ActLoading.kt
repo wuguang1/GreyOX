@@ -1,6 +1,5 @@
 package com.deepblue.greyox.act
 
-import android.app.Activity
 import android.graphics.Color
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -37,9 +36,11 @@ class ActLoading : BaseAct() {
         play(this.applicationContext, mediaPlayer!!, sv_welcome, uri)
 
         Handler().postDelayed({
-
             timeOut = true
-        }, 3000)
+            //TODO
+            Helper.startActivity(this, SelfCheckFragment::class.java, IndexAct::class.java)
+            finish()
+        }, 5500)
     }
 
     override fun onDestroy() {

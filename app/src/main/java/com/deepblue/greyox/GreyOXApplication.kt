@@ -20,7 +20,7 @@ import org.jetbrains.anko.doAsync
 
 class GreyOXApplication : Application() {
     companion object {
-        val hostUrl = "ws://192.168.120.23:12235"
+        val hostUrl = "ws://192.168.120.229:12235"
         val DEFAULT_STATUS: Int = 0  //0默认
         val DISCONNECT_STATUS: Int = 1  //1断连
         val CONNECT_STATUS: Int = 2     //2续连
