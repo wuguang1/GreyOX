@@ -16,8 +16,9 @@ import com.deepblue.greyox.ada.BaseAdapter
 import com.deepblue.greyox.ada.HomeLineAdapter
 import com.deepblue.greyox.ada.TaskDoubleAdapter
 import com.deepblue.greyox.bean.GetMapInfoReq
-import com.deepblue.greyox.bean.GetOXMapInfoModel
+import com.deepblue.greyox.bean.GetOXMapInfoModel2
 import com.deepblue.greyox.bean.OXStartTaskReq
+import com.deepblue.greyox.bean.OxMapInfoRes
 import com.deepblue.greyox.util.BaiduMapUtil
 import com.deepblue.greyox.util.BaiduMapUtil.drawMarker
 import com.deepblue.greyox.util.BaiduMapUtil.mEdgePolylineColor
@@ -40,14 +41,14 @@ import kotlinx.android.synthetic.main.frg_home.*
 class HomeFragment : BaseFrg() {
     private val mMap by lazy { map_home.map }
 
-    var mGroupList = ArrayList<GetOXMapInfoModel.MapInfoBean>()
-    var mChildList = ArrayList<ArrayList<GetOXMapInfoModel.MapInfoBean.GreyAddrListBean>>()
-    var mLinesList = ArrayList<GetOXMapInfoModel.MapInfoBean.GreyLineListBean>()
+    var mGroupList = ArrayList<GetOXMapInfoModel2.MapInfoBean>()
+    var mChildList = ArrayList<ArrayList<GetOXMapInfoModel2.MapInfoBean.GreyAddrListBean>>()
+    var mLinesList = ArrayList<GetOXMapInfoModel2.MapInfoBean.GreyLineListBean>()
 
     var mCurrentGroup = -1
     var mCurrentChlid = -1
 
-    private lateinit var mGetOXMapInfoModel: GetOXMapInfoModel
+    private lateinit var mGetOXMapInfoModel2: GetOXMapInfoModel2
     private lateinit var mDoubleAdapter: TaskDoubleAdapter
     private lateinit var mLineAdapter: HomeLineAdapter
     private val edialog: TimeDownDialog by lazy {
@@ -86,21 +87,27 @@ class HomeFragment : BaseFrg() {
                 mLinesList[position].isOXLineCheck = !mLinesList[position].isOXLineCheck
                 if (mLinesList[position].isOXLineCheck) {
                     /*   绘制地图   */
-                    val drawLine = BaiduMapUtil.drawLine(
-                        mMap, mPolylineWith, mPolylineColor, 8,
-                        mLinesList[position].map_poly_points
-                    )
-                    val edgLine1 = BaiduMapUtil.drawLine(
-                        mMap, mEdgePolylineWith, mEdgePolylineColor, 8,
-                        mLinesList[position].map_edg1_points
-                    )
-                    val edgLine2 = BaiduMapUtil.drawLine(
-                        mMap, mEdgePolylineWith, mEdgePolylineColor, 8,
-                        mLinesList[position].map_edg2_points
-                    )
-                    mLinesList[position].polyline = drawLine
-                    mLinesList[position].edgpolyline1 = edgLine1
-                    mLinesList[position].edgpolyline2 = edgLine2
+                    if (mLinesList[position].map_poly_points != null && mLinesList[position].map_poly_points.size > 0) {
+                        val drawLine = BaiduMapUtil.drawLine(
+                            mMap, mPolylineWith, mPolylineColor, 8,
+                            mLinesList[position].map_poly_points
+                        )
+                        mLinesList[position].polyline = drawLine
+                    }
+                    if (mLinesList[position].map_edg1_points != null && mLinesList[position].map_edg1_points.size > 0) {
+                        val edgLine1 = BaiduMapUtil.drawLine(
+                            mMap, mEdgePolylineWith, mEdgePolylineColor, 8,
+                            mLinesList[position].map_edg1_points
+                        )
+                        mLinesList[position].edgpolyline1 = edgLine1
+                    }
+                    if (mLinesList[position].map_edg2_points != null && mLinesList[position].map_edg2_points.size > 0) {
+                        val edgLine2 = BaiduMapUtil.drawLine(
+                            mMap, mEdgePolylineWith, mEdgePolylineColor, 8,
+                            mLinesList[position].map_edg2_points
+                        )
+                        mLinesList[position].edgpolyline2 = edgLine2
+                    }
 //                    /*   定位缩放地图   */
 //                    val list = ArrayList<LatLng>()
 //                    mMap.animateMapStatus(setLatLngBounds(mLinesList[position].map_poly_points, map_home))
@@ -124,16 +131,16 @@ class HomeFragment : BaseFrg() {
     override fun loaddata() {
         sendwebSocket(GetMapInfoReq().reqUpload(), context, true)
 
-        val jsonbuilder = F.fileToJsonString("test.json")
+        val jsonbuilder = F.fileToJsonString("test2.json")
 
-        mGetOXMapInfoModel = JsonUtils.fromJson(jsonbuilder!!, GetOXMapInfoModel::class.java)!!
-        mGetOXMapInfoModel.initdata()
+        mGetOXMapInfoModel2 = JsonUtils.fromJson(jsonbuilder!!, OxMapInfoRes::class.java)?.getJson()!!
+        mGetOXMapInfoModel2.initdata()
         mGroupList.clear()
         mChildList.clear()
-        mGroupList.addAll(mGetOXMapInfoModel.map_info)
+        mGroupList.addAll(mGetOXMapInfoModel2.map_info)
 
         mGroupList.forEach {
-            mChildList.add(it.greyAddrList as ArrayList<GetOXMapInfoModel.MapInfoBean.GreyAddrListBean>)
+            mChildList.add(it.greyAddrList as ArrayList<GetOXMapInfoModel2.MapInfoBean.GreyAddrListBean>)
         }
     }
 
@@ -161,7 +168,7 @@ class HomeFragment : BaseFrg() {
                     oxStartTaskReq.task_basic_info.map_id = mGroupList[mCurrentGroup].mapId
                     mLinesList.forEach {
                         if (it.isOXLineCheck) {
-                            val lineIdListBean = GetOXMapInfoModel.MapInfoBean.GreyAddrListBean.LineIdListBean()
+                            val lineIdListBean = GetOXMapInfoModel2.MapInfoBean.GreyAddrListBean.LineIdListBean()
                             lineIdListBean.id = it.lineId
                             oxStartTaskReq.lineIdList.add(lineIdListBean)
                         }
@@ -172,7 +179,7 @@ class HomeFragment : BaseFrg() {
                     } else {
                         sendwebSocket(oxStartTaskReq, context, true)
                         //TODO
-                        Helper.startActivity(context, WorkFragment::class.java, TitleAct::class.java)
+//                        Helper.startActivity(context, WorkFragment::class.java, TitleAct::class.java)
                     }
                 }
                 edialog.show()
@@ -184,7 +191,15 @@ class HomeFragment : BaseFrg() {
         super.disposeMsg(type, obj)
         when (type) {
             17001 -> {
-                val mGetOXMapInfoModel = JsonUtils.fromJson(obj.toString(), GetOXMapInfoModel::class.java)
+//                mGetOXMapInfoModel2 = JsonUtils.fromJson(obj.toString(), OxMapInfoRes::class.java)?.getJson()!!
+//                mGetOXMapInfoModel2.initdata()
+//                mGroupList.clear()
+//                mChildList.clear()
+//                mGroupList.addAll(mGetOXMapInfoModel2.map_info)
+//
+//                mGroupList.forEach {
+//                    mChildList.add(it.greyAddrList as ArrayList<GetOXMapInfoModel2.MapInfoBean.GreyAddrListBean>)
+//                }
             }
             17002 -> {
                 val res = JsonUtils.fromJson(obj.toString(), Response::class.java)
@@ -233,7 +248,7 @@ class HomeFragment : BaseFrg() {
             expandableListView_home_task.expandGroup(groupPosition)
             /* expandableListView子item选中状态   ------    点击子item  更新右侧预置line列表 */
             mLinesList.clear()
-            val greyLineList = mGetOXMapInfoModel.map_info[groupPosition].greyLineList//字典
+            val greyLineList = mGetOXMapInfoModel2.map_info[groupPosition].greyLineList//字典
             val lineIdList = mChildList[groupPosition][childPosition].lineIdList
             lineIdList.forEach { _lineId ->
                 greyLineList.forEach { _greyLinebean ->
@@ -246,10 +261,10 @@ class HomeFragment : BaseFrg() {
             mLineAdapter.notifyDataSetChanged()
 
             mMap.clear()
-            val minPos = LatLng(mGetOXMapInfoModel.map_info[groupPosition].min_pos.y, mGetOXMapInfoModel.map_info[groupPosition].min_pos.x)
-            val maxPos = LatLng(mGetOXMapInfoModel.map_info[groupPosition].max_pos.y, mGetOXMapInfoModel.map_info[groupPosition].max_pos.x)
+            val minPos = LatLng(mGetOXMapInfoModel2.map_info[groupPosition].min_pos.y, mGetOXMapInfoModel2.map_info[groupPosition].min_pos.x)
+            val maxPos = LatLng(mGetOXMapInfoModel2.map_info[groupPosition].max_pos.y, mGetOXMapInfoModel2.map_info[groupPosition].max_pos.x)
             mMap.animateMapStatus(setLatLngBounds(arrayListOf(minPos, maxPos), map_home))
-            mGetOXMapInfoModel.map_info[groupPosition].greyPointList.forEach {
+            mGetOXMapInfoModel2.map_info[groupPosition].greyPointList.forEach {
                 val drawMarker = drawMarker(mMap, R.mipmap.icon_map_point, 10, LatLng(it.y, it.x))
             }
             true

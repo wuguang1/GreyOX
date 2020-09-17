@@ -5,14 +5,17 @@ import com.deepblue.library.planbmsg.Response
 import com.deepblue.library.planbmsg.bean.CleanProInfo
 import com.deepblue.library.planbmsg.bean.ScrubberReport
 
-class TaskReportRes : Response() {
+/**
+ * 室外机器人地图信息上传(17001)
+ */
+class OxMapInfoRes : Response() {
 
     init {
-        json = TaskReport()
+        json = GetOXMapInfoModel2()
     }
 
-    fun getJson(): TaskReport? {
-        val scrubberReport = JsonUtils.fromJson(json.toString(), TaskReport::class.java) ?: return null
+    fun getJson(): GetOXMapInfoModel2? {
+        val scrubberReport = JsonUtils.fromJson(json.toString(), GetOXMapInfoModel2::class.java) ?: return null
         return scrubberReport
     }
 }

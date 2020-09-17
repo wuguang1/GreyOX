@@ -205,10 +205,6 @@ class LoginFragment : BaseFrg() {
                 } else {
                     Helper.toast("请填写正确信息")
                 }
-
-                //TODO
-                Helper.startActivity(context, HomeFragment::class.java, IndexActSpecial::class.java)
-                finish()
             }
         }
     }

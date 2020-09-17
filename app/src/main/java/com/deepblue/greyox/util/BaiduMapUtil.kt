@@ -5,8 +5,7 @@ import com.baidu.mapapi.map.*
 import com.baidu.mapapi.model.LatLng
 import com.baidu.mapapi.model.LatLngBounds
 import com.baidu.mapapi.utils.CoordinateConverter
-import com.deepblue.greyox.R
-import com.deepblue.greyox.bean.GetOXMapInfoModel
+import com.deepblue.greyox.bean.GetOXMapInfoModel2
 
 object BaiduMapUtil {
     val mEdgePolylineWith = 3  //路沿宽度
@@ -48,7 +47,7 @@ object BaiduMapUtil {
     }
 
     //转化成百度坐标体系
-    fun loadBaiDuData(dataList: ArrayList<GetOXMapInfoModel.MapInfoBean.GreyLineListBean.PrepointListBean>): ArrayList<LatLng> {
+    fun loadBaiDuData(dataList: ArrayList<GetOXMapInfoModel2.MapInfoBean.GreyLineListBean.PrepointListBean>): ArrayList<LatLng> {
         val dealList = ArrayList<LatLng>()
         dataList.forEach {
             dealList.add(converter.coord(LatLng(it.x, it.y)).convert())
@@ -56,7 +55,7 @@ object BaiduMapUtil {
         return dealList
     }
 
-    fun loadBaiDuData2(dataList: List<GetOXMapInfoModel.MapInfoBean.GreyLineListBean.PrepointListBean>): ArrayList<LatLng> {
+    fun loadBaiDuData2(dataList: List<GetOXMapInfoModel2.MapInfoBean.GreyLineListBean.PrepointListBean>): ArrayList<LatLng> {
         val dealList = ArrayList<LatLng>()
         dataList.forEach {
             dealList.add(LatLng(it.y, it.x))

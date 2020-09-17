@@ -11,20 +11,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.deepblue.greyox.R;
-import com.deepblue.greyox.bean.GetOXMapInfoModel;
+import com.deepblue.greyox.bean.GetOXMapInfoModel2;
 
 import java.util.ArrayList;
 
 public class TaskDoubleAdapter extends BaseExpandableListAdapter {
     //数据
-    private ArrayList<GetOXMapInfoModel.MapInfoBean> group;
-    private ArrayList<ArrayList<GetOXMapInfoModel.MapInfoBean.GreyAddrListBean>> child;
+    private ArrayList<GetOXMapInfoModel2.MapInfoBean> group;
+    private ArrayList<ArrayList<GetOXMapInfoModel2.MapInfoBean.GreyAddrListBean>> child;
 
     private Context context;
     private GroupViewHolder groupViewHolder;
     private ChildViewHolder childViewHolder;
 
-    public TaskDoubleAdapter(ArrayList<GetOXMapInfoModel.MapInfoBean> group, ArrayList<ArrayList<GetOXMapInfoModel.MapInfoBean.GreyAddrListBean>> child, Context context) {
+    public TaskDoubleAdapter(ArrayList<GetOXMapInfoModel2.MapInfoBean> group, ArrayList<ArrayList<GetOXMapInfoModel2.MapInfoBean.GreyAddrListBean>> child, Context context) {
         this.group = group;
         this.child = child;
         this.context = context;
@@ -145,7 +145,7 @@ public class TaskDoubleAdapter extends BaseExpandableListAdapter {
         } else {
             childViewHolder = (ChildViewHolder) convertView.getTag();
         }
-        childViewHolder.tv_child.setText(child.get(groupPosition).get(childPosition).jobAddr);
+        childViewHolder.tv_child.setText(child.get(groupPosition).get(childPosition).jobName);
         setSelectState(groupPosition, childPosition, childViewHolder.tv_child);
         return convertView;
     }

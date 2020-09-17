@@ -61,12 +61,7 @@ object F {
 
     fun play(context: Context, mediaPlayer: MediaPlayer, surfaceView: SurfaceView, path: String) {
         surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
-            override fun surfaceChanged(
-                holder: SurfaceHolder?,
-                format: Int,
-                width: Int,
-                height: Int
-            ) {
+            override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {
                 try {
                     mediaPlayer.run {
                         reset()

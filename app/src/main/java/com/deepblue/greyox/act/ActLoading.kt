@@ -1,12 +1,16 @@
 package com.deepblue.greyox.act
 
+import android.app.Activity
 import android.graphics.Color
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
+import com.deepblue.greyox.Const
 import com.deepblue.greyox.F.play
 import com.deepblue.greyox.R
 import com.deepblue.greyox.frg.SelfCheckFragment
+import com.deepblue.library.planbmsg.JsonUtils
+import com.deepblue.library.planbmsg.push.InitDataRes
 import com.mdx.framework.activity.IndexAct
 import com.mdx.framework.utility.Helper
 import kotlinx.android.synthetic.main.act_loading.*
@@ -23,10 +27,20 @@ class ActLoading : BaseAct() {
 
     override fun disposeMsg(type: Int, obj: Any) {
         super.disposeMsg(type, obj)
-        if (type == 10999 && timeOut) {
-            timeOut = false
-            Helper.startActivity(this, SelfCheckFragment::class.java, IndexAct::class.java)
-            finish()
+        when (type) {
+            10999 -> {
+                if (timeOut) {
+                    timeOut = false
+                    Helper.startActivity(this, SelfCheckFragment::class.java, IndexAct::class.java)
+                    finish()
+                }
+            }
+            24000 -> {
+                val mInitDataRes = JsonUtils.fromJson(obj.toString(), InitDataRes::class.java)
+                mInitDataRes?.let {
+                    Const.mInitData = it.getJson()
+                }
+            }
         }
     }
 
@@ -37,10 +51,7 @@ class ActLoading : BaseAct() {
 
         Handler().postDelayed({
             timeOut = true
-            //TODO
-            Helper.startActivity(this, SelfCheckFragment::class.java, IndexAct::class.java)
-            finish()
-        }, 5500)
+        }, 3000)
     }
 
     override fun onDestroy() {

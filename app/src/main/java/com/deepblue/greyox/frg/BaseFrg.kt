@@ -55,12 +55,6 @@ abstract class BaseFrg : MFragment(), View.OnClickListener {
     override fun disposeMsg(type: Int, obj: Any?) {
         super.disposeMsg(type, obj)
         when (type) {
-            24000 -> {
-                val mInitDataRes = JsonUtils.fromJson(obj.toString(), InitDataRes::class.java)
-                mInitDataRes?.let {
-                    mInitData = it.getJson()
-                }
-            }
             11002 -> {
 
                 val robotBattery =

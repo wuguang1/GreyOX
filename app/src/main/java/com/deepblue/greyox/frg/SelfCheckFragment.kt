@@ -111,26 +111,17 @@ class SelfCheckFragment : BaseFrg() {
                     }
                 }
             }
+            if (iv_vcu != null || iv_sensor != null || iv_ACU != null || iv_aa != null || iv_network != null) {
+                cleanAllAnimator()
+            }
 
-//            cleanAllAnimator()
-//
-//            handler.postDelayed({
-//                Helper.startActivity(context, LoginFragment::class.java, IndexAct::class.java)
-//                finish()
-//            }, 2000)
+            handler.postDelayed({
+                Helper.startActivity(context, LoginFragment::class.java, IndexAct::class.java)
+                finish()
+            }, 2000)
         } else {
             Helper.toast("没有自检结果,请自行检查机器")
         }
-
-        //TODO
-        if (iv_vcu != null || iv_sensor != null || iv_ACU != null || iv_aa != null || iv_network != null) {
-            cleanAllAnimator()
-        }
-
-        handler.postDelayed({
-            Helper.startActivity(context, LoginFragment::class.java, IndexAct::class.java)
-            finish()
-        }, 2000)
     }
 
     override fun onDestroy() {
