@@ -33,12 +33,17 @@ import com.deepblue.library.planbmsg.bean.TaskBasicInfo.Companion.EXECUTATION_TY
 import com.deepblue.library.planbmsg.bean.TaskBasicInfo.Companion.TASK_MODE_ONCE
 import com.deepblue.library.planbmsg.bean.TaskBasicInfo.Companion.TASK_PRIORITY_NORMAL
 import com.deepblue.library.planbmsg.bean.TaskBasicInfo.Companion.TASK_TYPE_CLEAN
+import com.mdx.framework.activity.IndexAct
 import com.mdx.framework.activity.TitleAct
 import com.mdx.framework.utility.Helper
 import kotlinx.android.synthetic.main.frg_home.*
 
 
 class HomeFragment : BaseFrg() {
+    companion object {
+        var MAPINFO = "mapinfo"
+    }
+
     private val mMap by lazy { map_home.map }
 
     var mGroupList = ArrayList<GetOXMapInfoModel2.MapInfoBean>()
@@ -131,6 +136,7 @@ class HomeFragment : BaseFrg() {
     override fun loaddata() {
         sendwebSocket(GetMapInfoReq().reqUpload(), context, true)
 
+        //TODO
         val jsonbuilder = F.fileToJsonString("test2.json")
 
         mGetOXMapInfoModel2 = JsonUtils.fromJson(jsonbuilder!!, OxMapInfoRes::class.java)?.getJson()!!
@@ -179,7 +185,7 @@ class HomeFragment : BaseFrg() {
                     } else {
                         sendwebSocket(oxStartTaskReq, context, true)
                         //TODO
-//                        Helper.startActivity(context, WorkFragment::class.java, TitleAct::class.java)
+                        Helper.startActivity(context, WorkFragment::class.java, TitleAct::class.java, MAPINFO, mGroupList[mCurrentGroup])
                     }
                 }
                 edialog.show()
@@ -205,7 +211,7 @@ class HomeFragment : BaseFrg() {
                 val res = JsonUtils.fromJson(obj.toString(), Response::class.java)
                 if (res?.error_code == 0) {
                     Helper.toast("新建任务成功")
-//                    Helper.startActivity(context, HomeFragment::class.java, IndexAct::class.java)
+                    Helper.startActivity(context, WorkFragment::class.java, TitleAct::class.java, MAPINFO, mGroupList[mCurrentGroup])
                 } else {
                     Helper.toast("任务新建失败,请检查机器人状态")
                 }

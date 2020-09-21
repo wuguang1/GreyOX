@@ -47,10 +47,9 @@ class Head(context: Context?) : BaseItem(context) {
     }
 
     fun refData() {
-        if (Const.system4G) mImageView_4g.visibility = View.VISIBLE
-        else mImageView_4g.visibility = View.GONE
-        if (Const.systemError) mImageView_error.visibility = View.VISIBLE
-        else mImageView_error.visibility = View.GONE
+        if (Const.systemLocation) mImageView_location.visibility = View.VISIBLE else mImageView_location.visibility = View.GONE
+        if (Const.system4G) mImageView_4g.visibility = View.VISIBLE else mImageView_4g.visibility = View.GONE
+        if (Const.systemError) mImageView_error.visibility = View.VISIBLE else mImageView_error.visibility = View.GONE
 
         mTextView_dl.text = Const.systemPower.toString() + "%"
         mBatteryView.setPower(Const.systemPower)

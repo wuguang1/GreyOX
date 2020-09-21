@@ -21,6 +21,7 @@ import org.jetbrains.anko.doAsync
 
 class GreyOXApplication : Application() {
     companion object {
+        //        val hostUrl = "ws://192.168.8.199:12235"
         val hostUrl = "ws://192.168.120.17:12235"
         val DEFAULT_STATUS: Int = 0  //0默认
         val DISCONNECT_STATUS: Int = 1  //1断连
@@ -42,9 +43,13 @@ class GreyOXApplication : Application() {
         CrashReport.initCrashReport(applicationContext, "02108abf99", false)
         webSocketClient = WebSocketClient3.getInstance(hostUrl)
 
+        //TODO
+        val jsonbuilder = F.fileToJsonString("test.json")
         doAsync {
             while (isDestory) {
                 Thread.sleep(2000)
+                //TODO
+                Frame.HANDLES.sentAll(17004, jsonbuilder!!)
                 if (connect_status != DISCONNECT_STATUS) {
                     tims++
                     heartTimes++

@@ -19,6 +19,7 @@ import com.deepblue.greyox.Const.mInitData
 import com.deepblue.greyox.F.hideNavigation
 import com.deepblue.greyox.GreyOXApplication
 import com.deepblue.greyox.bean.GetBatteryRes
+import com.deepblue.greyox.bean.GetRealDateRes
 import com.deepblue.greyox.item.DialogLeft
 import com.deepblue.greyox.item.Head
 import com.deepblue.greyox.pop.PopShowSet
@@ -33,6 +34,7 @@ import com.deepblue.library.planbmsg.msg2000.GetErrorHistoryRes
 import com.deepblue.library.planbmsg.push.InitDataRes
 import com.mdx.framework.activity.MFragment
 import kotlinx.android.synthetic.main.frg_error_list.*
+import org.jetbrains.anko.doAsync
 
 abstract class BaseFrg : MFragment(), View.OnClickListener {
     val greyOXApplication by lazy { activity?.application as GreyOXApplication }
@@ -55,8 +57,24 @@ abstract class BaseFrg : MFragment(), View.OnClickListener {
     override fun disposeMsg(type: Int, obj: Any?) {
         super.disposeMsg(type, obj)
         when (type) {
+            17004 -> {
+                doAsync {
+                    val mGetRealDateRes = JsonUtils.fromJson(obj.toString(), GetRealDateRes::class.java)?.getJson()
+                    mGetRealDateRes?.let {
+                        if (it.realdatainfo != null && it.realdatainfo!!.isNotEmpty()) {
+                            it.realdatainfo!!.forEach { a ->
+                                Const.systemLocation = false
+                                if (a.key.isNotEmpty() && a.key == GetRealDateRes.GPS_SIGNAL && a.value > -1) {
+                                    Const.systemLocation = true
+                                }
+                            }
+                        } else {
+                            Const.systemLocation = false
+                        }
+                    }
+                }
+            }
             11002 -> {
-
                 val robotBattery =
                     JsonUtils.fromJson(obj.toString(), GetBatteryRes::class.java)
                 Const.systemPower = robotBattery?.getJson()!!.battery_level

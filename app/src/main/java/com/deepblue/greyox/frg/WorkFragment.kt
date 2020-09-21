@@ -3,17 +3,21 @@ package com.deepblue.greyox.frg
 import android.os.Bundle
 import android.view.View
 import com.deepblue.greyox.R
+import com.deepblue.greyox.bean.GetOXMapInfoModel2
 import com.deepblue.greyox.bean.OXChangeTaskStatusReq
 import com.deepblue.greyox.bean.Oxprogress
 import com.deepblue.greyox.bean.TaskReportRes
+import com.deepblue.greyox.frg.HomeFragment.Companion.MAPINFO
 import com.deepblue.library.planbmsg.JsonUtils
 import com.mdx.framework.activity.TitleAct
 import com.mdx.framework.utility.Helper
 import kotlinx.android.synthetic.main.frg_work.*
 
 class WorkFragment : BaseFrg() {
+    private lateinit var data: GetOXMapInfoModel2.MapInfoBean
     override fun create(var1: Bundle?) {
         setContentView(R.layout.frg_work)
+        data = activity?.intent?.getSerializableExtra(MAPINFO) as GetOXMapInfoModel2.MapInfoBean
     }
 
     override fun initView() {

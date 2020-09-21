@@ -18,6 +18,10 @@ object Const {
     @JvmField
     var system4G: Boolean = false
 
+    //机器人GPS信号
+    @JvmField
+    var systemLocation: Boolean = false
+
     //机器人电量
     @JvmField
     var systemPower: Int = 0
