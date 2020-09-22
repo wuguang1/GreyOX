@@ -22,5 +22,12 @@
     <string name="i_zqszynh">总清扫作业能耗：</string>
     <string name="i_sydcdl">剩余电池电量：</string>
     <string name="i_zqslc">总清扫里程：</string>
+    <string name="str_yqsmj">已清扫面积</string>
+    <string name="str_kssj">开始时间</string>
+    <string name="str_ghqsmj">规划清扫面积</string>
+    <string name="str_dlzc">道路总长</string>
+    <string name="str_ywcbfb">已完成百分比</string>
+    <string name="str_zzrw">终止任务</string>
+    <string name="str_stop">暂停</string>
 
 </resources>

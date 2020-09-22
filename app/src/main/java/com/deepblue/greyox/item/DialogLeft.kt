@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.LinearLayout;
+import com.deepblue.greyox.act.TitleActSpecial
 import com.deepblue.greyox.frg.FrgErrorList
 import com.deepblue.greyox.frg.FrgReportList
 import com.deepblue.greyox.pop.PopShowSet
@@ -36,11 +37,11 @@ class DialogLeft(context: Context?) : BaseItem(context) {
         val flater = LayoutInflater.from(context)
         flater.inflate(R.layout.item_dialog_left, this)
         mLinearLayout_zybg.setOnClickListener {
-            Helper.startActivity(context, FrgReportList::class.java, TitleAct::class.java)
+            Helper.startActivity(context, FrgReportList::class.java, TitleActSpecial::class.java)
             mPopShowSet?.hide()
         }
         mLinearLayout_gzlb.setOnClickListener {
-            Helper.startActivity(context, FrgErrorList::class.java, TitleAct::class.java)
+            Helper.startActivity(context, FrgErrorList::class.java, TitleActSpecial::class.java)
             mPopShowSet?.hide()
         }
         mLinearLayout_set.setOnClickListener { mPopShowSet?.hide() }

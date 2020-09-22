@@ -14,6 +14,7 @@ package com.deepblue.greyox.item;
 import com.deepblue.greyox.R;
 
 import android.annotation.SuppressLint;
+import android.app.Activity
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -40,11 +41,22 @@ class Head(context: Context?) : BaseItem(context) {
         mImageButton_menu.setOnClickListener {
             showMenu(context!!, this@Head)
         }
+
+        mImageButton_back.setOnClickListener {
+            (context as Activity).finish()
+        }
     }
 
     fun setTitle(title: String) {
         mTextView_title.text = title
     }
+
+    fun setback() {
+        mImageButton_back.visibility = View.VISIBLE
+        mImageButton_menu.visibility = View.GONE
+        iv_head_logo.visibility = View.GONE
+    }
+
 
     fun refData() {
         if (Const.systemLocation) mImageView_location.visibility = View.VISIBLE else mImageView_location.visibility = View.GONE

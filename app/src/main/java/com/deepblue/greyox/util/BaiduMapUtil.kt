@@ -10,8 +10,8 @@ import com.deepblue.greyox.bean.GetOXMapInfoModel2
 object BaiduMapUtil {
     val mEdgePolylineWith = 3  //路沿宽度
     val mPolylineWith = 10  //路线宽度
-    val mHasRunPolylineWith = 11   //已行驶路线宽度v
-    val mEdgePolylineColor =  Color.parseColor("#40485F")   //路沿颜色
+    val mHasRunPolylineWith = 11   //已行驶路线宽度
+    val mEdgePolylineColor = Color.parseColor("#40485F")   //路沿颜色
     val mPolylineColor = Color.parseColor("#28EECD") //路线颜色
     val mHasRunPolylineColor = Color.parseColor("#FF4538") //已行驶路线颜色
 
@@ -20,13 +20,13 @@ object BaiduMapUtil {
     /**
      * 绘制Marker
      */
-    fun drawMarker(mMap: BaiduMap, drawableId: Int, zindex: Int, latLng: LatLng): Marker {
+    fun drawMarker(mMap: BaiduMap, drawableId: Int, zindex: Int, latLng: LatLng, animateType: Boolean): Marker {
         return mMap.addOverlay(
             MarkerOptions().flat(true)//marker突变是否平贴地面
                 .anchor(0.5f, 0.5f)//设置 marker覆盖物与位置点的位置关系，默认（0.5f, 1.0f）水平居中，垂直下对齐
                 .draggable(false) //是否可拖拽，默认不可拖拽
                 .alpha(0.8f) //marker图标透明度，0~1.0，默认为1.0
-                .animateType(MarkerOptions.MarkerAnimateType.jump) //marker出现的方式，从天上掉下
+                .animateType(if (animateType) MarkerOptions.MarkerAnimateType.jump else MarkerOptions.MarkerAnimateType.none) //marker出现的方式，从天上掉下
                 .icon(BitmapDescriptorFactory.fromResource(drawableId))
                 .zIndex(zindex)
                 .position(latLng)
@@ -53,6 +53,14 @@ object BaiduMapUtil {
             dealList.add(converter.coord(LatLng(it.x, it.y)).convert())
         }
         return dealList
+    }
+
+    fun getDesBaiduLatLng(latlng: LatLng): LatLng {
+        return converter.coord(latlng).convert()
+    }
+
+    fun getDesBaiduLatLng(lat: Double, lng: Double): LatLng {
+        return converter.coord(LatLng(lat, lng)).convert()
     }
 
     fun loadBaiDuData2(dataList: List<GetOXMapInfoModel2.MapInfoBean.GreyLineListBean.PrepointListBean>): ArrayList<LatLng> {

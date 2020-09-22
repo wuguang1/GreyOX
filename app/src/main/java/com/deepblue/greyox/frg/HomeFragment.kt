@@ -12,13 +12,11 @@ import com.baidu.mapapi.map.MapStatusUpdateFactory
 import com.baidu.mapapi.model.LatLng
 import com.deepblue.greyox.F
 import com.deepblue.greyox.R
+import com.deepblue.greyox.act.TitleActSpecial
 import com.deepblue.greyox.ada.BaseAdapter
 import com.deepblue.greyox.ada.HomeLineAdapter
 import com.deepblue.greyox.ada.TaskDoubleAdapter
-import com.deepblue.greyox.bean.GetMapInfoReq
-import com.deepblue.greyox.bean.GetOXMapInfoModel2
-import com.deepblue.greyox.bean.OXStartTaskReq
-import com.deepblue.greyox.bean.OxMapInfoRes
+import com.deepblue.greyox.bean.*
 import com.deepblue.greyox.util.BaiduMapUtil
 import com.deepblue.greyox.util.BaiduMapUtil.drawMarker
 import com.deepblue.greyox.util.BaiduMapUtil.mEdgePolylineColor
@@ -114,8 +112,8 @@ class HomeFragment : BaseFrg() {
                         mLinesList[position].edgpolyline2 = edgLine2
                     }
 //                    /*   定位缩放地图   */
-//                    val list = ArrayList<LatLng>()
-//                    mMap.animateMapStatus(setLatLngBounds(mLinesList[position].map_poly_points, map_home))
+                    val list = ArrayList<LatLng>()
+                    mMap.animateMapStatus(setLatLngBounds(mLinesList[position].map_poly_points, map_home))
                 } else {
                     mLinesList[position].polyline?.remove()
                     mLinesList[position].edgpolyline1?.remove()
@@ -136,18 +134,18 @@ class HomeFragment : BaseFrg() {
     override fun loaddata() {
         sendwebSocket(GetMapInfoReq().reqUpload(), context, true)
 
-        //TODO
-        val jsonbuilder = F.fileToJsonString("test2.json")
-
-        mGetOXMapInfoModel2 = JsonUtils.fromJson(jsonbuilder!!, OxMapInfoRes::class.java)?.getJson()!!
-        mGetOXMapInfoModel2.initdata()
-        mGroupList.clear()
-        mChildList.clear()
-        mGroupList.addAll(mGetOXMapInfoModel2.map_info)
-
-        mGroupList.forEach {
-            mChildList.add(it.greyAddrList as ArrayList<GetOXMapInfoModel2.MapInfoBean.GreyAddrListBean>)
-        }
+//        //TODO
+//        val jsonbuilder = F.fileToJsonString("test2.json")
+//
+//        mGetOXMapInfoModel2 = JsonUtils.fromJson(jsonbuilder!!, OxMapInfoRes::class.java)?.getJson()!!
+//        mGetOXMapInfoModel2.initdata()
+//        mGroupList.clear()
+//        mChildList.clear()
+//        mGroupList.addAll(mGetOXMapInfoModel2.map_info)
+//
+//        mGroupList.forEach {
+//            mChildList.add(it.greyAddrList as ArrayList<GetOXMapInfoModel2.MapInfoBean.GreyAddrListBean>)
+//        }
     }
 
     override fun onClick(v: View) {
@@ -183,9 +181,9 @@ class HomeFragment : BaseFrg() {
                     if (oxStartTaskReq.lineIdList.size <= 0) {
                         Helper.toast("请选择任务")
                     } else {
-                        sendwebSocket(oxStartTaskReq, context, true)
+                        sendwebSocket(OXNewTaskReq(oxStartTaskReq), context, true)
                         //TODO
-                        Helper.startActivity(context, WorkFragment::class.java, TitleAct::class.java, MAPINFO, mGroupList[mCurrentGroup])
+//                        Helper.startActivity(context, WorkFragment::class.java, TitleActSpecial::class.java)
                     }
                 }
                 edialog.show()
@@ -197,21 +195,21 @@ class HomeFragment : BaseFrg() {
         super.disposeMsg(type, obj)
         when (type) {
             17001 -> {
-//                mGetOXMapInfoModel2 = JsonUtils.fromJson(obj.toString(), OxMapInfoRes::class.java)?.getJson()!!
-//                mGetOXMapInfoModel2.initdata()
-//                mGroupList.clear()
-//                mChildList.clear()
-//                mGroupList.addAll(mGetOXMapInfoModel2.map_info)
-//
-//                mGroupList.forEach {
-//                    mChildList.add(it.greyAddrList as ArrayList<GetOXMapInfoModel2.MapInfoBean.GreyAddrListBean>)
-//                }
+                mGetOXMapInfoModel2 = JsonUtils.fromJson(obj.toString(), OxMapInfoRes::class.java)?.getJson()!!
+                mGetOXMapInfoModel2.initdata()
+                mGroupList.clear()
+                mChildList.clear()
+                mGroupList.addAll(mGetOXMapInfoModel2.map_info)
+
+                mGroupList.forEach {
+                    mChildList.add(it.greyAddrList as ArrayList<GetOXMapInfoModel2.MapInfoBean.GreyAddrListBean>)
+                }
             }
             17002 -> {
                 val res = JsonUtils.fromJson(obj.toString(), Response::class.java)
                 if (res?.error_code == 0) {
                     Helper.toast("新建任务成功")
-                    Helper.startActivity(context, WorkFragment::class.java, TitleAct::class.java, MAPINFO, mGroupList[mCurrentGroup])
+                    Helper.startActivity(context, WorkFragment::class.java, TitleActSpecial::class.java)
                 } else {
                     Helper.toast("任务新建失败,请检查机器人状态")
                 }
@@ -271,7 +269,7 @@ class HomeFragment : BaseFrg() {
             val maxPos = LatLng(mGetOXMapInfoModel2.map_info[groupPosition].max_pos.y, mGetOXMapInfoModel2.map_info[groupPosition].max_pos.x)
             mMap.animateMapStatus(setLatLngBounds(arrayListOf(minPos, maxPos), map_home))
             mGetOXMapInfoModel2.map_info[groupPosition].greyPointList.forEach {
-                val drawMarker = drawMarker(mMap, R.mipmap.icon_map_point, 10, LatLng(it.y, it.x))
+                val drawMarker = drawMarker(mMap, R.mipmap.icon_map_point, 10, LatLng(it.y, it.x), true)
             }
             true
         }

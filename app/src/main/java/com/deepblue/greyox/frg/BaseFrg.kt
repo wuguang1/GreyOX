@@ -65,7 +65,12 @@ abstract class BaseFrg : MFragment(), View.OnClickListener {
                             it.realdatainfo!!.forEach { a ->
                                 Const.systemLocation = false
                                 if (a.key.isNotEmpty() && a.key == GetRealDateRes.GPS_SIGNAL && a.value > -1) {
-                                    Const.systemLocation = true
+                                    when (a.key) {
+                                        GetRealDateRes.GPS_SIGNAL -> Const.systemLocation = true
+                                        GetRealDateRes.LATITUDE -> Const.systemLatitude = a.value
+                                        GetRealDateRes.LONGITUDE -> Const.systemLongitude = a.value
+                                        GetRealDateRes.YAW_ANGLE -> Const.systemYaw_angle = a.value
+                                    }
                                 }
                             }
                         } else {
@@ -119,7 +124,6 @@ abstract class BaseFrg : MFragment(), View.OnClickListener {
 
     override fun setActionBar(actionBar: LinearLayout?) {
         mHead = Head(context)
-//        mHead.canGoBack()
         actionBar?.addView(mHead, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
     }
 

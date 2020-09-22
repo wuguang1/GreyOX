@@ -12,6 +12,7 @@
 package com.deepblue.greyox.frg;
 
 import android.os.Bundle;
+import android.widget.LinearLayout
 
 import com.deepblue.greyox.R;
 
@@ -129,6 +130,11 @@ class FrgErrorList : BaseFrg() {
                 sendwebSocket(OXErrorListReq())
             }
         }
+    }
+
+    override fun setActionBar(actionBar: LinearLayout?) {
+        super.setActionBar(actionBar)
+        mHead?.setback()
     }
 
     override fun onSuccess(data: String?, method: String) {

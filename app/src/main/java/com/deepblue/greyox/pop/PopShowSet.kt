@@ -20,7 +20,7 @@ class PopShowSet(var context: Context, val view: View , popview: View) {
         get() = popwindow.isShowing
 
     init {
-        (view as DialogLeft).set(this)
+        (popview as DialogLeft).set(this)
         popwindow = PopupWindow(popview, LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT)
         popwindow.setBackgroundDrawable(BitmapDrawable(context.resources))
         popwindow.isTouchable = true
