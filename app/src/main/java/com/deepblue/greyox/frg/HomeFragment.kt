@@ -40,16 +40,16 @@ import kotlinx.android.synthetic.main.frg_home.*
 class HomeFragment : BaseFrg() {
     companion object {
         var MAPINFO = "mapinfo"
+
+        var mGroupList = ArrayList<GetOXMapInfoModel2.MapInfoBean>()
+        var mChildList = ArrayList<ArrayList<GetOXMapInfoModel2.MapInfoBean.GreyAddrListBean>>()
+        var mLinesList = ArrayList<GetOXMapInfoModel2.MapInfoBean.GreyLineListBean>()
+
+        var mCurrentGroup = -1
+        var mCurrentChlid = -1
     }
 
     private val mMap by lazy { map_home.map }
-
-    var mGroupList = ArrayList<GetOXMapInfoModel2.MapInfoBean>()
-    var mChildList = ArrayList<ArrayList<GetOXMapInfoModel2.MapInfoBean.GreyAddrListBean>>()
-    var mLinesList = ArrayList<GetOXMapInfoModel2.MapInfoBean.GreyLineListBean>()
-
-    var mCurrentGroup = -1
-    var mCurrentChlid = -1
 
     private lateinit var mGetOXMapInfoModel2: GetOXMapInfoModel2
     private lateinit var mDoubleAdapter: TaskDoubleAdapter
@@ -182,8 +182,6 @@ class HomeFragment : BaseFrg() {
                         Helper.toast("请选择任务")
                     } else {
                         sendwebSocket(OXNewTaskReq(oxStartTaskReq), context, true)
-                        //TODO
-//                        Helper.startActivity(context, WorkFragment::class.java, TitleActSpecial::class.java)
                     }
                 }
                 edialog.show()

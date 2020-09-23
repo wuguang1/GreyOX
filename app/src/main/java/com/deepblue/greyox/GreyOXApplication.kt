@@ -7,6 +7,7 @@ import com.baidu.mapapi.CoordType
 import com.baidu.mapapi.SDKInitializer
 import com.deepblue.greyox.bean.GetOxInfoReq
 import com.deepblue.greyox.bean.OXErrorListReq
+import com.deepblue.greyox.bean.OXRealdataReq
 import com.deepblue.greyox.websocket.WebSocketClient3
 import com.deepblue.library.planbmsg.HeartbeatReq
 import com.deepblue.library.planbmsg.msg1000.GetBatteryReq
@@ -36,6 +37,8 @@ class GreyOXApplication : Application() {
     var lockTime: Int = 0
     var connect_status: Int = DEFAULT_STATUS
 
+    var isStartRealData: Boolean = false
+
     override fun onCreate() {
         super.onCreate()
         Frame.init(applicationContext)
@@ -43,13 +46,13 @@ class GreyOXApplication : Application() {
         CrashReport.initCrashReport(applicationContext, "02108abf99", false)
         webSocketClient = WebSocketClient3.getInstance(hostUrl)
 
-        //TODO
-        val jsonbuilder = F.fileToJsonString("test.json")
+//        //TODO
+//        val jsonbuilder = F.fileToJsonString("test.json")
         doAsync {
             while (isDestory) {
                 Thread.sleep(2000)
-                //TODO
-                Frame.HANDLES.sentAll(17004, jsonbuilder!!)
+//                //TODO
+//                Frame.HANDLES.sentAll(17004, jsonbuilder!!)
                 if (connect_status != DISCONNECT_STATUS) {
                     tims++
                     heartTimes++
@@ -72,6 +75,10 @@ class GreyOXApplication : Application() {
                     webSocketClient!!.sendMessage(GetBatteryReq())
                     Thread.sleep(100)
                     webSocketClient!!.sendMessage(OXErrorListReq())
+                    if (isStartRealData) {
+                        Thread.sleep(100)
+                        webSocketClient!!.sendMessage(OXRealdataReq())
+                    }
 //                    if (webSocketClient!!.isConnected()) {
 //                        Thread.sleep(100)
 //                        val robotStatusReq = GetRobotStatusReq().toString()

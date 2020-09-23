@@ -3,9 +3,9 @@ package com.deepblue.greyox.frg
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import com.baidu.mapapi.map.Marker
-import com.baidu.mapapi.map.Overlay
-import com.baidu.mapapi.map.PolylineOptions
+import android.widget.ImageView
+import android.widget.ZoomControls
+import com.baidu.mapapi.map.*
 import com.baidu.mapapi.model.LatLng
 import com.deepblue.greyox.Const
 import com.deepblue.greyox.R
@@ -13,40 +13,73 @@ import com.deepblue.greyox.bean.GetOXMapInfoModel2
 import com.deepblue.greyox.bean.OXChangeTaskStatusReq
 import com.deepblue.greyox.bean.Oxprogress
 import com.deepblue.greyox.bean.TaskReportRes
-import com.deepblue.greyox.frg.HomeFragment.Companion.MAPINFO
 import com.deepblue.greyox.util.BaiduMapUtil
+import com.deepblue.greyox.util.BaiduMapUtil.loadBaiDuData2
 import com.deepblue.greyox.util.BaiduMapUtil.mHasRunPolylineColor
 import com.deepblue.greyox.util.BaiduMapUtil.mHasRunPolylineWith
+import com.deepblue.greyox.util.BaiduMapUtil.setLatLngBounds
 import com.deepblue.library.planbmsg.JsonUtils
 import com.mdx.framework.activity.TitleAct
 import com.mdx.framework.utility.Helper
 import kotlinx.android.synthetic.main.frg_work.*
 
 class WorkFragment : BaseFrg() {
-    private val mMap by lazy { map_work.map }
-//    private lateinit var data: GetOXMapInfoModel2.MapInfoBean
+    private val mWorkMap by lazy { map_work.map }
+    private var data: GetOXMapInfoModel2.MapInfoBean? = null
     private var mMoveMarker: Marker? = null
 
     private var mHasRunPolyline: Overlay? = null
 
     override fun create(var1: Bundle?) {
         setContentView(R.layout.frg_work)
-//        data = activity?.intent?.getSerializableExtra(MAPINFO) as GetOXMapInfoModel2.MapInfoBean
+        data = HomeFragment.mGroupList[HomeFragment.mCurrentGroup]
         Const.hasRunPosints.clear()
     }
 
     override fun initView() {
         btn_work_chance.setOnClickListener(this)
         btn_work_stop_continu.setOnClickListener(this)
-//        data.greyLineList.forEach {
-//            if (it.isOXLineCheck) {
-//                mMoveMarker = BaiduMapUtil.drawMarker(mMap, R.drawable.ic_location, 10, it.map_poly_points[0], false)
-//                return
-//            }
-//        }
+
+        /*初始化地图设置*/
+        var builder = MapStatus.Builder()
+        mWorkMap.setMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()))
+        val child = map_work.getChildAt(1)//设置地图 logo 显示/隐藏
+        if (child != null && (child is ImageView || child is ZoomControls)) {
+            child.visibility = View.INVISIBLE
+        }
+        map_work.showScaleControl(false)
+        map_work.showZoomControls(false)
+
+        /*application开始发请求*/
+        greyOXApplication.isStartRealData = true
+
     }
 
     override fun loaddata() {
+        data?.let {
+            val minPos = LatLng(it.min_pos.y, it.min_pos.x)
+            val maxPos = LatLng(it.max_pos.y, it.min_pos.x)
+            mWorkMap.setOnMapLoadedCallback(BaiduMap.OnMapLoadedCallback {
+                mWorkMap.animateMapStatus(setLatLngBounds(arrayListOf(minPos, maxPos), map_work))
+            })
+            it.greyLineList.forEach { aa ->
+                if (aa.isOXLineCheck) {
+                    mMoveMarker = BaiduMapUtil.drawMarker(mWorkMap, R.drawable.ic_location, 10, aa.map_poly_points[0], false)
+                    BaiduMapUtil.drawLine(
+                        mWorkMap, BaiduMapUtil.mPolylineWith, BaiduMapUtil.mPolylineColor, 8,
+                        aa.map_poly_points
+                    )
+                    BaiduMapUtil.drawLine(
+                        mWorkMap, BaiduMapUtil.mEdgePolylineWith, BaiduMapUtil.mEdgePolylineColor, 8,
+                        aa.map_edg1_points
+                    )
+                    BaiduMapUtil.drawLine(
+                        mWorkMap, BaiduMapUtil.mEdgePolylineWith, BaiduMapUtil.mEdgePolylineColor, 8,
+                        aa.map_edg2_points
+                    )
+                }
+            }
+        }
     }
 
     override fun disposeMsg(type: Int, obj: Any?) {
@@ -101,7 +134,7 @@ class WorkFragment : BaseFrg() {
                                 .zIndex(9)
                                 .color(mHasRunPolylineColor)
                                 .points(Const.hasRunPosints)
-                            mHasRunPolyline = mMap.addOverlay(s)
+                            mHasRunPolyline = mWorkMap.addOverlay(s)
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()

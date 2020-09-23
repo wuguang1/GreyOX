@@ -64,7 +64,7 @@ abstract class BaseFrg : MFragment(), View.OnClickListener {
                         if (it.realdatainfo != null && it.realdatainfo!!.isNotEmpty()) {
                             it.realdatainfo!!.forEach { a ->
                                 Const.systemLocation = false
-                                if (a.key.isNotEmpty() && a.key == GetRealDateRes.GPS_SIGNAL && a.value > -1) {
+                                if (a.key.isNotEmpty() && a.value > -1) {
                                     when (a.key) {
                                         GetRealDateRes.GPS_SIGNAL -> Const.systemLocation = true
                                         GetRealDateRes.LATITUDE -> Const.systemLatitude = a.value

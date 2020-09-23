@@ -72,6 +72,11 @@ class FrgReportList : BaseFrg() {
         }
     }
 
+    override fun setActionBar(actionBar: LinearLayout?) {
+        super.setActionBar(actionBar)
+        mHead?.setback()
+    }
+
     override fun onSuccess(data: String?, method: String) {
     }
 

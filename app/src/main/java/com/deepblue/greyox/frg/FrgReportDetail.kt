@@ -46,7 +46,7 @@ class FrgReportDetail : BaseFrg() {
     override fun disposeMsg(type: Int, obj: Any?) {
         super.disposeMsg(type, obj)
         when (type) {
-            7003 -> {
+           17003 -> {
                 getTaskReportsRes = JsonUtils.fromJson(obj.toString(), GetTaskReportsRes::class.java)
                 if (getTaskReportsRes?.getJson()?.reports != null && getTaskReportsRes?.getJson()?.reports!!.size > 0) {
                     var obj = getTaskReportsRes?.getJson()?.reports!![0]
