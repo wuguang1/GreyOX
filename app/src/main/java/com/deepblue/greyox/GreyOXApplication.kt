@@ -23,7 +23,7 @@ import org.jetbrains.anko.doAsync
 class GreyOXApplication : Application() {
     companion object {
         //        val hostUrl = "ws://192.168.8.199:12235"
-        val hostUrl = "ws://192.168.120.17:12235"
+        val hostUrl = "ws://192.168.8.199:12235"
         val DEFAULT_STATUS: Int = 0  //0默认
         val DISCONNECT_STATUS: Int = 1  //1断连
         val CONNECT_STATUS: Int = 2     //2续连
@@ -37,8 +37,6 @@ class GreyOXApplication : Application() {
     var lockTime: Int = 0
     var connect_status: Int = DEFAULT_STATUS
 
-    var isStartRealData: Boolean = false
-
     override fun onCreate() {
         super.onCreate()
         Frame.init(applicationContext)
@@ -46,13 +44,9 @@ class GreyOXApplication : Application() {
         CrashReport.initCrashReport(applicationContext, "02108abf99", false)
         webSocketClient = WebSocketClient3.getInstance(hostUrl)
 
-//        //TODO
-//        val jsonbuilder = F.fileToJsonString("test.json")
         doAsync {
             while (isDestory) {
                 Thread.sleep(2000)
-//                //TODO
-//                Frame.HANDLES.sentAll(17004, jsonbuilder!!)
                 if (connect_status != DISCONNECT_STATUS) {
                     tims++
                     heartTimes++
@@ -67,42 +61,20 @@ class GreyOXApplication : Application() {
                         Frame.HANDLES.sentAll(10002, "backLoack")
                         lockTime = 0
                     }
-                    Thread.sleep(100)
-                    webSocketClient!!.sendMessage(GetOxInfoReq())
-                    Thread.sleep(100)
-                    webSocketClient!!.sendMessage(GetNetworkReq())
-                    Thread.sleep(100)
-                    webSocketClient!!.sendMessage(GetBatteryReq())
-                    Thread.sleep(100)
-                    webSocketClient!!.sendMessage(OXErrorListReq())
-                    if (isStartRealData) {
-                        Thread.sleep(100)
-                        webSocketClient!!.sendMessage(OXRealdataReq())
-                    }
-//                    if (webSocketClient!!.isConnected()) {
+                    if (webSocketClient!!.isConnected()) {
 //                        Thread.sleep(100)
-//                        val robotStatusReq = GetRobotStatusReq().toString()
-//                        webSocketClient!!.sendMessage(robotStatusReq)
-//                        if (tims % 5 == 2) {
-//                            Thread.sleep(100)
-//                            val network = GetNetworkReq().toString()
-//                            webSocketClient!!.sendMessage(network)
-//                            Thread.sleep(100)
-//                            val battery = GetBatteryReq().toString()
-//                            webSocketClient!!.sendMessage(battery)
-//                            Thread.sleep(100)
-//                            val scrubber = GetScrubberStatusReq().toString()
-//                            webSocketClient!!.sendMessage(scrubber)
-////                            val allUsersReq = GetAllUsersReq().toString()
-////                            webSocketClient!!.sendMessage(allUsersReq)
-//                            webSocketClient!!.sendMessage(GetScrubberWorkModeReq().toString())
-//                        }
-//                        if (needLoc) {
-//                            Thread.sleep(100)
-//                            val robotLoc = GetRobotLocReq().query()
-//                            webSocketClient!!.sendMessage(robotLoc)
-//                        }
-//                    }
+//                        webSocketClient!!.sendMessage(OXRealdataReq())
+                        if (tims % 5 == 2) {
+                            Thread.sleep(100)
+                            webSocketClient!!.sendMessage(GetOxInfoReq())
+                            Thread.sleep(100)
+                            webSocketClient!!.sendMessage(GetNetworkReq())
+                            Thread.sleep(100)
+                            webSocketClient!!.sendMessage(GetBatteryReq())
+                            Thread.sleep(100)
+                            webSocketClient!!.sendMessage(OXErrorListReq())
+                        }
+                    }
                 }
 
             }

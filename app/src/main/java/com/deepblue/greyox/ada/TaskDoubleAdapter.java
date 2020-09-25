@@ -145,7 +145,7 @@ public class TaskDoubleAdapter extends BaseExpandableListAdapter {
         } else {
             childViewHolder = (ChildViewHolder) convertView.getTag();
         }
-        childViewHolder.tv_child.setText(child.get(groupPosition).get(childPosition).jobName);
+        childViewHolder.tv_child.setText(child.get(groupPosition).get(childPosition).jobAddr);
         setSelectState(groupPosition, childPosition, childViewHolder.tv_child);
         return convertView;
     }

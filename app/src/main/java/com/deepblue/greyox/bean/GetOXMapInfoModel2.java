@@ -5,6 +5,7 @@ import com.baidu.mapapi.model.LatLng;
 import com.deepblue.greyox.util.BaiduMapUtil;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GetOXMapInfoModel2 implements Serializable {
@@ -35,6 +36,8 @@ public class GetOXMapInfoModel2 implements Serializable {
         public List<GreyAddrListBean> greyAddrList;
         public List<GreyLineListBean> greyLineList;
         public List<GreyPointListBean> greyPointList;
+
+        public List<LatLng> allPoints;
 
         public static class MaxPosBean implements Serializable {
             /**
@@ -142,16 +145,21 @@ public class GetOXMapInfoModel2 implements Serializable {
     }
 
     public void initdata() {
+
         for (int i = 0; i < this.map_info.size(); i++) {
+            this.map_info.get(i).allPoints = new ArrayList<LatLng>();
             for (int j = 0; j < this.map_info.get(i).greyLineList.size(); j++) {
                 MapInfoBean.GreyLineListBean greyLineListBean = this.map_info.get(i).greyLineList.get(j);
-                if (greyLineListBean.prepointList != null && greyLineListBean.prepointList.size() > 0)
-                    this.map_info.get(i).greyLineList.get(j).map_poly_points = BaiduMapUtil.INSTANCE.loadBaiDuData2(greyLineListBean.prepointList);
-                if (greyLineListBean.path1List != null && greyLineListBean.path1List.size() > 0)
-                    this.map_info.get(i).greyLineList.get(j).map_edg1_points = BaiduMapUtil.INSTANCE.loadBaiDuData2(greyLineListBean.path1List);
-                if (greyLineListBean.path2List != null && greyLineListBean.path2List.size() > 0)
-                    this.map_info.get(i).greyLineList.get(j).map_edg2_points = BaiduMapUtil.INSTANCE.loadBaiDuData2(greyLineListBean.path2List);
+                if (greyLineListBean.prepointList != null && greyLineListBean.prepointList.size() > 0) {
+                    this.map_info.get(i).greyLineList.get(j).map_poly_points = BaiduMapUtil.INSTANCE.loadBaiDuData(greyLineListBean.prepointList);
+                    this.map_info.get(i).allPoints.addAll(this.map_info.get(i).greyLineList.get(j).map_poly_points);
+                }
+//                if (greyLineListBean.path1List != null && greyLineListBean.path1List.size() > 0)
+//                    this.map_info.get(i).greyLineList.get(j).map_edg1_points = BaiduMapUtil.INSTANCE.loadBaiDuData(greyLineListBean.path1List);
+//                if (greyLineListBean.path2List != null && greyLineListBean.path2List.size() > 0)
+//                    this.map_info.get(i).greyLineList.get(j).map_edg2_points = BaiduMapUtil.INSTANCE.loadBaiDuData(greyLineListBean.path2List);
             }
+
         }
     }
 }

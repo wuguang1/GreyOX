@@ -120,7 +120,9 @@ class SelfCheckFragment : BaseFrg() {
                 finish()
             }, 2000)
         } else {
-            Helper.toast("没有自检结果,请自行检查机器")
+            Helper.toast("没有自检结果,重新开始自检")
+            currentProcess = 0
+            handler.post(runnable1)
         }
     }
 

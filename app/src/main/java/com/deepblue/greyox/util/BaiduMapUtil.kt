@@ -9,11 +9,11 @@ import com.deepblue.greyox.bean.GetOXMapInfoModel2
 
 object BaiduMapUtil {
     val mEdgePolylineWith = 3  //路沿宽度
-    val mPolylineWith = 10  //路线宽度
+    val mPolylineWith = 12  //路线宽度
     val mHasRunPolylineWith = 11   //已行驶路线宽度
     val mEdgePolylineColor = Color.parseColor("#40485F")   //路沿颜色
-    val mPolylineColor = Color.parseColor("#28EECD") //路线颜色
-    val mHasRunPolylineColor = Color.parseColor("#FF4538") //已行驶路线颜色
+    val mPolylineColor = Color.parseColor("#40485F") //路线颜色
+    val mHasRunPolylineColor = Color.parseColor("#28EECD") //已行驶路线颜色
 
     val converter = CoordinateConverter().from(CoordinateConverter.CoordType.GPS)
 
@@ -47,12 +47,17 @@ object BaiduMapUtil {
     }
 
     //转化成百度坐标体系
-    fun loadBaiDuData(dataList: ArrayList<GetOXMapInfoModel2.MapInfoBean.GreyLineListBean.PrepointListBean>): ArrayList<LatLng> {
+    fun loadBaiDuData(dataList: List<GetOXMapInfoModel2.MapInfoBean.GreyLineListBean.PrepointListBean>): ArrayList<LatLng> {
         val dealList = ArrayList<LatLng>()
         dataList.forEach {
-            dealList.add(converter.coord(LatLng(it.x, it.y)).convert())
+            dealList.add(converter.coord(LatLng(it.y, it.x)).convert())
         }
         return dealList
+    }
+
+    //转化成百度坐标体系
+    fun loadBaiDuData(oneLatLng: LatLng): LatLng {
+        return converter.coord(oneLatLng).convert()
     }
 
     fun getDesBaiduLatLng(latlng: LatLng): LatLng {

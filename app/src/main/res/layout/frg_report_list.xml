@@ -7,7 +7,7 @@
     android:background="@mipmap/app_bg"
     android:orientation="horizontal"
     android:paddingLeft="10dp"
-    android:paddingTop="90dp"
+    android:paddingTop="57dp"
     android:paddingRight="10dp"
     android:paddingBottom="30dp">
 

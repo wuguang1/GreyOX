@@ -36,7 +36,7 @@ class WebSocketClient3(url: String) {
                     override fun onOpen(webSocket: WebSocket, response: Response) {
                         super.onOpen(webSocket, response)
                         connectStatus = CONNECT_SUCCESS
-                        Frame.HANDLES.sentAll(10001, CONNECT_SUCCESS)
+                        Frame.HANDLES.sentAll(101, CONNECT_SUCCESS)
                     }
 
                     override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
@@ -46,7 +46,7 @@ class WebSocketClient3(url: String) {
 //                        dismissLoadDialog(-1)
                         if (connectStatus != CONNECT_ERROR) {
                             connectStatus = CONNECT_ERROR
-                            Frame.HANDLES.sentAll(10001, CONNECT_ERROR)
+                            Frame.HANDLES.sentAll(101, CONNECT_ERROR)
                         }
                         mWebSocket?.close(1000, "null")
                         mWebSocket = null
@@ -74,7 +74,7 @@ class WebSocketClient3(url: String) {
                         Log.e("web", "onClosed")
                         if (connectStatus != CONNECT_CLOSE) {
                             connectStatus = CONNECT_CLOSE
-                            Frame.HANDLES.sentAll(10001, CONNECT_CLOSE)
+                            Frame.HANDLES.sentAll(101, CONNECT_CLOSE)
                         }
                         mWebSocket?.close(1000, "null")
                         mWebSocket = null
@@ -84,7 +84,7 @@ class WebSocketClient3(url: String) {
                         super.onClosing(webSocket, code, reason)
                         if (connectStatus != CONNECT_CLOSE) {
                             connectStatus = CONNECT_CLOSE
-                            Frame.HANDLES.sentAll(10001, CONNECT_CLOSE)
+                            Frame.HANDLES.sentAll(101, CONNECT_CLOSE)
                         }
                     }
                 }

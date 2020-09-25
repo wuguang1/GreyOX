@@ -57,6 +57,12 @@ class Head(context: Context?) : BaseItem(context) {
         iv_head_logo.visibility = View.GONE
     }
 
+    fun setNoBackNoMenu() {
+        mImageButton_back.visibility = View.GONE
+        mImageButton_menu.visibility = View.GONE
+        iv_head_logo.visibility = View.GONE
+    }
+
 
     fun refData() {
         if (Const.systemLocation) mImageView_location.visibility = View.VISIBLE else mImageView_location.visibility = View.GONE

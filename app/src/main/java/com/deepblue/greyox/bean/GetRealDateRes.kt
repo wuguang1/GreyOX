@@ -9,10 +9,10 @@ import com.deepblue.library.planbmsg.Response
 class GetRealDateRes : Response() {
 
     companion object {
-        var LATITUDE = "latitude"
-        var LONGITUDE = "longitude"
-        var YAW_ANGLE = "yaw_angle"     // 车头方向
-        var GPS_SIGNAL = "gps_signal"   // GPS状态信息   -1: offline   0-100
+        var LATITUDE = "data_latitude"
+        var LONGITUDE = "data_longitude"
+        var YAW_ANGLE = "data_yaw_angle"     // 车头方向
+        var GPS_SIGNAL = "data_gps_signal"   // GPS状态信息   -1: offline   0-100
     }
 
     init {

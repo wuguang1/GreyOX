@@ -24,6 +24,7 @@ import com.deepblue.greyox.item.DialogLeft
 import com.deepblue.greyox.item.Head
 import com.deepblue.greyox.pop.PopShowSet
 import com.deepblue.greyox.view.LoadingDialog
+import com.deepblue.greyox.websocket.WebSocketClient3.Companion.CONNECT_SUCCESS
 import com.deepblue.library.planbmsg.HeartbeatRes
 import com.deepblue.library.planbmsg.JsonUtils
 import com.deepblue.library.planbmsg.Request

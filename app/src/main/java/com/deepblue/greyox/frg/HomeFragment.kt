@@ -78,7 +78,7 @@ class HomeFragment : BaseFrg() {
         }
         map_home.showScaleControl(false)//比例尺 显示/隐藏
         map_home.showZoomControls(false)//缩放按钮 显示/隐藏
-
+        mMap.setMaxAndMinZoomLevel(20F, 4F)
     }
 
     private fun initAdapter(contexts: Context) {
@@ -87,37 +87,38 @@ class HomeFragment : BaseFrg() {
         mLineAdapter.notifyDataSetChanged()
         mLineAdapter.setOnItemClickListener(object : BaseAdapter.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
-                mLinesList[position].isOXLineCheck = !mLinesList[position].isOXLineCheck
-                if (mLinesList[position].isOXLineCheck) {
+                val greyLineListBean = mLinesList[position]
+                greyLineListBean.isOXLineCheck = !greyLineListBean.isOXLineCheck
+                if (greyLineListBean.isOXLineCheck) {
                     /*   绘制地图   */
-                    if (mLinesList[position].map_poly_points != null && mLinesList[position].map_poly_points.size > 0) {
+                    if (greyLineListBean.map_poly_points != null && greyLineListBean.map_poly_points.size > 0) {
                         val drawLine = BaiduMapUtil.drawLine(
                             mMap, mPolylineWith, mPolylineColor, 8,
-                            mLinesList[position].map_poly_points
+                            greyLineListBean.map_poly_points
                         )
-                        mLinesList[position].polyline = drawLine
+                        greyLineListBean.polyline = drawLine
                     }
-                    if (mLinesList[position].map_edg1_points != null && mLinesList[position].map_edg1_points.size > 0) {
-                        val edgLine1 = BaiduMapUtil.drawLine(
-                            mMap, mEdgePolylineWith, mEdgePolylineColor, 8,
-                            mLinesList[position].map_edg1_points
-                        )
-                        mLinesList[position].edgpolyline1 = edgLine1
-                    }
-                    if (mLinesList[position].map_edg2_points != null && mLinesList[position].map_edg2_points.size > 0) {
-                        val edgLine2 = BaiduMapUtil.drawLine(
-                            mMap, mEdgePolylineWith, mEdgePolylineColor, 8,
-                            mLinesList[position].map_edg2_points
-                        )
-                        mLinesList[position].edgpolyline2 = edgLine2
-                    }
+//                    if (greyLineListBean.map_edg1_points != null && greyLineListBean.map_edg1_points.size > 0) {
+//                        val edgLine1 = BaiduMapUtil.drawLine(
+//                            mMap, mEdgePolylineWith, mEdgePolylineColor, 8,
+//                            greyLineListBean.map_edg1_points
+//                        )
+//                        greyLineListBean.edgpolyline1 = edgLine1
+//                    }
+//                    if (greyLineListBean.map_edg2_points != null && greyLineListBean.map_edg2_points.size > 0) {
+//                        val edgLine2 = BaiduMapUtil.drawLine(
+//                            mMap, mEdgePolylineWith, mEdgePolylineColor, 8,
+//                            greyLineListBean.map_edg2_points
+//                        )
+//                        greyLineListBean.edgpolyline2 = edgLine2
+//                    }
 //                    /*   定位缩放地图   */
                     val list = ArrayList<LatLng>()
-                    mMap.animateMapStatus(setLatLngBounds(mLinesList[position].map_poly_points, map_home))
+                    mMap.animateMapStatus(setLatLngBounds(greyLineListBean.map_poly_points, map_home))
                 } else {
-                    mLinesList[position].polyline?.remove()
-                    mLinesList[position].edgpolyline1?.remove()
-                    mLinesList[position].edgpolyline2?.remove()
+                    greyLineListBean.polyline?.remove()
+//                    greyLineListBean.edgpolyline1?.remove()
+//                    greyLineListBean.edgpolyline2?.remove()
                 }
                 mLineAdapter.notifyDataSetChanged()
 //                if (false) {
@@ -166,7 +167,8 @@ class HomeFragment : BaseFrg() {
                     oxStartTaskReq.task_basic_info.task_type = TASK_TYPE_CLEAN
                     oxStartTaskReq.task_basic_info.task_status = TASK_MODE_ONCE
                     oxStartTaskReq.task_basic_info.task_mode = 0
-                    oxStartTaskReq.task_basic_info.task_name = mGroupList[mCurrentGroup].mapName
+                    oxStartTaskReq.task_basic_info.task_name =
+                        mGroupList[mCurrentGroup].greyAddrList[mCurrentChlid].jobAddr + "/" + mGroupList[mCurrentGroup].greyAddrList[mCurrentChlid].jobName
                     oxStartTaskReq.task_basic_info.executation_type = EXECUTATION_TYPE_IMMEDIATELY
                     oxStartTaskReq.task_basic_info.task_priority = TASK_PRIORITY_NORMAL
                     oxStartTaskReq.task_basic_info.map_id = mGroupList[mCurrentGroup].mapId
@@ -263,9 +265,11 @@ class HomeFragment : BaseFrg() {
             mLineAdapter.notifyDataSetChanged()
 
             mMap.clear()
-            val minPos = LatLng(mGetOXMapInfoModel2.map_info[groupPosition].min_pos.y, mGetOXMapInfoModel2.map_info[groupPosition].min_pos.x)
-            val maxPos = LatLng(mGetOXMapInfoModel2.map_info[groupPosition].max_pos.y, mGetOXMapInfoModel2.map_info[groupPosition].max_pos.x)
-            mMap.animateMapStatus(setLatLngBounds(arrayListOf(minPos, maxPos), map_home))
+//            val minPos = LatLng(mGetOXMapInfoModel2.map_info[groupPosition].min_pos.y, mGetOXMapInfoModel2.map_info[groupPosition].min_pos.x)
+//            val maxPos = LatLng(mGetOXMapInfoModel2.map_info[groupPosition].max_pos.y, mGetOXMapInfoModel2.map_info[groupPosition].max_pos.x)
+//            mMap.animateMapStatus(setLatLngBounds(arrayListOf(minPos, maxPos), map_home))
+            if (mGetOXMapInfoModel2.map_info[groupPosition].allPoints != null && mGetOXMapInfoModel2.map_info[groupPosition].allPoints.isNotEmpty())
+                mMap.animateMapStatus(setLatLngBounds(mGetOXMapInfoModel2.map_info[groupPosition].allPoints, map_home))
             mGetOXMapInfoModel2.map_info[groupPosition].greyPointList.forEach {
                 val drawMarker = drawMarker(mMap, R.mipmap.icon_map_point, 10, LatLng(it.y, it.x), true)
             }
