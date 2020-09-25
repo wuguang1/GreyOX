@@ -11,6 +11,12 @@ class OXChangeTaskStatusReq : Request(4002, "任务状态修改") {
         const val STOP = 5
     }
 
+    fun start(task_id: Int): OXChangeTaskStatusReq {
+        number = DELETE
+        json = Data("start", task_id)
+        return this
+    }
+
     fun delete(task_id: Int): OXChangeTaskStatusReq {
         number = DELETE
         json = Data("delete", task_id)

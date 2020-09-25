@@ -56,6 +56,8 @@ class WorkFragment : BaseFrg() {
     }
 
     override fun loaddata() {
+        sendwebSocket(OXChangeTaskStatusReq().start(0), context)
+
         data?.let {
 //            val minPos = LatLng(it.min_pos.y, it.min_pos.x)
 //            val maxPos = LatLng(it.max_pos.y, it.min_pos.x)
