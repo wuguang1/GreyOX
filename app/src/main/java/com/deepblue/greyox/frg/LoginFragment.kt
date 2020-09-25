@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.deepblue.greyox.Const
+import com.deepblue.greyox.F
 import com.deepblue.greyox.R
 import com.deepblue.greyox.act.IndexActSpecial
 import com.deepblue.greyox.ada.BaseAdapter
@@ -16,8 +17,10 @@ import com.deepblue.library.planbmsg.msg2000.GetAllUsersReq
 import com.deepblue.library.planbmsg.msg2000.GetAllUsersRes
 import com.deepblue.library.planbmsg.msg2000.LoginReq
 import com.deepblue.library.planbmsg.msg2000.LoginRes
+import com.google.gson.Gson
 import com.mdx.framework.Frame
 import com.mdx.framework.utility.Helper
+import com.mdx.framework.utility.permissions.PermissionRequest
 import kotlinx.android.synthetic.main.frg_login.*
 
 
@@ -25,6 +28,7 @@ class LoginFragment : BaseFrg() {
     var passwords: ArrayList<Int> = ArrayList()
     var usersDataList = ArrayList<UserInfo>()
     private lateinit var mAdapter: LoginUsersAdapter
+    private var loginrobot2: LoginReq? = null
 
     override fun create(var1: Bundle?) {
         setContentView(R.layout.frg_login)
@@ -32,6 +36,16 @@ class LoginFragment : BaseFrg() {
     }
 
     override fun initView() {
+        Helper.requestPermissions(arrayOf(
+            android.Manifest.permission.READ_EXTERNAL_STORAGE,
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            android.Manifest.permission.ACCESS_FINE_LOCATION
+        ), object : PermissionRequest() {
+            override fun onGrant(var1: Array<out String>?, var2: IntArray?) {
+
+            }
+        })
+
         rl_login_etuser.setOnClickListener(this)
         view_pwd.setOnClickListener(this)
         tv_login0.setOnClickListener(this)
@@ -201,7 +215,8 @@ class LoginFragment : BaseFrg() {
                     for (j in passwords.indices) {
                         passwd.append(passwords[j])
                     }
-                    sendwebSocket(LoginReq().robot2(tv_login_user.text.toString(), passwd.toString()), context, true)
+                    loginrobot2 = LoginReq().robot2(tv_login_user.text.toString(), passwd.toString())
+                    sendwebSocket(loginrobot2!!, context, true)
                 } else {
                     Helper.toast("请填写正确信息")
                 }
@@ -210,11 +225,11 @@ class LoginFragment : BaseFrg() {
     }
 
     override fun disposeMsg(type: Int, obj: Any?) {
-        super.disposeMsg(type, obj)
         when (type) {
             12003 -> {
                 val loginRes = JsonUtils.fromJson(obj.toString(), LoginRes::class.java)
                 if (loginRes?.error_code == 0 || loginRes?.error_code == -3) {
+                    F.saveJson("login", Gson().toJson(loginrobot2))
                     Const.user = loginRes.getJson()
                     Helper.startActivity(context, HomeFragment::class.java, IndexActSpecial::class.java)
                     finish()

@@ -74,7 +74,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="right"
-                        android:text="3.6KM"
+                        android:text="-"
                         android:textColor="#ffffffff"
                         android:textSize="18sp" />
 
@@ -101,7 +101,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="right"
-                        android:text="3.6KM"
+                        android:text="-"
                         android:textColor="#ffffffff"
                         android:textSize="18sp" />
 
@@ -128,7 +128,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="right"
-                        android:text="2020年12月21日12:10"
+                        android:text="-"
                         android:textColor="#ffffffff"
                         android:textSize="18sp" />
 
@@ -155,7 +155,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="right"
-                        android:text="3.6KM"
+                        android:text="-"
                         android:textColor="#ffffffff"
                         android:textSize="18sp" />
 
@@ -182,7 +182,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="right"
-                        android:text="3.6KM"
+                        android:text="-"
                         android:textColor="#ffffffff"
                         android:textSize="18sp" />
 

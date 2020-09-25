@@ -12,10 +12,13 @@
 package com.deepblue.greyox.frg;
 
 import android.content.Context
+import android.text.TextUtils
 import android.view.View
 import android.widget.LinearLayout
 import com.deepblue.greyox.Const
 import com.deepblue.greyox.Const.mInitData
+import com.deepblue.greyox.F
+import com.deepblue.greyox.F.getJson
 import com.deepblue.greyox.F.hideNavigation
 import com.deepblue.greyox.GreyOXApplication
 import com.deepblue.greyox.bean.GetBatteryRes
@@ -32,9 +35,13 @@ import com.deepblue.library.planbmsg.Response
 import com.deepblue.library.planbmsg.msg1000.GetNetworkRes
 import com.deepblue.library.planbmsg.msg2000.GetAllUsersRes
 import com.deepblue.library.planbmsg.msg2000.GetErrorHistoryRes
+import com.deepblue.library.planbmsg.msg2000.LoginReq
+import com.deepblue.library.planbmsg.msg2000.LoginRes
 import com.deepblue.library.planbmsg.push.InitDataRes
+import com.google.gson.Gson
 import com.mdx.framework.activity.MFragment
 import kotlinx.android.synthetic.main.frg_error_list.*
+import kotlinx.android.synthetic.main.frg_login.*
 import org.jetbrains.anko.doAsync
 
 abstract class BaseFrg : MFragment(), View.OnClickListener {
@@ -97,10 +104,26 @@ abstract class BaseFrg : MFragment(), View.OnClickListener {
                 Const.systemTime = json?.time!! * 1000
                 mHead?.refData()
             }
+            12003 -> {
+                val res = JsonUtils.fromJson(obj.toString(), Response::class.java)
+                if (res?.error_code == -2 && this !is LoginFragment) {
+                    if (Const.user != null) {
+                        val fromJson = Gson().fromJson(getJson("login"), LoginReq::class.java)
+                        sendwebSocket(fromJson, context, true)
+                    }
+                }
+            }
+
             12028 -> {
-                var getErrorHistoryRes = JsonUtils.fromJson(obj.toString(), GetErrorHistoryRes::class.java)
-                if (getErrorHistoryRes?.getJson()?.error_msgs !== null && getErrorHistoryRes?.getJson()?.error_msgs?.size!! > 0) {
+                val json = JsonUtils.fromJson(obj.toString(), GetErrorHistoryRes::class.java)?.getJson()
+                if (json?.error_msgs !== null && json.error_msgs.isNotEmpty()) {
                     Const.systemError = true
+                }
+            }
+            24000 -> {
+                val mInitDataRes = JsonUtils.fromJson(obj.toString(), InitDataRes::class.java)
+                mInitDataRes?.let {
+                    Const.mInitData = it.getJson()
                 }
             }
         }

@@ -1,6 +1,5 @@
 package com.deepblue.greyox.act
 
-import android.app.Activity
 import android.graphics.Color
 import android.media.MediaPlayer
 import android.os.Bundle

@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.baidu.mapapi.map.MapStatus
 import com.baidu.mapapi.map.MapStatusUpdateFactory
 import com.baidu.mapapi.model.LatLng
-import com.deepblue.greyox.F
 import com.deepblue.greyox.R
 import com.deepblue.greyox.act.TitleActSpecial
 import com.deepblue.greyox.ada.BaseAdapter
@@ -19,22 +18,21 @@ import com.deepblue.greyox.ada.TaskDoubleAdapter
 import com.deepblue.greyox.bean.*
 import com.deepblue.greyox.util.BaiduMapUtil
 import com.deepblue.greyox.util.BaiduMapUtil.drawMarker
-import com.deepblue.greyox.util.BaiduMapUtil.mEdgePolylineColor
-import com.deepblue.greyox.util.BaiduMapUtil.mEdgePolylineWith
+import com.deepblue.greyox.util.BaiduMapUtil.getCustomStyleFilePath
 import com.deepblue.greyox.util.BaiduMapUtil.mPolylineColor
 import com.deepblue.greyox.util.BaiduMapUtil.mPolylineWith
 import com.deepblue.greyox.util.BaiduMapUtil.setLatLngBounds
+import com.deepblue.greyox.view.ErrorDialog
 import com.deepblue.greyox.view.TimeDownDialog
 import com.deepblue.library.planbmsg.JsonUtils
-import com.deepblue.library.planbmsg.Response
 import com.deepblue.library.planbmsg.bean.TaskBasicInfo.Companion.EXECUTATION_TYPE_IMMEDIATELY
 import com.deepblue.library.planbmsg.bean.TaskBasicInfo.Companion.TASK_MODE_ONCE
 import com.deepblue.library.planbmsg.bean.TaskBasicInfo.Companion.TASK_PRIORITY_NORMAL
 import com.deepblue.library.planbmsg.bean.TaskBasicInfo.Companion.TASK_TYPE_CLEAN
-import com.mdx.framework.activity.IndexAct
-import com.mdx.framework.activity.TitleAct
+import com.deepblue.library.planbmsg.msg2000.GetErrorHistoryRes
 import com.mdx.framework.utility.Helper
 import kotlinx.android.synthetic.main.frg_home.*
+import org.jetbrains.anko.doAsync
 
 
 class HomeFragment : BaseFrg() {
@@ -57,7 +55,11 @@ class HomeFragment : BaseFrg() {
     private val edialog: TimeDownDialog by lazy {
         TimeDownDialog(context!!)
     }
+    private val adialog: ErrorDialog by lazy {
+        ErrorDialog(context!!)
+    }
 
+    var customStyleFilePath = ""
     override fun create(savedInstanceState: Bundle?) {
         setContentView(R.layout.frg_home)
     }
@@ -78,7 +80,16 @@ class HomeFragment : BaseFrg() {
         }
         map_home.showScaleControl(false)//比例尺 显示/隐藏
         map_home.showZoomControls(false)//缩放按钮 显示/隐藏
-        mMap.setMaxAndMinZoomLevel(20F, 4F)
+        mMap.setMaxAndMinZoomLevel(19F, 4F)
+
+        doAsync {
+            customStyleFilePath = getCustomStyleFilePath(context!!, "customConfigdir/custom_config_dark.json") ?: ""
+            if (customStyleFilePath.isNotEmpty()) {
+                map_home.setMapCustomStylePath(customStyleFilePath)
+                map_home.setMapCustomStyleEnable(true)
+            }
+        }
+
     }
 
     private fun initAdapter(contexts: Context) {
@@ -133,6 +144,7 @@ class HomeFragment : BaseFrg() {
     }
 
     override fun loaddata() {
+        greyOXApplication.isStartRequestError = true
         sendwebSocket(GetMapInfoReq().reqUpload(), context, true)
 
 //        //TODO
@@ -206,12 +218,26 @@ class HomeFragment : BaseFrg() {
                 }
             }
             17002 -> {
-                val res = JsonUtils.fromJson(obj.toString(), Response::class.java)
-                if (res?.error_code == 0) {
-                    Helper.toast("新建任务成功")
-                    Helper.startActivity(context, WorkFragment::class.java, TitleActSpecial::class.java)
-                } else {
-                    Helper.toast("任务新建失败,请检查机器人状态")
+                val res = JsonUtils.fromJson(obj.toString(), OxStartTaskRes::class.java)?.getJson()
+                res?.let {
+                    if (res.status == OxStartTaskRes.ALLOWSTART) {
+                        Helper.toast("新建任务成功")
+                        Helper.startActivity(context, WorkFragment::class.java, TitleActSpecial::class.java)
+                    } else {
+                        Helper.toast("任务新建失败,请检查机器人故障列表")
+                    }
+                }
+            }
+            12028 -> {
+                val json = JsonUtils.fromJson(obj.toString(), GetErrorHistoryRes::class.java)?.getJson()
+                if (json?.error_msgs !== null && json.error_msgs.isNotEmpty()) {
+                    adialog.setErrorData(json.error_msgs)
+                    adialog.show()
+                    adialog.setOnclickListener(View.OnClickListener { v ->
+                        if (v.id == R.id.tv_Yes_center) {
+                            adialog.dismiss()
+                        }
+                    })
                 }
             }
         }
@@ -286,5 +312,20 @@ class HomeFragment : BaseFrg() {
                 }
             }
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        map_home?.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        map_home?.onPause()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        map_home?.onDestroy()
     }
 }

@@ -8,47 +8,43 @@
 
     <RelativeLayout
         android:id="@+id/YesOrNo_relativeLayout"
-        android:layout_width="224dp"
-        android:layout_height="112dp"
+        android:layout_width="424dp"
+        android:layout_height="202dp"
         android:background="@drawable/shape_white_radius">
 
         <TextView
             android:id="@+id/tv_YesOrNo_info"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="22dp"
             android:gravity="center"
             android:maxLines="2"
-            android:text="提示信息"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
             android:textColor="#ff303030"
-            android:textSize="14sp" />
+            android:textSize="22sp" />
 
         <TextView
             android:id="@+id/tv_YesOrNo_left"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="200dp"
+            android:layout_height="80dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="29dp"
-            android:layout_marginBottom="17dp"
             android:gravity="center"
-            android:text="@string/str_sure"
-            android:textColor="#ff009eb5"
-            android:textSize="14sp" />
+            android:text="@string/str_chance"
+            android:textColor="#ff303030"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/tv_YesOrNo_right"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="200dp"
+            android:layout_height="80dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="22dp"
-            android:layout_marginBottom="8dp"
             android:gravity="center"
-            android:paddingBottom="4dp"
-            android:text="@string/str_chance"
-            android:textColor="#fff8feff"
-            android:textSize="14sp" />
+            android:text="@string/str_sure"
+            android:textColor="#158DEE"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/tv_YesOrNo_center"
@@ -61,8 +57,7 @@
             android:paddingBottom="4dp"
             android:text="@string/str_ckxq"
             android:textColor="#fff8feff"
-            android:textSize="14sp"
-            android:visibility="gone" />
+            android:textSize="14sp" />
     </RelativeLayout>
 </LinearLayout>
 

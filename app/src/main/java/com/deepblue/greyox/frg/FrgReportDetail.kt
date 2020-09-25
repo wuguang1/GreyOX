@@ -40,7 +40,7 @@ class FrgReportDetail : BaseFrg() {
     }
 
     override fun loaddata() {
-        sendwebSocket(OXGetReportReq(0, 0))
+        sendwebSocket(OXGetReportReq(0, 0),context,true)
     }
 
     override fun disposeMsg(type: Int, obj: Any?) {

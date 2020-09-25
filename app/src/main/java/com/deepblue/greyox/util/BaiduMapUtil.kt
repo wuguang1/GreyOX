@@ -1,16 +1,23 @@
 package com.deepblue.greyox.util
 
+import android.content.Context
 import android.graphics.Color
+import android.util.Log
 import com.baidu.mapapi.map.*
 import com.baidu.mapapi.model.LatLng
 import com.baidu.mapapi.model.LatLngBounds
 import com.baidu.mapapi.utils.CoordinateConverter
 import com.deepblue.greyox.bean.GetOXMapInfoModel2
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStream
+
 
 object BaiduMapUtil {
     val mEdgePolylineWith = 3  //路沿宽度
     val mPolylineWith = 12  //路线宽度
-    val mHasRunPolylineWith = 11   //已行驶路线宽度
+    val mHasRunPolylineWith = 12   //已行驶路线宽度
     val mEdgePolylineColor = Color.parseColor("#40485F")   //路沿颜色
     val mPolylineColor = Color.parseColor("#40485F") //路线颜色
     val mHasRunPolylineColor = Color.parseColor("#28EECD") //已行驶路线颜色
@@ -86,5 +93,35 @@ object BaiduMapUtil {
         }
         val latlngBounds = builder2.build()
         return MapStatusUpdateFactory.newLatLngBounds(latlngBounds, mMapView.width - 100, mMapView.height - 100)
+    }
+
+    fun getCustomStyleFilePath(context: Context, customStyleFileName: String): String? {
+        var outputStream: FileOutputStream? = null
+        var inputStream: InputStream? = null
+        var parentPath: String? = null
+        try {
+            inputStream = context.assets.open("customConfigdir/$customStyleFileName")
+            val buffer = ByteArray(inputStream.available())
+            inputStream.read(buffer)
+            parentPath = context.filesDir.absolutePath
+            val customStyleFile = File("$parentPath/$customStyleFileName")
+            if (customStyleFile.exists()) {
+                customStyleFile.delete()
+            }
+            customStyleFile.createNewFile()
+            outputStream = FileOutputStream(customStyleFile)
+            outputStream.write(buffer)
+        } catch (e: IOException) {
+            Log.e("CustomMapDemo", "Copy custom style file failed", e)
+        } finally {
+            try {
+                inputStream?.close()
+                outputStream?.close()
+            } catch (e: IOException) {
+                Log.e("CustomMapDemo", "Close stream failed", e)
+                return null
+            }
+        }
+        return "$parentPath/$customStyleFileName"
     }
 }

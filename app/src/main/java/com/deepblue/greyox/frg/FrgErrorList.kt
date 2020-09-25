@@ -115,7 +115,7 @@ class FrgErrorList : BaseFrg() {
     }
 
     override fun loaddata() {
-        sendwebSocket(OXErrorListReq())
+        sendwebSocket(OXErrorListReq(),context,true)
     }
 
     override fun disposeMsg(type: Int, obj: Any?) {

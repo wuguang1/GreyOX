@@ -1,26 +1,9 @@
 {
   "error_code": 0,
   "json": {
-    "realdatainfo": [
-      {
-        "key": "latitude",
-        "value": 31.81944
-      },
-      {
-        "key": "longitude",
-        "value": 120.026705
-      },
-      {
-        "key": "yaw_angle",
-        "value": 20
-      },
-      {
-        "key": "gps_signal",
-        "value": 20
-      }
-    ]
+    "status": 0
   },
   "name": "",
   "number": 0,
-  "type": 17004
+  "type": 17002
 }

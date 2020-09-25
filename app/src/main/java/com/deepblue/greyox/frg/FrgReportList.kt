@@ -39,7 +39,7 @@ class FrgReportList : BaseFrg() {
     }
 
     override fun loaddata() {
-        sendwebSocket(OXGetReportReq(0, System.currentTimeMillis() / 1000))
+        sendwebSocket(OXGetReportReq(0, System.currentTimeMillis() / 1000), context, true)
     }
 
     override fun disposeMsg(type: Int, obj: Any?) {

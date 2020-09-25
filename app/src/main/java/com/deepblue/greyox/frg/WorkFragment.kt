@@ -21,7 +21,9 @@ import com.deepblue.greyox.util.BaiduMapUtil.loadBaiDuData2
 import com.deepblue.greyox.util.BaiduMapUtil.mHasRunPolylineColor
 import com.deepblue.greyox.util.BaiduMapUtil.mHasRunPolylineWith
 import com.deepblue.greyox.util.BaiduMapUtil.setLatLngBounds
+import com.deepblue.greyox.view.ErrorDialog
 import com.deepblue.library.planbmsg.JsonUtils
+import com.deepblue.library.planbmsg.msg2000.GetErrorHistoryRes
 import com.mdx.framework.activity.TitleAct
 import com.mdx.framework.utility.Helper
 import kotlinx.android.synthetic.main.frg_work.*
@@ -32,6 +34,10 @@ class WorkFragment : BaseFrg() {
     private var mMoveMarker: Marker? = null
 
     private var mHasRunPolyline: Overlay? = null
+    private var isErrorStoped: Boolean = false   //是否因为故障暂停过
+    private val adialog: ErrorDialog by lazy {
+        ErrorDialog(context!!)
+    }
 
     override fun create(var1: Bundle?) {
         setContentView(R.layout.frg_work)
@@ -52,7 +58,7 @@ class WorkFragment : BaseFrg() {
         }
         map_work.showScaleControl(false)
         map_work.showZoomControls(false)
-
+        mWorkMap.setMaxAndMinZoomLevel(19F, 4F)
     }
 
     override fun loaddata() {
@@ -64,8 +70,10 @@ class WorkFragment : BaseFrg() {
 //            mWorkMap.setOnMapLoadedCallback(BaiduMap.OnMapLoadedCallback {
 //                mWorkMap.animateMapStatus(setLatLngBounds(arrayListOf(minPos, maxPos), map_work))
 //            })
+
             mWorkMap.setOnMapLoadedCallback(BaiduMap.OnMapLoadedCallback {
-                mWorkMap.animateMapStatus(setLatLngBounds(data!!.allPoints, map_work))
+                if (data!!.allPoints != null && data!!.allPoints.isNotEmpty())
+                    mWorkMap.animateMapStatus(setLatLngBounds(data!!.allPoints, map_work))
             })
             it.greyLineList.forEach { aa ->
                 if (aa.isOXLineCheck) {
@@ -82,6 +90,23 @@ class WorkFragment : BaseFrg() {
     override fun disposeMsg(type: Int, obj: Any?) {
         super.disposeMsg(type, obj)
         when (type) {
+            12028 -> {
+                val json = JsonUtils.fromJson(obj.toString(), GetErrorHistoryRes::class.java)?.getJson()
+                if (json?.error_msgs !== null && json.error_msgs.isNotEmpty()) {
+                    isErrorStoped = true
+                    adialog.setErrorData(json.error_msgs)
+                    adialog.show()
+                    adialog.setOnclickListener(View.OnClickListener { v ->
+                        if (v.id == R.id.tv_Yes_center) {
+                            adialog.dismiss()
+                        }
+                    })
+                } else {
+                    if (isErrorStoped) {
+                        sendwebSocket(OXChangeTaskStatusReq().resume(0), context)
+                    }
+                }
+            }
             17004 -> {
 //                val mA = getDesBaiduLatLng(Const.systemLatitude, Const.systemLongitude)
                 val mA = loadBaiDuData(LatLng(Const.systemLatitude, Const.systemLongitude))
@@ -97,7 +122,9 @@ class WorkFragment : BaseFrg() {
                         tv_work_taskname.text = oxProRes.taskName
                         tv_work_long.text = "${oxProRes.planDistance} KM"
                         tv_work_area.text = "${oxProRes.planArea} m²"
-                        tv_work_starttime.text = oxProRes.taskStartTime
+                        if (oxProRes.taskStartTime.isNotEmpty() && oxProRes.taskStartTime.contains(" ")) {
+                            tv_work_starttime.text = oxProRes.taskStartTime.replace(" ", "\n")
+                        }
                         tv_work_hasarea.text = "${oxProRes.cleanArea} m²"
                         tv_work_percent.text = "${oxProRes.donePercent} %"
                     }
@@ -165,4 +192,19 @@ class WorkFragment : BaseFrg() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        map_work?.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        map_work?.onPause()
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        map_work?.let { it.onDestroy() }
+    }
 }

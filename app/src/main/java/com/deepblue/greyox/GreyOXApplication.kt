@@ -2,6 +2,7 @@ package com.deepblue.greyox
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import androidx.multidex.MultiDex
 import com.baidu.mapapi.CoordType
 import com.baidu.mapapi.SDKInitializer
@@ -37,6 +38,8 @@ class GreyOXApplication : Application() {
     var lockTime: Int = 0
     var connect_status: Int = DEFAULT_STATUS
 
+    var isStartRequestError = false
+
     override fun onCreate() {
         super.onCreate()
         Frame.init(applicationContext)
@@ -64,6 +67,10 @@ class GreyOXApplication : Application() {
                     if (webSocketClient!!.isConnected()) {
 //                        Thread.sleep(100)
 //                        webSocketClient!!.sendMessage(OXRealdataReq())
+                        if (isStartRequestError) {
+                            Thread.sleep(100)
+                            webSocketClient!!.sendMessage(OXErrorListReq())
+                        }
                         if (tims % 5 == 2) {
                             Thread.sleep(100)
                             webSocketClient!!.sendMessage(GetOxInfoReq())
@@ -71,8 +78,6 @@ class GreyOXApplication : Application() {
                             webSocketClient!!.sendMessage(GetNetworkReq())
                             Thread.sleep(100)
                             webSocketClient!!.sendMessage(GetBatteryReq())
-                            Thread.sleep(100)
-                            webSocketClient!!.sendMessage(OXErrorListReq())
                         }
                     }
                 }
