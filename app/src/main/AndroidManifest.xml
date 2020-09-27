@@ -71,6 +71,12 @@
             android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":remote" />
+
+        <!--        <receiver android:name=".BootBroadcastReceiver">-->
+        <!--            <intent-filter>-->
+        <!--                <action android:name="android.intent.action.BOOT_COMPLETED" />-->
+        <!--            </intent-filter>-->
+        <!--        </receiver>-->
     </application>
 </manifest>
 

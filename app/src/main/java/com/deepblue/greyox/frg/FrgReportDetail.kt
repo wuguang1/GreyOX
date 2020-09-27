@@ -11,6 +11,7 @@
 
 package com.deepblue.greyox.frg;
 
+import android.annotation.SuppressLint
 import android.os.Bundle;
 import android.view.View
 
@@ -40,17 +41,19 @@ class FrgReportDetail : BaseFrg() {
     }
 
     override fun loaddata() {
-        sendwebSocket(OXGetReportReq(0, 0),context,true)
+        sendwebSocket(OXGetReportReq(0, 0), context, true)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun disposeMsg(type: Int, obj: Any?) {
         super.disposeMsg(type, obj)
         when (type) {
-           17003 -> {
+            17003 -> {
                 getTaskReportsRes = JsonUtils.fromJson(obj.toString(), GetTaskReportsRes::class.java)
                 if (getTaskReportsRes?.getJson()?.reports != null && getTaskReportsRes?.getJson()?.reports!!.size > 0) {
                     var obj = getTaskReportsRes?.getJson()?.reports!![0]
-                    mTextView_time.text = obj.taskStartTime + "-" + obj.taskEndTime
+                    if (obj.taskEndTime.split(" ").isNotEmpty())
+                        mTextView_time.text = obj.taskStartTime + "-" + obj.taskEndTime.split(" ")[1]
                     mTextView_name.text = obj.taskName
                     mTextView_czy.text = getString(R.string.i_czy) + obj.operater
                     mTextView_ghzylc.text = getString(R.string.i_ghzylc) + obj.planDistance + "KM"
