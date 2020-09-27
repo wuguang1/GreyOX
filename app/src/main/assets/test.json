@@ -1,9 +1,26 @@
 {
   "error_code": 0,
   "json": {
-    "status": 0
+    "reports": [
+      {
+        "actualArea": 0,
+        "actualCostTime": 30,
+        "actualDistance": 0,
+        "costEnergy": 0,
+        "finishPercent": 0,
+        "operater": "root",
+        "planArea": 11570,
+        "planCostTime": 2.4700000000000002,
+        "planDistance": 8.9000000000000004,
+        "remainingBattery": 0,
+        "taskEndTime": "2020-09-27 13:30:50",
+        "taskName": "小犀牛贴边清扫测试",
+        "taskStartTime": "2020-09-27 13:30:20",
+        "unfinishArea": 11570
+      }
+    ],
+    "totalCostEnergy": 0,
+    "totalDistance": 24.130865
   },
-  "name": "",
-  "number": 0,
-  "type": 17002
+  "type": 17003
 }

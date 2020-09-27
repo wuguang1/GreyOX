@@ -121,11 +121,11 @@ class WorkFragment : BaseFrg() {
                     activity?.runOnUiThread {
                         tv_work_taskname.text = oxProRes.taskName
                         tv_work_long.text = "${oxProRes.planDistance} KM"
-                        tv_work_area.text = "${oxProRes.planArea} m²"
+                        tv_work_area.text = "${oxProRes.planArea} M²"
                         if (oxProRes.taskStartTime.isNotEmpty() && oxProRes.taskStartTime.contains(" ")) {
                             tv_work_starttime.text = oxProRes.taskStartTime.replace(" ", "\n")
                         }
-                        tv_work_hasarea.text = "${oxProRes.cleanArea} m²"
+                        tv_work_hasarea.text = "${oxProRes.cleanArea} M²"
                         tv_work_percent.text = "${oxProRes.donePercent} %"
                     }
                 }

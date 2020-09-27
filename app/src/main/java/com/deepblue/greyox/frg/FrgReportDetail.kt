@@ -54,15 +54,15 @@ class FrgReportDetail : BaseFrg() {
                     mTextView_name.text = obj.taskName
                     mTextView_czy.text = getString(R.string.i_czy) + obj.operater
                     mTextView_ghzylc.text = getString(R.string.i_ghzylc) + obj.planDistance + "KM"
-                    mTextView_ghzymj.text = getString(R.string.i_ghqszymj) + obj.planArea + "㎡"
+                    mTextView_ghzymj.text = getString(R.string.i_ghqszymj) + obj.planArea + "M"
                     mTextView_ghzysc.text = getString(R.string.I_ghqszysc) + obj.planCostTime + "H"
 
                     mTextView_sjzylc.text = getString(R.string.i_sjqszylc) + obj.actualDistance + "KM"
-                    mTextView_sjzymj.text = getString(R.string.i_sjqszymj) + obj.actualArea + "㎡"
+                    mTextView_sjzymj.text = getString(R.string.i_sjqszymj) + obj.actualArea + "M²"
                     mTextView_sjzysc.text = getString(R.string.i_sjqszysc) + obj.actualCostTime + "H"
 
                     mTextView_sjwcd.text = getString(R.string.i_sjqszywcd) + obj.finishPercent + "%"
-                    mTextView_wqsmj.text = getString(R.string.i_wqszymj) + obj.unfinishArea + "㎡"
+                    mTextView_wqsmj.text = getString(R.string.i_wqszymj) + obj.unfinishArea + "M²"
 
                     mTextView_dcnh.text = getString(R.string.i_dcqszynh) + obj.costEnergy + "KWH"
                     mTextView_sydl.text = getString(R.string.i_sydcdl) + obj.remainingBattery + "%"

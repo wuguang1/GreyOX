@@ -15,7 +15,7 @@ class GetTaskReportsRes : Response() {
 
     class Data {
         val reports = ArrayList<TaskReport>()
-        var totalDistance: Long? = null
-        var totalCostEnergy: Long? = null
+        var totalDistance = 0.0
+        var totalCostEnergy = 0.0
     }
 }
