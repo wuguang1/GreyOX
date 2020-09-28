@@ -17,23 +17,23 @@ import com.deepblue.greyox.bean.Oxprogress
 import com.deepblue.greyox.bean.TaskReportRes
 import com.deepblue.greyox.util.BaiduMapUtil
 import com.deepblue.greyox.util.BaiduMapUtil.loadBaiDuData
-import com.deepblue.greyox.util.BaiduMapUtil.loadBaiDuData2
 import com.deepblue.greyox.util.BaiduMapUtil.mHasRunPolylineColor
 import com.deepblue.greyox.util.BaiduMapUtil.mHasRunPolylineWith
 import com.deepblue.greyox.util.BaiduMapUtil.setLatLngBounds
 import com.deepblue.greyox.view.ErrorDialog
 import com.deepblue.library.planbmsg.JsonUtils
 import com.deepblue.library.planbmsg.msg2000.GetErrorHistoryRes
-import com.mdx.framework.activity.TitleAct
 import com.mdx.framework.utility.Helper
 import kotlinx.android.synthetic.main.frg_work.*
 
 class WorkFragment : BaseFrg() {
     private val mWorkMap by lazy { map_work.map }
-    private var data: GetOXMapInfoModel2.MapInfoBean? = null
-    private var mMoveMarker: Marker? = null
 
+    private var mMoveMarker: Marker? = null
     private var mHasRunPolyline: Overlay? = null
+
+    private var data: GetOXMapInfoModel2.MapInfoBean? = null
+    private var allSelectMapPoints: ArrayList<LatLng> = ArrayList()
     private var isErrorStoped: Boolean = false   //是否因为故障暂停过
     private val adialog: ErrorDialog by lazy {
         ErrorDialog(context!!)
@@ -58,12 +58,13 @@ class WorkFragment : BaseFrg() {
         }
         map_work.showScaleControl(false)
         map_work.showZoomControls(false)
-        mWorkMap.setMaxAndMinZoomLevel(19F, 4F)
+        mWorkMap.setIndoorEnable(true)
     }
 
     override fun loaddata() {
         sendwebSocket(OXChangeTaskStatusReq().start(0), context)
 
+        allSelectMapPoints.clear()
         data?.let {
 //            val minPos = LatLng(it.min_pos.y, it.min_pos.x)
 //            val maxPos = LatLng(it.max_pos.y, it.min_pos.x)
@@ -71,19 +72,16 @@ class WorkFragment : BaseFrg() {
 //                mWorkMap.animateMapStatus(setLatLngBounds(arrayListOf(minPos, maxPos), map_work))
 //            })
 
-            mWorkMap.setOnMapLoadedCallback(BaiduMap.OnMapLoadedCallback {
-                if (data!!.allPoints != null && data!!.allPoints.isNotEmpty())
-                    mWorkMap.animateMapStatus(setLatLngBounds(data!!.allPoints, map_work))
-            })
             it.greyLineList.forEach { aa ->
                 if (aa.isOXLineCheck) {
+                    allSelectMapPoints.addAll(aa.map_poly_points)
                     mMoveMarker = BaiduMapUtil.drawMarker(mWorkMap, R.drawable.ic_location, 10, aa.map_poly_points[0], false)
-                    BaiduMapUtil.drawLine(
-                        mWorkMap, BaiduMapUtil.mPolylineWith, BaiduMapUtil.mPolylineColor, 8,
-                        aa.map_poly_points
-                    )
                 }
             }
+            BaiduMapUtil.drawPointLine(mWorkMap, BaiduMapUtil.mPolylineWith, BaiduMapUtil.mRealTexture, 8, allSelectMapPoints)
+            mWorkMap.setOnMapLoadedCallback(BaiduMap.OnMapLoadedCallback {
+                mWorkMap.animateMapStatus(setLatLngBounds(allSelectMapPoints, map_work))
+            })
         }
     }
 

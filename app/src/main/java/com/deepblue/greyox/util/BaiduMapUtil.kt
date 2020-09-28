@@ -16,13 +16,16 @@ import java.io.InputStream
 
 object BaiduMapUtil {
     val mEdgePolylineWith = 3  //路沿宽度
-    val mPolylineWith = 12  //路线宽度
-    val mHasRunPolylineWith = 12   //已行驶路线宽度
+    val mPolylineWith = 10  //路线宽度
+    val mHasRunPolylineWith = 10  //已行驶路线宽度
     val mEdgePolylineColor = Color.parseColor("#40485F")   //路沿颜色
     val mPolylineColor = Color.parseColor("#40485F") //路线颜色
     val mHasRunPolylineColor = Color.parseColor("#28EECD") //已行驶路线颜色
 
     val converter = CoordinateConverter().from(CoordinateConverter.CoordType.GPS)
+
+    val mHasTexture by lazy { BitmapDescriptorFactory.fromAsset("ic_hastoute.png") }
+    val mRealTexture by lazy { BitmapDescriptorFactory.fromAsset("ic_realroute.png") }
 
     /**
      * 绘制Marker
@@ -31,6 +34,19 @@ object BaiduMapUtil {
         return mMap.addOverlay(
             MarkerOptions().flat(true)//marker突变是否平贴地面
                 .anchor(0.5f, 0.5f)//设置 marker覆盖物与位置点的位置关系，默认（0.5f, 1.0f）水平居中，垂直下对齐
+                .draggable(false) //是否可拖拽，默认不可拖拽
+                .alpha(0.8f) //marker图标透明度，0~1.0，默认为1.0
+                .animateType(if (animateType) MarkerOptions.MarkerAnimateType.jump else MarkerOptions.MarkerAnimateType.none) //marker出现的方式，从天上掉下
+                .icon(BitmapDescriptorFactory.fromResource(drawableId))
+                .zIndex(zindex)
+                .position(latLng)
+        ) as Marker
+    }
+
+    fun drawMarker2(mMap: BaiduMap, drawableId: Int, zindex: Int, latLng: LatLng, animateType: Boolean): Marker {
+        return mMap.addOverlay(
+            MarkerOptions().flat(true)//marker突变是否平贴地面
+                .anchor(0.5f, 8.5f)//设置 marker覆盖物与位置点的位置关系，默认（0.5f, 1.0f）水平居中，垂直下对齐
                 .draggable(false) //是否可拖拽，默认不可拖拽
                 .alpha(0.8f) //marker图标透明度，0~1.0，默认为1.0
                 .animateType(if (animateType) MarkerOptions.MarkerAnimateType.jump else MarkerOptions.MarkerAnimateType.none) //marker出现的方式，从天上掉下
@@ -50,6 +66,17 @@ object BaiduMapUtil {
                 .color(mColor)
                 .zIndex(zIndex)
                 .points(pointlist)
+        ) as Polyline
+    }
+
+    fun drawPointLine(mMap: BaiduMap, mWith: Int, color: BitmapDescriptor, zIndex: Int, pointlist: List<LatLng>): Polyline {
+        return mMap.addOverlay(
+            PolylineOptions().width(mWith)
+                .points(pointlist)
+                .zIndex(zIndex)
+                .dottedLine(true)
+                .customTextureList(arrayOf(color).toMutableList())
+                .textureIndex(arrayOf(0).toMutableList())
         ) as Polyline
     }
 

@@ -1,5 +1,6 @@
 package com.deepblue.greyox.bean;
 
+import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.Polyline;
 import com.baidu.mapapi.model.LatLng;
 import com.deepblue.greyox.util.BaiduMapUtil;
@@ -141,6 +142,8 @@ public class GetOXMapInfoModel2 implements Serializable {
             public int id;
             public double x;
             public double y;
+            public Marker mMarker;
+            public Marker mSelectMarker;
         }
     }
 

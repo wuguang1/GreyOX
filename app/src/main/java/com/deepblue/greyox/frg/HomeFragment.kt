@@ -18,9 +18,13 @@ import com.deepblue.greyox.ada.TaskDoubleAdapter
 import com.deepblue.greyox.bean.*
 import com.deepblue.greyox.util.BaiduMapUtil
 import com.deepblue.greyox.util.BaiduMapUtil.drawMarker
+import com.deepblue.greyox.util.BaiduMapUtil.drawMarker2
+import com.deepblue.greyox.util.BaiduMapUtil.drawPointLine
 import com.deepblue.greyox.util.BaiduMapUtil.getCustomStyleFilePath
+import com.deepblue.greyox.util.BaiduMapUtil.loadBaiDuData
 import com.deepblue.greyox.util.BaiduMapUtil.mPolylineColor
 import com.deepblue.greyox.util.BaiduMapUtil.mPolylineWith
+import com.deepblue.greyox.util.BaiduMapUtil.mRealTexture
 import com.deepblue.greyox.util.BaiduMapUtil.setLatLngBounds
 import com.deepblue.greyox.view.ErrorDialog
 import com.deepblue.greyox.view.TimeDownDialog
@@ -37,14 +41,13 @@ import org.jetbrains.anko.doAsync
 
 class HomeFragment : BaseFrg() {
     companion object {
-        var MAPINFO = "mapinfo"
-
         var mGroupList = ArrayList<GetOXMapInfoModel2.MapInfoBean>()
         var mChildList = ArrayList<ArrayList<GetOXMapInfoModel2.MapInfoBean.GreyAddrListBean>>()
         var mLinesList = ArrayList<GetOXMapInfoModel2.MapInfoBean.GreyLineListBean>()
 
         var mCurrentGroup = -1
         var mCurrentChlid = -1
+        var mCurrentBackid = -1
     }
 
     private val mMap by lazy { map_home.map }
@@ -80,14 +83,27 @@ class HomeFragment : BaseFrg() {
         }
         map_home.showScaleControl(false)//比例尺 显示/隐藏
         map_home.showZoomControls(false)//缩放按钮 显示/隐藏
-        mMap.setMaxAndMinZoomLevel(19F, 4F)
+        mMap.setIndoorEnable(true)//开启室内地图  缩放比例到2
 
+        /*       地图深色theme(报错TODO)       */
         doAsync {
             customStyleFilePath = getCustomStyleFilePath(context!!, "customConfigdir/custom_config_dark.json") ?: ""
             if (customStyleFilePath.isNotEmpty()) {
                 map_home.setMapCustomStylePath(customStyleFilePath)
                 map_home.setMapCustomStyleEnable(true)
             }
+        }
+
+        /*        百度地图Maker点击事件监听        */
+        mMap.setOnMarkerClickListener {
+            mGetOXMapInfoModel2.map_info[mCurrentGroup].greyPointList.forEach { aa ->
+                aa.mSelectMarker?.remove()
+                if (aa.mMarker == it) {
+                    mCurrentBackid = aa.id
+                    aa.mSelectMarker = drawMarker2(mMap, R.mipmap.ic_map_todown, 10, aa.mMarker.position, true)
+                }
+            }
+            return@setOnMarkerClickListener true
         }
 
     }
@@ -103,11 +119,8 @@ class HomeFragment : BaseFrg() {
                 if (greyLineListBean.isOXLineCheck) {
                     /*   绘制地图   */
                     if (greyLineListBean.map_poly_points != null && greyLineListBean.map_poly_points.size > 0) {
-                        val drawLine = BaiduMapUtil.drawLine(
-                            mMap, mPolylineWith, mPolylineColor, 8,
-                            greyLineListBean.map_poly_points
-                        )
-                        greyLineListBean.polyline = drawLine
+                        val drawPointLine = drawPointLine(mMap, mPolylineWith, mRealTexture, 8, greyLineListBean.map_poly_points)
+                        greyLineListBean.polyline = drawPointLine
                     }
 //                    if (greyLineListBean.map_edg1_points != null && greyLineListBean.map_edg1_points.size > 0) {
 //                        val edgLine1 = BaiduMapUtil.drawLine(
@@ -191,7 +204,10 @@ class HomeFragment : BaseFrg() {
                             oxStartTaskReq.lineIdList.add(lineIdListBean)
                         }
                     }
-                    oxStartTaskReq.rebackId = mGroupList[mCurrentGroup].greyPointList[0].id
+                    if (mCurrentBackid == -1) {
+
+                    }
+                    oxStartTaskReq.rebackId = mCurrentBackid
                     if (oxStartTaskReq.lineIdList.size <= 0) {
                         Helper.toast("请选择任务")
                     } else {
@@ -297,7 +313,10 @@ class HomeFragment : BaseFrg() {
             if (mGetOXMapInfoModel2.map_info[groupPosition].allPoints != null && mGetOXMapInfoModel2.map_info[groupPosition].allPoints.isNotEmpty())
                 mMap.animateMapStatus(setLatLngBounds(mGetOXMapInfoModel2.map_info[groupPosition].allPoints, map_home))
             mGetOXMapInfoModel2.map_info[groupPosition].greyPointList.forEach {
-                val drawMarker = drawMarker(mMap, R.mipmap.icon_map_point, 10, LatLng(it.y, it.x), true)
+                val drawMarker = drawMarker(mMap, R.mipmap.icon_map_point, 10, loadBaiDuData(LatLng(it.y, it.x)), true)
+                drawMarker.isClickable = true
+                it.mMarker = drawMarker
+//                val drawMarker2 = drawMarker2(mMap, R.mipmap.ic_map_todown, 10, loadBaiDuData(LatLng(it.y, it.x)), true)
             }
             true
         }
@@ -326,6 +345,8 @@ class HomeFragment : BaseFrg() {
 
     override fun onDestroy() {
         super.onDestroy()
+        mRealTexture?.recycle()
+        mMap?.clear()
         map_home?.onDestroy()
     }
 }
