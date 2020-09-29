@@ -7,6 +7,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.deepblue.greyox.R
@@ -20,10 +21,13 @@ class YesOrNODialog : Dialog {
     constructor(context: Context) : this(context, 0)
     constructor(context: Context, themeResId: Int) : super(context, R.style.loadingDialogStyle) {
         setContentView(R.layout.item_yesornodialog)
-
+        val attr: WindowManager.LayoutParams = window!!.attributes
+        attr.height = ViewGroup.LayoutParams.MATCH_PARENT
+        attr.width = ViewGroup.LayoutParams.MATCH_PARENT
+        attr.gravity = Gravity.CENTER //设置dialog 在布局中的位置
     }
 
-    fun setTextValue(info: String, left: String = context.resources.getString(R.string.str_sure), right: String = context.resources.getString(R.string.str_chance)) {
+    fun setTextValue(info: String, left: String = context.resources.getString(R.string.str_chance), right: String = context.resources.getString(R.string.str_sure)) {
         if (info.isNotEmpty()) tv_YesOrNo_info.text = info
         if (left.isNotEmpty()) tv_YesOrNo_left.text = left
         if (right.isNotEmpty()) tv_YesOrNo_right.text = right

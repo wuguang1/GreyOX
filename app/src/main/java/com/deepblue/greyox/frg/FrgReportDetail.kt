@@ -56,22 +56,22 @@ class FrgReportDetail : BaseFrg() {
                         mTextView_time.text = obj.taskStartTime + "-" + obj.taskEndTime.split(" ")[1]
                     mTextView_name.text = obj.taskName
                     mTextView_czy.text = getString(R.string.i_czy) + obj.operater
-                    mTextView_ghzylc.text = getString(R.string.i_ghzylc) + obj.planDistance + "KM"
-                    mTextView_ghzymj.text = getString(R.string.i_ghqszymj) + obj.planArea + "M"
-                    mTextView_ghzysc.text = getString(R.string.I_ghqszysc) + obj.planCostTime + "H"
+                    mTextView_ghzylc.text = getString(R.string.i_ghzylc) + String.format("%.2f", obj.planDistance) + "KM"
+                    mTextView_ghzymj.text = getString(R.string.i_ghqszymj) + String.format("%.2f", obj.planArea) + "M²"
+                    mTextView_ghzysc.text = getString(R.string.I_ghqszysc) + String.format("%.1f", obj.planCostTime) + "H"
 
-                    mTextView_sjzylc.text = getString(R.string.i_sjqszylc) + obj.actualDistance + "KM"
-                    mTextView_sjzymj.text = getString(R.string.i_sjqszymj) + obj.actualArea + "M²"
-                    mTextView_sjzysc.text = getString(R.string.i_sjqszysc) + obj.actualCostTime + "H"
+                    mTextView_sjzylc.text = getString(R.string.i_sjqszylc) + String.format("%.2f", obj.actualDistance) + "KM"
+                    mTextView_sjzymj.text = getString(R.string.i_sjqszymj) + String.format("%.2f", obj.actualArea) + "M²"
+                    mTextView_sjzysc.text = getString(R.string.i_sjqszysc) + String.format("%.2f", obj.actualCostTime) + "H"
 
                     mTextView_sjwcd.text = getString(R.string.i_sjqszywcd) + obj.finishPercent + "%"
-                    mTextView_wqsmj.text = getString(R.string.i_wqszymj) + obj.unfinishArea + "M²"
+                    mTextView_wqsmj.text = getString(R.string.i_wqszymj) + String.format("%.2f", obj.unfinishArea) + "M²"
 
-                    mTextView_dcnh.text = getString(R.string.i_dcqszynh) + obj.costEnergy + "KWH"
+                    mTextView_dcnh.text = getString(R.string.i_dcqszynh) + String.format("%.1f", obj.costEnergy) + "KWH"
                     mTextView_sydl.text = getString(R.string.i_sydcdl) + obj.remainingBattery + "%"
 
-                    mTextView_zlc.text = getString(R.string.i_zqslc) + getTaskReportsRes?.getJson()?.totalDistance + "KM"
-                    mTextView_znh.text = getString(R.string.i_zqszynh) + getTaskReportsRes?.getJson()?.totalCostEnergy + "KWH"
+                    mTextView_zlc.text = getString(R.string.i_zqslc) + String.format("%.2f", getTaskReportsRes?.getJson()?.totalDistance) + "KM"
+                    mTextView_znh.text = getString(R.string.i_zqszynh) + String.format("%.2f", getTaskReportsRes?.getJson()?.totalCostEnergy) + "KWH"
                 }
             }
         }

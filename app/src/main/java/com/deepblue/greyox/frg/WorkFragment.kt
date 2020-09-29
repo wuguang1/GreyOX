@@ -2,6 +2,7 @@ package com.deepblue.greyox.frg
 
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -21,6 +22,7 @@ import com.deepblue.greyox.util.BaiduMapUtil.mHasRunPolylineColor
 import com.deepblue.greyox.util.BaiduMapUtil.mHasRunPolylineWith
 import com.deepblue.greyox.util.BaiduMapUtil.setLatLngBounds
 import com.deepblue.greyox.view.ErrorDialog
+import com.deepblue.greyox.view.YesOrNODialog
 import com.deepblue.library.planbmsg.JsonUtils
 import com.deepblue.library.planbmsg.msg2000.GetErrorHistoryRes
 import com.mdx.framework.utility.Helper
@@ -35,8 +37,11 @@ class WorkFragment : BaseFrg() {
     private var data: GetOXMapInfoModel2.MapInfoBean? = null
     private var allSelectMapPoints: ArrayList<LatLng> = ArrayList()
     private var isErrorStoped: Boolean = false   //是否因为故障暂停过
-    private val adialog: ErrorDialog by lazy {
+    private val adialog by lazy {
         ErrorDialog(context!!)
+    }
+    private val bdialog by lazy {
+        YesOrNODialog(context!!)
     }
 
     override fun create(var1: Bundle?) {
@@ -75,13 +80,17 @@ class WorkFragment : BaseFrg() {
             it.greyLineList.forEach { aa ->
                 if (aa.isOXLineCheck) {
                     allSelectMapPoints.addAll(aa.map_poly_points)
-                    mMoveMarker = BaiduMapUtil.drawMarker(mWorkMap, R.drawable.ic_location, 10, aa.map_poly_points[0], false)
                 }
             }
-            BaiduMapUtil.drawPointLine(mWorkMap, BaiduMapUtil.mPolylineWith, BaiduMapUtil.mRealTexture, 8, allSelectMapPoints)
-            mWorkMap.setOnMapLoadedCallback(BaiduMap.OnMapLoadedCallback {
-                mWorkMap.animateMapStatus(setLatLngBounds(allSelectMapPoints, map_work))
-            })
+            if (allSelectMapPoints.isNotEmpty()) {
+                mMoveMarker = BaiduMapUtil.drawMarker(mWorkMap, R.drawable.ic_location, 10, allSelectMapPoints[0], false)
+                BaiduMapUtil.drawPointLine(mWorkMap, BaiduMapUtil.mPolylineWith, BaiduMapUtil.mRealTexture, 8, allSelectMapPoints)
+                mWorkMap.setOnMapLoadedCallback(BaiduMap.OnMapLoadedCallback {
+                    mWorkMap.animateMapStatus(setLatLngBounds(allSelectMapPoints, map_work))
+                })
+            } else {
+                Helper.toast("数据出错,请重试")
+            }
         }
     }
 
@@ -118,12 +127,12 @@ class WorkFragment : BaseFrg() {
                 if (oxProRes != null) {
                     activity?.runOnUiThread {
                         tv_work_taskname.text = oxProRes.taskName
-                        tv_work_long.text = "${oxProRes.planDistance} KM"
-                        tv_work_area.text = "${oxProRes.planArea} M²"
+                        tv_work_long.text = "${String.format("%.2f", oxProRes.planDistance)} KM"
+                        tv_work_area.text = "${String.format("%.0f", oxProRes.planArea * 1000)} M²"
                         if (oxProRes.taskStartTime.isNotEmpty() && oxProRes.taskStartTime.contains(" ")) {
                             tv_work_starttime.text = oxProRes.taskStartTime.replace(" ", "\n")
                         }
-                        tv_work_hasarea.text = "${oxProRes.cleanArea} M²"
+                        tv_work_hasarea.text = "${String.format("%.2f", oxProRes.cleanArea)} M²"
                         tv_work_percent.text = "${oxProRes.donePercent} %"
                     }
                 }
@@ -188,6 +197,24 @@ class WorkFragment : BaseFrg() {
                 sendwebSocket(OXChangeTaskStatusReq().stop(0), context)
             }
         }
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            bdialog.show()
+            bdialog.setTextValue("请确定是否退出任务")
+            bdialog.setOnclickListener(View.OnClickListener { v ->
+                if (v.id == R.id.tv_YesOrNo_left) {
+                    adialog.dismiss()
+                }
+                if (v.id == R.id.tv_YesOrNo_right) {
+                    sendwebSocket(OXChangeTaskStatusReq().stop(0), context)
+                    adialog.dismiss()
+                }
+            })
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
     }
 
     override fun onResume() {

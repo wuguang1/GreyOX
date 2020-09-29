@@ -86,13 +86,13 @@ class HomeFragment : BaseFrg() {
         mMap.setIndoorEnable(true)//开启室内地图  缩放比例到2
 
         /*       地图深色theme(报错TODO)       */
-        doAsync {
-            customStyleFilePath = getCustomStyleFilePath(context!!, "customConfigdir/custom_config_dark.json") ?: ""
-            if (customStyleFilePath.isNotEmpty()) {
-                map_home.setMapCustomStylePath(customStyleFilePath)
-                map_home.setMapCustomStyleEnable(true)
-            }
-        }
+//        doAsync {
+//            customStyleFilePath = getCustomStyleFilePath(context!!, "customConfigdir/custom_config_dark.json") ?: ""
+//            if (customStyleFilePath.isNotEmpty()) {
+//                map_home.setMapCustomStylePath(customStyleFilePath)
+//                map_home.setMapCustomStyleEnable(true)
+//            }
+//        }
 
         /*        百度地图Maker点击事件监听        */
         mMap.setOnMarkerClickListener {
@@ -160,7 +160,7 @@ class HomeFragment : BaseFrg() {
         greyOXApplication.isStartRequestError = true
         sendwebSocket(GetMapInfoReq().reqUpload(), context, true)
 
-//        //TODO
+        /*       模拟数据使用        */
 //        val jsonbuilder = F.fileToJsonString("test2.json")
 //
 //        mGetOXMapInfoModel2 = JsonUtils.fromJson(jsonbuilder!!, OxMapInfoRes::class.java)?.getJson()!!
@@ -204,10 +204,12 @@ class HomeFragment : BaseFrg() {
                             oxStartTaskReq.lineIdList.add(lineIdListBean)
                         }
                     }
-                    if (mCurrentBackid == -1) {
-
+                    oxStartTaskReq.rebackId = if (mCurrentBackid == -1) {
+                        mGroupList[mCurrentGroup].greyPointList[0].id
+                    } else {
+                        mCurrentBackid
                     }
-                    oxStartTaskReq.rebackId = mCurrentBackid
+
                     if (oxStartTaskReq.lineIdList.size <= 0) {
                         Helper.toast("请选择任务")
                     } else {
@@ -223,14 +225,16 @@ class HomeFragment : BaseFrg() {
         super.disposeMsg(type, obj)
         when (type) {
             17001 -> {
-                mGetOXMapInfoModel2 = JsonUtils.fromJson(obj.toString(), OxMapInfoRes::class.java)?.getJson()!!
-                mGetOXMapInfoModel2.initdata()
-                mGroupList.clear()
-                mChildList.clear()
-                mGroupList.addAll(mGetOXMapInfoModel2.map_info)
+                activity?.runOnUiThread {
+                    mGetOXMapInfoModel2 = JsonUtils.fromJson(obj.toString(), OxMapInfoRes::class.java)?.getJson()!!
+                    mGetOXMapInfoModel2.initdata()
+                    mGroupList.clear()
+                    mChildList.clear()
+                    mGroupList.addAll(mGetOXMapInfoModel2.map_info)
 
-                mGroupList.forEach {
-                    mChildList.add(it.greyAddrList as ArrayList<GetOXMapInfoModel2.MapInfoBean.GreyAddrListBean>)
+                    mGroupList.forEach {
+                        mChildList.add(it.greyAddrList as ArrayList<GetOXMapInfoModel2.MapInfoBean.GreyAddrListBean>)
+                    }
                 }
             }
             17002 -> {
@@ -307,19 +311,38 @@ class HomeFragment : BaseFrg() {
             mLineAdapter.notifyDataSetChanged()
 
             mMap.clear()
+
 //            val minPos = LatLng(mGetOXMapInfoModel2.map_info[groupPosition].min_pos.y, mGetOXMapInfoModel2.map_info[groupPosition].min_pos.x)
 //            val maxPos = LatLng(mGetOXMapInfoModel2.map_info[groupPosition].max_pos.y, mGetOXMapInfoModel2.map_info[groupPosition].max_pos.x)
 //            mMap.animateMapStatus(setLatLngBounds(arrayListOf(minPos, maxPos), map_home))
-            if (mGetOXMapInfoModel2.map_info[groupPosition].allPoints != null && mGetOXMapInfoModel2.map_info[groupPosition].allPoints.isNotEmpty())
+            /*      因为没有max min_point  所以将所有点聚合----->地图显示合理缩放比列      */
+            if (mGetOXMapInfoModel2.map_info[groupPosition].allPoints != null && mGetOXMapInfoModel2.map_info[groupPosition].allPoints.isNotEmpty()) {
                 mMap.animateMapStatus(setLatLngBounds(mGetOXMapInfoModel2.map_info[groupPosition].allPoints, map_home))
-            mGetOXMapInfoModel2.map_info[groupPosition].greyPointList.forEach {
-                val drawMarker = drawMarker(mMap, R.mipmap.icon_map_point, 10, loadBaiDuData(LatLng(it.y, it.x)), true)
-                drawMarker.isClickable = true
-                it.mMarker = drawMarker
-//                val drawMarker2 = drawMarker2(mMap, R.mipmap.ic_map_todown, 10, loadBaiDuData(LatLng(it.y, it.x)), true)
+            }
+            /*        绘制预置点      */
+            if (mGetOXMapInfoModel2.map_info[groupPosition].greyPointList.isNotEmpty()) {
+                mGetOXMapInfoModel2.map_info[groupPosition].greyPointList.forEach {
+                    val drawMarker = drawMarker(mMap, R.mipmap.icon_map_point, 10, loadBaiDuData(LatLng(it.y, it.x)), true)
+                    drawMarker.isClickable = true
+                    it.mMarker = drawMarker
+                }
+                //默认第一个预置点选中
+                mGetOXMapInfoModel2.map_info[groupPosition].greyPointList[0].mSelectMarker =
+                    drawMarker2(
+                        mMap,
+                        R.mipmap.ic_map_todown,
+                        10,
+                        loadBaiDuData(
+                            LatLng(
+                                mGetOXMapInfoModel2.map_info[groupPosition].greyPointList[0].y,
+                                mGetOXMapInfoModel2.map_info[groupPosition].greyPointList[0].x
+                            )
+                        ),
+                        true
+                    )
             }
             true
-        }
+        }/*     二级列表 父级同时之能选中一个      */
         expandableListView_home_task.setOnGroupExpandListener(object : ExpandableListView.OnGroupExpandListener {
             override fun onGroupExpand(groupPosition: Int) {
                 mCurrentGroup = groupPosition
