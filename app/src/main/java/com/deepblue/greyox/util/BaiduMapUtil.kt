@@ -55,6 +55,7 @@ object BaiduMapUtil {
                 .position(latLng)
         ) as Marker
 
+
     }
 
     /**
