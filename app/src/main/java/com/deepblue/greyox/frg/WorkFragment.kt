@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
+import android.view.View.GONE
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ZoomControls
@@ -22,6 +23,7 @@ import com.deepblue.greyox.util.BaiduMapUtil.mHasRunPolylineColor
 import com.deepblue.greyox.util.BaiduMapUtil.mHasRunPolylineWith
 import com.deepblue.greyox.util.BaiduMapUtil.setLatLngBounds
 import com.deepblue.greyox.view.ErrorDialog
+import com.deepblue.greyox.view.TimeDownDialog
 import com.deepblue.greyox.view.YesOrNODialog
 import com.deepblue.library.planbmsg.JsonUtils
 import com.deepblue.library.planbmsg.msg2000.GetErrorHistoryRes
@@ -34,7 +36,6 @@ class WorkFragment : BaseFrg() {
     private var mMoveMarker: Marker? = null
     private var mHasRunPolyline: Overlay? = null
 
-    private var data: GetOXMapInfoModel2.MapInfoBean? = null
     private var allSelectMapPoints: ArrayList<LatLng> = ArrayList()
     private var isErrorStoped: Boolean = false   //是否因为故障暂停过
     private val adialog by lazy {
@@ -43,15 +44,18 @@ class WorkFragment : BaseFrg() {
     private val bdialog by lazy {
         YesOrNODialog(context!!)
     }
+    private val edialog: TimeDownDialog by lazy {
+        TimeDownDialog(context!!)
+    }
 
     override fun create(var1: Bundle?) {
         setContentView(R.layout.frg_work)
-        data = HomeFragment.mGroupList[HomeFragment.mCurrentGroup]
         Const.hasRunPosints.clear()
     }
 
     override fun initView() {
         btn_work_chance.setOnClickListener(this)
+        btn_work_start.setOnClickListener(this)
         btn_work_stop_continu.setOnClickListener(this)
 
         /*初始化地图设置*/
@@ -67,10 +71,8 @@ class WorkFragment : BaseFrg() {
     }
 
     override fun loaddata() {
-        sendwebSocket(OXChangeTaskStatusReq().start(0), context)
-
         allSelectMapPoints.clear()
-        data?.let {
+        Const.selectRoute?.let {
 //            val minPos = LatLng(it.min_pos.y, it.min_pos.x)
 //            val maxPos = LatLng(it.max_pos.y, it.min_pos.x)
 //            mWorkMap.setOnMapLoadedCallback(BaiduMap.OnMapLoadedCallback {
@@ -155,7 +157,9 @@ class WorkFragment : BaseFrg() {
                     try {
                         //更新小车方向
 //                        iv_dirction.rotation = F.mModelStatus.mModelB?.data_yaw_angle?.toFloat()!!
-                        mMoveMarker?.rotate = (if (Const.systemYaw_angle > 0) 360 - Const.systemYaw_angle else kotlin.math.abs(Const.systemYaw_angle)).toFloat()
+//                        mMoveMarker?.rotate = (if (Const.systemYaw_angle > 0) 360 - Const.systemYaw_angle else kotlin.math.abs(Const.systemYaw_angle)).toFloat()
+                        mMoveMarker?.rotate = (if (Const.systemYaw_angle > 0) Const.systemYaw_angle else (360 + Const.systemYaw_angle)).toFloat()
+
                         Log.e("websocket_route_angle", "route方向====(" + mMoveMarker?.rotate + ")")
                         //设置小车已行驶路径
                         mHasRunPolyline?.remove()
@@ -194,7 +198,14 @@ class WorkFragment : BaseFrg() {
                 btn_work_stop_continu.isSelected = !btn_work_stop_continu.isSelected
             }
             R.id.btn_work_chance -> {
-                sendwebSocket(OXChangeTaskStatusReq().stop(0), context)
+                sendwebSocket(OXChangeTaskStatusReq().stop(0), context, true)
+            }
+            R.id.btn_work_start -> {
+                edialog.setOnDismissListener {
+                    sendwebSocket(OXChangeTaskStatusReq().start(0), context, true)
+                    btn_work_start.visibility = GONE
+                }
+                edialog.show()
             }
         }
     }
@@ -205,11 +216,11 @@ class WorkFragment : BaseFrg() {
             bdialog.setTextValue("请确定是否退出任务")
             bdialog.setOnclickListener(View.OnClickListener { v ->
                 if (v.id == R.id.tv_YesOrNo_left) {
-                    adialog.dismiss()
+                    bdialog.dismiss()
                 }
                 if (v.id == R.id.tv_YesOrNo_right) {
                     sendwebSocket(OXChangeTaskStatusReq().stop(0), context)
-                    adialog.dismiss()
+                    bdialog.dismiss()
                 }
             })
             return true
@@ -231,5 +242,6 @@ class WorkFragment : BaseFrg() {
     override fun onDestroy() {
         super.onDestroy()
         map_work?.let { it.onDestroy() }
+        Const.selectRoute = null
     }
 }

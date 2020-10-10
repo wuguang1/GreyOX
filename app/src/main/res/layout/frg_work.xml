@@ -206,14 +206,29 @@
                     android:textColor="#fff"
                     android:textSize="17sp" />
 
-                <Button
-                    android:id="@+id/btn_work_chance"
+                <RelativeLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@mipmap/ic_work_chance"
-                    android:text="终止任务"
-                    android:textColor="#fff"
-                    android:textSize="17sp" />
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/btn_work_chance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@mipmap/ic_work_chance"
+                        android:text="终止任务"
+                        android:textColor="#fff"
+                        android:textSize="17sp" />
+
+                    <Button
+                        android:id="@+id/btn_work_start"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/ic_rectangle_2"
+                        android:text="开始任务"
+                        android:textColor="#fff"
+                        android:textSize="17sp" />
+                </RelativeLayout>
+
             </LinearLayout>
 
         </LinearLayout>

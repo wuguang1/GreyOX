@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.baidu.mapapi.map.MapStatus
 import com.baidu.mapapi.map.MapStatusUpdateFactory
 import com.baidu.mapapi.model.LatLng
+import com.deepblue.greyox.Const
 import com.deepblue.greyox.R
 import com.deepblue.greyox.act.TitleActSpecial
 import com.deepblue.greyox.ada.BaseAdapter
@@ -186,37 +187,37 @@ class HomeFragment : BaseFrg() {
                     Helper.toast("该地图没有预置返回点")
                     return
                 }
-                edialog.setOnDismissListener {
-                    val oxStartTaskReq = OXStartTaskReq()
-                    oxStartTaskReq.task_basic_info.task_id = 0
-                    oxStartTaskReq.task_basic_info.task_type = TASK_TYPE_CLEAN
-                    oxStartTaskReq.task_basic_info.task_status = TASK_MODE_ONCE
-                    oxStartTaskReq.task_basic_info.task_mode = 0
-                    oxStartTaskReq.task_basic_info.task_name =
-                        mGroupList[mCurrentGroup].greyAddrList[mCurrentChlid].jobAddr + "/" + mGroupList[mCurrentGroup].greyAddrList[mCurrentChlid].jobName
-                    oxStartTaskReq.task_basic_info.executation_type = EXECUTATION_TYPE_IMMEDIATELY
-                    oxStartTaskReq.task_basic_info.task_priority = TASK_PRIORITY_NORMAL
-                    oxStartTaskReq.task_basic_info.map_id = mGroupList[mCurrentGroup].mapId
-                    mLinesList.forEach {
-                        if (it.isOXLineCheck) {
-                            val lineIdListBean = GetOXMapInfoModel2.MapInfoBean.GreyAddrListBean.LineIdListBean()
-                            lineIdListBean.id = it.lineId
-                            oxStartTaskReq.lineIdList.add(lineIdListBean)
-                        }
-                    }
-                    oxStartTaskReq.rebackId = if (mCurrentBackid == -1) {
-                        mGroupList[mCurrentGroup].greyPointList[0].id
-                    } else {
-                        mCurrentBackid
-                    }
-
-                    if (oxStartTaskReq.lineIdList.size <= 0) {
-                        Helper.toast("请选择任务")
-                    } else {
-                        sendwebSocket(OXNewTaskReq(oxStartTaskReq), context, true)
+//                edialog.setOnDismissListener {
+                val oxStartTaskReq = OXStartTaskReq()
+                oxStartTaskReq.task_basic_info.task_id = 0
+                oxStartTaskReq.task_basic_info.task_type = TASK_TYPE_CLEAN
+                oxStartTaskReq.task_basic_info.task_status = TASK_MODE_ONCE
+                oxStartTaskReq.task_basic_info.task_mode = 0
+                oxStartTaskReq.task_basic_info.task_name =
+                    mGroupList[mCurrentGroup].greyAddrList[mCurrentChlid].jobAddr + "/" + mGroupList[mCurrentGroup].greyAddrList[mCurrentChlid].jobName
+                oxStartTaskReq.task_basic_info.executation_type = EXECUTATION_TYPE_IMMEDIATELY
+                oxStartTaskReq.task_basic_info.task_priority = TASK_PRIORITY_NORMAL
+                oxStartTaskReq.task_basic_info.map_id = mGroupList[mCurrentGroup].mapId
+                mLinesList.forEach {
+                    if (it.isOXLineCheck) {
+                        val lineIdListBean = GetOXMapInfoModel2.MapInfoBean.GreyAddrListBean.LineIdListBean()
+                        lineIdListBean.id = it.lineId
+                        oxStartTaskReq.lineIdList.add(lineIdListBean)
                     }
                 }
-                edialog.show()
+                oxStartTaskReq.rebackId = if (mCurrentBackid == -1) {
+                    mGroupList[mCurrentGroup].greyPointList[0].id
+                } else {
+                    mCurrentBackid
+                }
+
+                if (oxStartTaskReq.lineIdList.size <= 0) {
+                    Helper.toast("请选择任务")
+                } else {
+                    sendwebSocket(OXNewTaskReq(oxStartTaskReq), context, true)
+                }
+//                }
+//                edialog.show()
             }
         }
     }
@@ -235,6 +236,8 @@ class HomeFragment : BaseFrg() {
                     mGroupList.forEach {
                         mChildList.add(it.greyAddrList as ArrayList<GetOXMapInfoModel2.MapInfoBean.GreyAddrListBean>)
                     }
+                    mDoubleAdapter.notifyDataSetChanged()
+
                 }
             }
             17002 -> {
@@ -242,6 +245,7 @@ class HomeFragment : BaseFrg() {
                 res?.let {
                     if (res.status == OxStartTaskRes.ALLOWSTART) {
                         Helper.toast("新建任务成功")
+                        Const.selectRoute = mGroupList[mCurrentGroup]
                         Helper.startActivity(context, WorkFragment::class.java, TitleActSpecial::class.java)
                     } else {
                         Helper.toast("任务新建失败,请检查机器人故障列表")
@@ -359,6 +363,10 @@ class HomeFragment : BaseFrg() {
     override fun onResume() {
         super.onResume()
         map_home?.onResume()
+        mMap.clear()
+        mLinesList.clear()
+        mLineAdapter.notifyDataSetChanged()
+        sendwebSocket(GetMapInfoReq().reqUpload(), context, true)
     }
 
     override fun onPause() {

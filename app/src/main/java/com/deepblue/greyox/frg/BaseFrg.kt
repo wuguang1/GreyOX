@@ -77,7 +77,7 @@ abstract class BaseFrg : MFragment(), View.OnClickListener {
                                         GetRealDateRes.GPS_SIGNAL -> Const.systemLocation = true
                                         GetRealDateRes.LATITUDE -> Const.systemLatitude = a.value
                                         GetRealDateRes.LONGITUDE -> Const.systemLongitude = a.value
-                                        GetRealDateRes.YAW_ANGLE -> Const.systemYaw_angle = a.value
+                                        GetRealDateRes.YAW_ANGLE -> Const.systemYaw_angle = a.value.toInt()
                                     }
                                 }
                             }

@@ -54,7 +54,7 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/ic_rectangle_3"
                 android:gravity="center"
-                android:text="开始清扫作业"
+                android:text="确定"
                 android:textColor="#ffffffff"
                 android:textSize="17sp" />
 

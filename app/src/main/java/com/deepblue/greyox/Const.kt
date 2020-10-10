@@ -1,6 +1,7 @@
 package com.deepblue.greyox
 
 import com.baidu.mapapi.model.LatLng
+import com.deepblue.greyox.bean.GetOXMapInfoModel2
 import com.deepblue.library.planbmsg.bean.InitData
 import com.deepblue.library.planbmsg.bean.RobotLoc
 import com.deepblue.library.planbmsg.bean.UserInfo
@@ -46,9 +47,13 @@ object Const {
 
     //机器人GPS 车头方向
     @JvmField
-    var systemYaw_angle: Double = 0.0
+    var systemYaw_angle: Int = 0
 
     //机器人已行驶路线
     @JvmField
     var hasRunPosints = ArrayList<LatLng>()
+
+    //选中路线缓存
+    @JvmField
+    var selectRoute: GetOXMapInfoModel2.MapInfoBean? = null
 }
