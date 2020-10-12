@@ -105,6 +105,8 @@ public class GetOXMapInfoModel2 implements Serializable {
 
             public boolean isOXLineCheck = false;
             public Polyline polyline;
+            public Marker startMarker;
+            public Marker endMarker;
             public Polyline edgpolyline1;
             public Polyline edgpolyline2;
             public List<LatLng> map_poly_points;

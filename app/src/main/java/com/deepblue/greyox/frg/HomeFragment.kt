@@ -2,6 +2,7 @@ package com.deepblue.greyox.frg;
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ExpandableListView
 import android.widget.ImageView
@@ -9,6 +10,7 @@ import android.widget.ZoomControls
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.baidu.mapapi.map.MapStatus
 import com.baidu.mapapi.map.MapStatusUpdateFactory
+import com.baidu.mapapi.map.Marker
 import com.baidu.mapapi.model.LatLng
 import com.deepblue.greyox.Const
 import com.deepblue.greyox.R
@@ -38,6 +40,7 @@ import com.deepblue.library.planbmsg.msg2000.GetErrorHistoryRes
 import com.mdx.framework.utility.Helper
 import kotlinx.android.synthetic.main.frg_home.*
 import org.jetbrains.anko.doAsync
+import kotlin.math.abs
 
 
 class HomeFragment : BaseFrg() {
@@ -52,6 +55,7 @@ class HomeFragment : BaseFrg() {
     }
 
     private val mMap by lazy { map_home.map }
+    private var mMoveMarker: Marker? = null
 
     private lateinit var mGetOXMapInfoModel2: GetOXMapInfoModel2
     private lateinit var mDoubleAdapter: TaskDoubleAdapter
@@ -64,6 +68,8 @@ class HomeFragment : BaseFrg() {
     }
 
     var customStyleFilePath = ""
+    var isMapClear = false
+
     override fun create(savedInstanceState: Bundle?) {
         setContentView(R.layout.frg_home)
     }
@@ -97,11 +103,13 @@ class HomeFragment : BaseFrg() {
 
         /*        百度地图Maker点击事件监听        */
         mMap.setOnMarkerClickListener {
-            mGetOXMapInfoModel2.map_info[mCurrentGroup].greyPointList.forEach { aa ->
-                aa.mSelectMarker?.remove()
-                if (aa.mMarker == it) {
-                    mCurrentBackid = aa.id
-                    aa.mSelectMarker = drawMarker2(mMap, R.mipmap.ic_map_todown, 10, aa.mMarker.position, true)
+            if (mMoveMarker != it) {
+                mGetOXMapInfoModel2.map_info[mCurrentGroup].greyPointList.forEach { aa ->
+                    aa.mSelectMarker?.remove()
+                    if (aa.mMarker == it) {
+                        mCurrentBackid = aa.id
+                        aa.mSelectMarker = drawMarker2(mMap, R.mipmap.ic_map_todown, 10, aa.mMarker.position, true)
+                    }
                 }
             }
             return@setOnMarkerClickListener true
@@ -122,6 +130,12 @@ class HomeFragment : BaseFrg() {
                     if (greyLineListBean.map_poly_points != null && greyLineListBean.map_poly_points.size > 0) {
                         val drawPointLine = drawPointLine(mMap, mPolylineWith, mRealTexture, 8, greyLineListBean.map_poly_points)
                         greyLineListBean.polyline = drawPointLine
+                        val startMarker =
+                            drawMarker(mMap, R.mipmap.ic_startpoint, 9, greyLineListBean.map_poly_points[0], false)
+                        val endMarker =
+                            drawMarker(mMap, R.mipmap.ic_endpoint, 9, greyLineListBean.map_poly_points[greyLineListBean.map_poly_points.size - 1], false)
+                        greyLineListBean.startMarker = startMarker
+                        greyLineListBean.endMarker = endMarker
                     }
 //                    if (greyLineListBean.map_edg1_points != null && greyLineListBean.map_edg1_points.size > 0) {
 //                        val edgLine1 = BaiduMapUtil.drawLine(
@@ -144,6 +158,8 @@ class HomeFragment : BaseFrg() {
                     greyLineListBean.polyline?.remove()
 //                    greyLineListBean.edgpolyline1?.remove()
 //                    greyLineListBean.edgpolyline2?.remove()
+                    greyLineListBean.startMarker?.remove()
+                    greyLineListBean.endMarker?.remove()
                 }
                 mLineAdapter.notifyDataSetChanged()
 //                if (false) {
@@ -158,7 +174,6 @@ class HomeFragment : BaseFrg() {
     }
 
     override fun loaddata() {
-        greyOXApplication.isStartRequestError = true
         sendwebSocket(GetMapInfoReq().reqUpload(), context, true)
 
         /*       模拟数据使用        */
@@ -173,6 +188,11 @@ class HomeFragment : BaseFrg() {
 //        mGroupList.forEach {
 //            mChildList.add(it.greyAddrList as ArrayList<GetOXMapInfoModel2.MapInfoBean.GreyAddrListBean>)
 //        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        map_home?.onResume()
     }
 
     override fun onClick(v: View) {
@@ -225,6 +245,12 @@ class HomeFragment : BaseFrg() {
     override fun disposeMsg(type: Int, obj: Any?) {
         super.disposeMsg(type, obj)
         when (type) {
+            10009 -> {
+                mMap.clear()
+                mLinesList.clear()
+                mLineAdapter.notifyDataSetChanged()
+                sendwebSocket(GetMapInfoReq().reqUpload(), context, true)
+            }
             17001 -> {
                 activity?.runOnUiThread {
                     mGetOXMapInfoModel2 = JsonUtils.fromJson(obj.toString(), OxMapInfoRes::class.java)?.getJson()!!
@@ -238,6 +264,8 @@ class HomeFragment : BaseFrg() {
                     }
                     mDoubleAdapter.notifyDataSetChanged()
 
+                    mMoveMarker =
+                        drawMarker(mMap, R.drawable.ic_location, 10, loadBaiDuData(LatLng(Const.systemLatitude, Const.systemLongitude)), false)
                 }
             }
             17002 -> {
@@ -250,6 +278,25 @@ class HomeFragment : BaseFrg() {
                     } else {
                         Helper.toast("任务新建失败,请检查机器人故障列表")
                     }
+                }
+            }
+            17004 -> {
+                activity?.runOnUiThread {
+                    try {
+
+                        Const.systemLatLng?.let {
+                            if (isMapClear) {
+                                isMapClear = false
+                                mMoveMarker = null
+                                mMoveMarker = drawMarker(mMap, R.drawable.ic_location, 10, it, false)
+                            } else {
+                                mMoveMarker?.position = it
+                            }
+                            mMoveMarker?.rotate = (if (Const.systemYaw_angle > 0) (360 - Const.systemYaw_angle) else abs(Const.systemYaw_angle)).toFloat()
+                        }
+                    } catch (e: Exception) {
+                    }
+
                 }
             }
             12028 -> {
@@ -314,7 +361,9 @@ class HomeFragment : BaseFrg() {
             }
             mLineAdapter.notifyDataSetChanged()
 
+
             mMap.clear()
+            isMapClear = true
 
 //            val minPos = LatLng(mGetOXMapInfoModel2.map_info[groupPosition].min_pos.y, mGetOXMapInfoModel2.map_info[groupPosition].min_pos.x)
 //            val maxPos = LatLng(mGetOXMapInfoModel2.map_info[groupPosition].max_pos.y, mGetOXMapInfoModel2.map_info[groupPosition].max_pos.x)
@@ -360,14 +409,6 @@ class HomeFragment : BaseFrg() {
         })
     }
 
-    override fun onResume() {
-        super.onResume()
-        map_home?.onResume()
-        mMap.clear()
-        mLinesList.clear()
-        mLineAdapter.notifyDataSetChanged()
-        sendwebSocket(GetMapInfoReq().reqUpload(), context, true)
-    }
 
     override fun onPause() {
         super.onPause()

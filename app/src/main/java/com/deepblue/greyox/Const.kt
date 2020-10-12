@@ -45,9 +45,13 @@ object Const {
     @JvmField
     var systemLongitude: Double = 0.0
 
+    //机器人GPS 定位 LatLng
+    @JvmField
+    var systemLatLng: LatLng? = null
+
     //机器人GPS 车头方向
     @JvmField
-    var systemYaw_angle: Int = 0
+    var systemYaw_angle: Double = 0.0
 
     //机器人已行驶路线
     @JvmField

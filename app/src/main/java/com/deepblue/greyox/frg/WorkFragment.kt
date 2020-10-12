@@ -29,6 +29,7 @@ import com.deepblue.library.planbmsg.JsonUtils
 import com.deepblue.library.planbmsg.msg2000.GetErrorHistoryRes
 import com.mdx.framework.utility.Helper
 import kotlinx.android.synthetic.main.frg_work.*
+import kotlin.math.abs
 
 class WorkFragment : BaseFrg() {
     private val mWorkMap by lazy { map_work.map }
@@ -118,11 +119,12 @@ class WorkFragment : BaseFrg() {
             }
             17004 -> {
 //                val mA = getDesBaiduLatLng(Const.systemLatitude, Const.systemLongitude)
-                val mA = loadBaiDuData(LatLng(Const.systemLatitude, Const.systemLongitude))
-                if (Const.hasRunPosints.size == 0)
-                    Const.hasRunPosints.add(mA)
-                moveLooper(mA)
-                Const.hasRunPosints.add(mA)
+                Const.systemLatLng?.let {
+                    if (Const.hasRunPosints.size == 0)
+                        Const.hasRunPosints.add(it)
+                    moveLooper(it)
+                    Const.hasRunPosints.add(it)
+                }
             }
             24003 -> {
                 val oxProRes = JsonUtils.fromJson(obj.toString(), Oxprogress::class.java)!!.getJson()
@@ -152,15 +154,14 @@ class WorkFragment : BaseFrg() {
     private fun moveLooper(endPoint: LatLng) {
         object : Thread() {
             override fun run() {
-                mMoveMarker?.position = endPoint
                 activity?.runOnUiThread {
                     try {
+                        //更新小车位置
+                        mMoveMarker?.position = endPoint
                         //更新小车方向
 //                        iv_dirction.rotation = F.mModelStatus.mModelB?.data_yaw_angle?.toFloat()!!
 //                        mMoveMarker?.rotate = (if (Const.systemYaw_angle > 0) 360 - Const.systemYaw_angle else kotlin.math.abs(Const.systemYaw_angle)).toFloat()
-                        mMoveMarker?.rotate = (if (Const.systemYaw_angle > 0) Const.systemYaw_angle else (360 + Const.systemYaw_angle)).toFloat()
-
-                        Log.e("websocket_route_angle", "route方向====(" + mMoveMarker?.rotate + ")")
+                        mMoveMarker?.rotate = (if (Const.systemYaw_angle > 0) (360 - Const.systemYaw_angle) else abs(Const.systemYaw_angle)).toFloat()
                         //设置小车已行驶路径
                         mHasRunPolyline?.remove()
                         if (Const.hasRunPosints.size > 1) {

@@ -24,6 +24,7 @@ import com.deepblue.greyox.bean.GetTaskReportsRes
 import com.deepblue.greyox.bean.OXGetReportReq
 import com.deepblue.greyox.bean.TaskReport
 import com.deepblue.library.planbmsg.JsonUtils
+import com.mdx.framework.Frame
 import kotlinx.android.synthetic.main.frg_report_detail.*
 
 
@@ -36,6 +37,7 @@ class FrgReportDetail : BaseFrg() {
     override fun initView() {
 
         mButton_sure.setOnClickListener {
+            Frame.HANDLES.sentAll("HomeFragment", 10009, "10009")
             finish()
         }
     }

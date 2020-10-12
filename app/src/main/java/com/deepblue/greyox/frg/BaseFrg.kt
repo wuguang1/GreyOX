@@ -15,6 +15,7 @@ import android.content.Context
 import android.text.TextUtils
 import android.view.View
 import android.widget.LinearLayout
+import com.baidu.mapapi.model.LatLng
 import com.deepblue.greyox.Const
 import com.deepblue.greyox.Const.mInitData
 import com.deepblue.greyox.F
@@ -26,6 +27,7 @@ import com.deepblue.greyox.bean.GetRealDateRes
 import com.deepblue.greyox.item.DialogLeft
 import com.deepblue.greyox.item.Head
 import com.deepblue.greyox.pop.PopShowSet
+import com.deepblue.greyox.util.BaiduMapUtil
 import com.deepblue.greyox.view.LoadingDialog
 import com.deepblue.greyox.websocket.WebSocketClient3.Companion.CONNECT_SUCCESS
 import com.deepblue.library.planbmsg.HeartbeatRes
@@ -72,12 +74,17 @@ abstract class BaseFrg : MFragment(), View.OnClickListener {
                         if (it.realdatainfo != null && it.realdatainfo!!.isNotEmpty()) {
                             it.realdatainfo!!.forEach { a ->
                                 Const.systemLocation = false
-                                if (a.key.isNotEmpty() && a.value > -1) {
+                                if (a.key.isNotEmpty()) {
                                     when (a.key) {
                                         GetRealDateRes.GPS_SIGNAL -> Const.systemLocation = true
                                         GetRealDateRes.LATITUDE -> Const.systemLatitude = a.value
-                                        GetRealDateRes.LONGITUDE -> Const.systemLongitude = a.value
-                                        GetRealDateRes.YAW_ANGLE -> Const.systemYaw_angle = a.value.toInt()
+                                        GetRealDateRes.LONGITUDE -> {
+                                            Const.systemLongitude = a.value
+                                            Const.systemLatLng = BaiduMapUtil.loadBaiDuData(LatLng(Const.systemLatitude, Const.systemLongitude))
+                                        }
+                                        GetRealDateRes.YAW_ANGLE -> {
+                                            Const.systemYaw_angle = a.value
+                                        }
                                     }
                                 }
                             }

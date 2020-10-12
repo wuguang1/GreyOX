@@ -36,7 +36,7 @@ object BaiduMapUtil {
                 .anchor(0.5f, 0.5f)//设置 marker覆盖物与位置点的位置关系，默认（0.5f, 1.0f）水平居中，垂直下对齐
                 .draggable(false) //是否可拖拽，默认不可拖拽
                 .alpha(0.8f) //marker图标透明度，0~1.0，默认为1.0
-                .animateType(if (animateType) MarkerOptions.MarkerAnimateType.drop else MarkerOptions.MarkerAnimateType.none) //marker出现的方式，从天上掉下
+                .animateType(if (animateType) MarkerOptions.MarkerAnimateType.grow else MarkerOptions.MarkerAnimateType.none) //marker出现的方式，从天上掉下
                 .icon(BitmapDescriptorFactory.fromResource(drawableId))
                 .zIndex(zindex)
                 .position(latLng)
