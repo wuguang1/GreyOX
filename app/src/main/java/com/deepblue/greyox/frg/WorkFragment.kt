@@ -87,7 +87,7 @@ class WorkFragment : BaseFrg() {
             }
             if (allSelectMapPoints.isNotEmpty()) {
                 mMoveMarker = BaiduMapUtil.drawMarker(mWorkMap, R.drawable.ic_location, 10, allSelectMapPoints[0], false)
-                BaiduMapUtil.drawPointLine(mWorkMap, BaiduMapUtil.mPolylineWith, BaiduMapUtil.mRealTexture, 8, allSelectMapPoints)
+                BaiduMapUtil.drawPointLine(mWorkMap, BaiduMapUtil.mPolylineWith, BaiduMapUtil.mPreTexture, 8, allSelectMapPoints)
                 mWorkMap.setOnMapLoadedCallback(BaiduMap.OnMapLoadedCallback {
                     mWorkMap.animateMapStatus(setLatLngBounds(allSelectMapPoints, map_work))
                 })

@@ -63,6 +63,7 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/tv_home_taskname"
         android:layout_width="match_parent"
         android:layout_height="28dp"
         android:layout_margin="20dp"

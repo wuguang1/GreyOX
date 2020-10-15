@@ -13,11 +13,11 @@ public class BootBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-//        if (intent.getAction().equals(action_boot)) {
-//            Intent mWelcomeActivity = nesw Intent(context, ActLoading.class);
-//            // 这里必须为FLAG_ACTIVITY_NEW_TASK
-//            mWelcomeActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            context.startActivity(mWelcomeActivity);
-//        }
+        if (intent.getAction().equals(action_boot)) {
+            Intent mWelcomeActivity = new Intent(context, ActLoading.class);
+            // 这里必须为FLAG_ACTIVITY_NEW_TASK
+            mWelcomeActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(mWelcomeActivity);
+        }
     }
 }

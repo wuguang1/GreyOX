@@ -17,6 +17,7 @@ import java.io.InputStream
 object BaiduMapUtil {
     val mEdgePolylineWith = 3  //路沿宽度
     val mPolylineWith = 10  //路线宽度
+    val mPrePolylineWith = 13  //路线宽度
     val mHasRunPolylineWith = 10  //已行驶路线宽度
     val mEdgePolylineColor = Color.parseColor("#40485F")   //路沿颜色
     val mPolylineColor = Color.parseColor("#40485F") //路线颜色
@@ -26,6 +27,7 @@ object BaiduMapUtil {
 
     val mHasTexture by lazy { BitmapDescriptorFactory.fromAsset("ic_hastoute.png") }
     val mRealTexture by lazy { BitmapDescriptorFactory.fromAsset("ic_realroute.png") }
+    val mPreTexture by lazy { BitmapDescriptorFactory.fromAsset("ic_route.png") }
 
     /**
      * 绘制Marker

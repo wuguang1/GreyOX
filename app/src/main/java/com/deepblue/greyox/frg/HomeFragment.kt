@@ -27,6 +27,8 @@ import com.deepblue.greyox.util.BaiduMapUtil.getCustomStyleFilePath
 import com.deepblue.greyox.util.BaiduMapUtil.loadBaiDuData
 import com.deepblue.greyox.util.BaiduMapUtil.mPolylineColor
 import com.deepblue.greyox.util.BaiduMapUtil.mPolylineWith
+import com.deepblue.greyox.util.BaiduMapUtil.mPrePolylineWith
+import com.deepblue.greyox.util.BaiduMapUtil.mPreTexture
 import com.deepblue.greyox.util.BaiduMapUtil.mRealTexture
 import com.deepblue.greyox.util.BaiduMapUtil.setLatLngBounds
 import com.deepblue.greyox.view.ErrorDialog
@@ -36,7 +38,9 @@ import com.deepblue.library.planbmsg.bean.TaskBasicInfo.Companion.EXECUTATION_TY
 import com.deepblue.library.planbmsg.bean.TaskBasicInfo.Companion.TASK_MODE_ONCE
 import com.deepblue.library.planbmsg.bean.TaskBasicInfo.Companion.TASK_PRIORITY_NORMAL
 import com.deepblue.library.planbmsg.bean.TaskBasicInfo.Companion.TASK_TYPE_CLEAN
+import com.deepblue.library.planbmsg.msg1000.GetRobotInfoReq
 import com.deepblue.library.planbmsg.msg2000.GetErrorHistoryRes
+import com.mdx.framework.Frame
 import com.mdx.framework.utility.Helper
 import kotlinx.android.synthetic.main.frg_home.*
 import org.jetbrains.anko.doAsync
@@ -52,6 +56,22 @@ class HomeFragment : BaseFrg() {
         var mCurrentGroup = -1
         var mCurrentChlid = -1
         var mCurrentBackid = -1
+    }
+
+    private fun setTaskName() {
+        var tempTaskname = ""
+        if (mCurrentGroup != -1) {
+            tempTaskname = mGroupList[mCurrentGroup].mapName
+            if (mCurrentChlid != -1) {
+                tempTaskname += " -- " + mChildList[mCurrentGroup][mCurrentChlid].jobAddr + "  :"
+            }
+        }
+        mLinesList.forEach {
+            if (it.isOXLineCheck) {
+                tempTaskname += it.pathName + "、"
+            }
+        }
+        tv_home_taskname.text = tempTaskname.substring(0, tempTaskname.length - 1)
     }
 
     private val mMap by lazy { map_home.map }
@@ -90,7 +110,7 @@ class HomeFragment : BaseFrg() {
         }
         map_home.showScaleControl(false)//比例尺 显示/隐藏
         map_home.showZoomControls(false)//缩放按钮 显示/隐藏
-        mMap.setIndoorEnable(true)//开启室内地图  缩放比例到2
+//        mMap.setIndoorEnable(true)//开启室内地图  缩放比例到2
 
         /*       地图深色theme(报错TODO)       */
 //        doAsync {
@@ -117,6 +137,7 @@ class HomeFragment : BaseFrg() {
 
     }
 
+    val templist = ArrayList<LatLng>()
     private fun initAdapter(contexts: Context) {
         mLineAdapter = HomeLineAdapter(contexts, mLinesList, R.layout.adapter_homeline)
         recycleview_line.adapter = mLineAdapter
@@ -152,30 +173,33 @@ class HomeFragment : BaseFrg() {
 //                        greyLineListBean.edgpolyline2 = edgLine2
 //                    }
 //                    /*   定位缩放地图   */
-                    val list = ArrayList<LatLng>()
-                    mMap.animateMapStatus(setLatLngBounds(greyLineListBean.map_poly_points, map_home))
+                    templist.addAll(greyLineListBean.map_poly_points)
+                    mMap.animateMapStatus(setLatLngBounds(templist, map_home))
                 } else {
-                    greyLineListBean.polyline?.remove()
+                    try {
+                        templist.removeAll(greyLineListBean.map_poly_points)
+                        if (templist.size > 2)
+                            mMap.animateMapStatus(setLatLngBounds(templist, map_home))
+                        greyLineListBean.polyline?.remove()
 //                    greyLineListBean.edgpolyline1?.remove()
 //                    greyLineListBean.edgpolyline2?.remove()
-                    greyLineListBean.startMarker?.remove()
-                    greyLineListBean.endMarker?.remove()
+                        greyLineListBean.startMarker?.remove()
+                        greyLineListBean.endMarker?.remove()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                 }
                 mLineAdapter.notifyDataSetChanged()
-//                if (false) {
-//                    mMap.setOnMapLoadedCallback(OnMapLoadedCallback {
-//                        mMap.animateMapStatus(setLatLngBounds(loadBaiDuData2(mLinesList[position].path1List), map_home))
-//                    })
-//                } else {
-//                    mMap.animateMapStatus(setLatLngBounds(loadBaiDuData2(mLinesList[position].path1List), map_home))
-//                }
+
+                /*设置底部Textview Taskname*/
+                setTaskName()
             }
         })
     }
 
     override fun loaddata() {
         sendwebSocket(GetMapInfoReq().reqUpload(), context, true)
-
+        sendwebSocket(GetRobotInfoReq(), context, true)
         /*       模拟数据使用        */
 //        val jsonbuilder = F.fileToJsonString("test2.json")
 //
@@ -245,11 +269,19 @@ class HomeFragment : BaseFrg() {
     override fun disposeMsg(type: Int, obj: Any?) {
         super.disposeMsg(type, obj)
         when (type) {
+            11000 -> {
+            }
             10009 -> {
                 mMap.clear()
                 mLinesList.clear()
                 mLineAdapter.notifyDataSetChanged()
                 sendwebSocket(GetMapInfoReq().reqUpload(), context, true)
+
+                /*关闭所有父级菜单*/
+                val count: Int = mDoubleAdapter.groupCount
+                for (i in 0 until count) {
+                    expandableListView_home_task.collapseGroup(i)
+                }
             }
             17001 -> {
                 activity?.runOnUiThread {
@@ -338,6 +370,11 @@ class HomeFragment : BaseFrg() {
         expandableListView_home_task.setOnChildClickListener { parent, v, groupPosition, childPosition, id ->
             mCurrentGroup = groupPosition
             mCurrentChlid = childPosition
+
+            templist.clear()
+            mMap.clear()
+            isMapClear = true
+
             /*   更新当前位置   */
             mChildList.forEach {
                 it.forEach { aa ->
@@ -356,14 +393,11 @@ class HomeFragment : BaseFrg() {
                     _greyLinebean.isOXLineCheck = false
                     if (_greyLinebean.lineId == _lineId.id) {
                         mLinesList.add(_greyLinebean)
+                        drawPointLine(mMap, mPrePolylineWith, mPreTexture, 8, _greyLinebean.map_poly_points)
                     }
                 }
             }
             mLineAdapter.notifyDataSetChanged()
-
-
-            mMap.clear()
-            isMapClear = true
 
 //            val minPos = LatLng(mGetOXMapInfoModel2.map_info[groupPosition].min_pos.y, mGetOXMapInfoModel2.map_info[groupPosition].min_pos.x)
 //            val maxPos = LatLng(mGetOXMapInfoModel2.map_info[groupPosition].max_pos.y, mGetOXMapInfoModel2.map_info[groupPosition].max_pos.x)
@@ -394,6 +428,9 @@ class HomeFragment : BaseFrg() {
                         true
                     )
             }
+
+            /*设置显示底部Textview Taskname*/
+            setTaskName()
             true
         }/*     二级列表 父级同时之能选中一个      */
         expandableListView_home_task.setOnGroupExpandListener(object : ExpandableListView.OnGroupExpandListener {
