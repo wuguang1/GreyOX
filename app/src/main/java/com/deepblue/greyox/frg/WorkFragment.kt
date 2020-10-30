@@ -39,8 +39,8 @@ class WorkFragment : BaseFrg() {
 
     private var allSelectMapPoints: ArrayList<LatLng> = ArrayList()
     private var isErrorStoped: Boolean = false   //是否因为故障暂停过
-    private val adialog by lazy {
-        ErrorDialog(context!!)
+    private val adialog: YesOrNODialog by lazy {
+        YesOrNODialog(context!!)
     }
     private val bdialog by lazy {
         YesOrNODialog(context!!)
@@ -102,18 +102,23 @@ class WorkFragment : BaseFrg() {
         when (type) {
             12028 -> {
                 val json = JsonUtils.fromJson(obj.toString(), GetErrorHistoryRes::class.java)?.getJson()
-                if (json?.error_msgs !== null && json.error_msgs.isNotEmpty()) {
+                if (json?.error_msgs !== null && json.error_msgs.isNotEmpty() && !isErrorStoped) {
                     isErrorStoped = true
-                    adialog.setErrorData(json.error_msgs)
-                    adialog.show()
+                    adialog.setSingleBtn("车体出现硬件故障")
                     adialog.setOnclickListener(View.OnClickListener { v ->
-                        if (v.id == R.id.tv_Yes_center) {
+                        if (v.id == R.id.tv_YesOrNo_center) {
+                            adialog.dismiss()
+                            Helper.startActivity(context, FrgErrorList::class.java, TitleActSpecial::class.java)
+                        }
+                        if (v.id == R.id.iv_YesOrNo_close) {
                             adialog.dismiss()
                         }
                     })
+                    bdialog.show()
                 } else {
                     if (isErrorStoped) {
                         sendwebSocket(OXChangeTaskStatusReq().resume(0), context)
+                        isErrorStoped = false
                     }
                 }
             }

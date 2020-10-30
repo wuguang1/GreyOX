@@ -57,7 +57,7 @@
             android:id="@+id/mImageView_error"
             android:layout_width="22dp"
             android:layout_height="20dp"
-            android:layout_marginRight="7dp"
+            android:layout_marginRight="10dp"
             android:background="@drawable/ic_shape"
             android:visibility="gone" />
 
@@ -65,8 +65,8 @@
             android:id="@+id/mImageView_location"
             android:layout_width="23dp"
             android:layout_height="28dp"
-            android:layout_marginRight="7dp"
-            android:background="@drawable/ic_location"
+            android:layout_marginRight="10dp"
+            android:background="@mipmap/ic_head_loacation"
             android:visibility="gone" />
 
         <ImageView

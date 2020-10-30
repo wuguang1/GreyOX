@@ -46,8 +46,8 @@ public class GetOXMapInfoModel2 implements Serializable {
              * y : 6.9346060006079E-310
              */
 
-            public double x;
-            public double y;
+            public double x = 0.0;
+            public double y = 0.0;
         }
 
         public static class MinPosBean implements Serializable {
@@ -56,8 +56,8 @@ public class GetOXMapInfoModel2 implements Serializable {
              * y : 6.93460600040555E-310
              */
 
-            public double x;
-            public double y;
+            public double x = 0.0;
+            public double y = 0.0;
         }
 
         public static class GreyAddrListBean implements Serializable {
@@ -119,8 +119,8 @@ public class GetOXMapInfoModel2 implements Serializable {
                  * y : 31.815866587903532
                  */
 
-                public double x;
-                public double y;
+                public double x = 0.0;
+                public double y = 0.0;
             }
 
             public static class PrepointListBean implements Serializable {
@@ -129,8 +129,8 @@ public class GetOXMapInfoModel2 implements Serializable {
                  * y : 31.81586574746919
                  */
 
-                public double x;
-                public double y;
+                public double x = 0.0;
+                public double y = 0.0;
             }
         }
 
@@ -142,8 +142,8 @@ public class GetOXMapInfoModel2 implements Serializable {
              */
 
             public int id;
-            public double x;
-            public double y;
+            public double x = 0.0;
+            public double y = 0.0;
             public Marker mMarker;
             public Marker mSelectMarker;
         }

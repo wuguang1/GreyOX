@@ -28,12 +28,14 @@ class YesOrNODialog : Dialog {
     }
 
     fun setTextValue(info: String, left: String = context.resources.getString(R.string.str_chance), right: String = context.resources.getString(R.string.str_sure)) {
+        iv_YesOrNo_close.visibility = GONE
         if (info.isNotEmpty()) tv_YesOrNo_info.text = info
         if (left.isNotEmpty()) tv_YesOrNo_left.text = left
         if (right.isNotEmpty()) tv_YesOrNo_right.text = right
     }
 
     fun setSingleBtn(info: String, center: String = context.resources.getString(R.string.str_ckxq)) {
+        iv_YesOrNo_close.visibility = VISIBLE
         if (info.isNotEmpty()) tv_YesOrNo_info.text = info
         tv_YesOrNo_left.visibility = GONE
         tv_YesOrNo_right.visibility = GONE
@@ -44,5 +46,6 @@ class YesOrNODialog : Dialog {
         tv_YesOrNo_left.setOnClickListener(listener)
         tv_YesOrNo_right.setOnClickListener(listener)
         tv_YesOrNo_center.setOnClickListener(listener)
+        iv_YesOrNo_close.setOnClickListener(listener)
     }
 }

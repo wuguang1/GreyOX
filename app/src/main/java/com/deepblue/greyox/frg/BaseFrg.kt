@@ -73,23 +73,20 @@ abstract class BaseFrg : MFragment(), View.OnClickListener {
                     mGetRealDateRes?.let {
                         if (it.realdatainfo != null && it.realdatainfo!!.isNotEmpty()) {
                             it.realdatainfo!!.forEach { a ->
-                                Const.systemLocation = false
-                                if (a.key.isNotEmpty()) {
-                                    when (a.key) {
-                                        GetRealDateRes.GPS_SIGNAL -> Const.systemLocation = true
-                                        GetRealDateRes.LATITUDE -> Const.systemLatitude = a.value
-                                        GetRealDateRes.LONGITUDE -> {
-                                            Const.systemLongitude = a.value
-                                            Const.systemLatLng = BaiduMapUtil.loadBaiDuData(LatLng(Const.systemLatitude, Const.systemLongitude))
-                                        }
-                                        GetRealDateRes.YAW_ANGLE -> {
-                                            Const.systemYaw_angle = a.value
-                                        }
+                                when (a.key) {
+                                    GetRealDateRes.GPS_SIGNAL -> {
+                                        Const.systemLocation = a.value >= 0
+                                    }
+                                    GetRealDateRes.LATITUDE -> Const.systemLatitude = a.value
+                                    GetRealDateRes.LONGITUDE -> {
+                                        Const.systemLongitude = a.value
+                                        Const.systemLatLng = BaiduMapUtil.loadBaiDuData(LatLng(Const.systemLatitude, Const.systemLongitude))
+                                    }
+                                    GetRealDateRes.YAW_ANGLE -> {
+                                        Const.systemYaw_angle = a.value
                                     }
                                 }
                             }
-                        } else {
-                            Const.systemLocation = false
                         }
                     }
                 }
@@ -123,9 +120,7 @@ abstract class BaseFrg : MFragment(), View.OnClickListener {
 
             12028 -> {
                 val json = JsonUtils.fromJson(obj.toString(), GetErrorHistoryRes::class.java)?.getJson()
-                if (json?.error_msgs !== null && json.error_msgs.isNotEmpty()) {
-                    Const.systemError = true
-                }
+                Const.systemError = json?.error_msgs !== null && json.error_msgs.isNotEmpty()
             }
             24000 -> {
                 val mInitDataRes = JsonUtils.fromJson(obj.toString(), InitDataRes::class.java)

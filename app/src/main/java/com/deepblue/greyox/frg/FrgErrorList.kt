@@ -96,19 +96,19 @@ class FrgErrorList : BaseFrg() {
                 mListView.adapter = AdaErrorList(context, mMotors)
             }
             "Battery" -> {
-                mTextView_dj.setBackgroundResource(R.drawable.ic_tab)
+                mTextView_dc.setBackgroundResource(R.drawable.ic_tab)
                 mListView.adapter = AdaErrorList(context, mBatterys)
             }
             "Sensor" -> {
-                mTextView_dj.setBackgroundResource(R.drawable.ic_tab)
+                mTextView_cgq.setBackgroundResource(R.drawable.ic_tab)
                 mListView.adapter = AdaErrorList(context, mSensors)
             }
             "VCU" -> {
-                mTextView_dj.setBackgroundResource(R.drawable.ic_tab)
+                mTextView_clkzdy.setBackgroundResource(R.drawable.ic_tab)
                 mListView.adapter = AdaErrorList(context, mVCUs)
             }
             "ACU" -> {
-                mTextView_dj.setBackgroundResource(R.drawable.ic_tab)
+                mTextView_zdjsdy.setBackgroundResource(R.drawable.ic_tab)
                 mListView.adapter = AdaErrorList(context, mACUs)
             }
         }

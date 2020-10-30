@@ -33,6 +33,7 @@ import com.deepblue.greyox.util.BaiduMapUtil.mRealTexture
 import com.deepblue.greyox.util.BaiduMapUtil.setLatLngBounds
 import com.deepblue.greyox.view.ErrorDialog
 import com.deepblue.greyox.view.TimeDownDialog
+import com.deepblue.greyox.view.YesOrNODialog
 import com.deepblue.library.planbmsg.JsonUtils
 import com.deepblue.library.planbmsg.bean.TaskBasicInfo.Companion.EXECUTATION_TYPE_IMMEDIATELY
 import com.deepblue.library.planbmsg.bean.TaskBasicInfo.Companion.TASK_MODE_ONCE
@@ -43,6 +44,7 @@ import com.deepblue.library.planbmsg.msg2000.GetErrorHistoryRes
 import com.mdx.framework.Frame
 import com.mdx.framework.utility.Helper
 import kotlinx.android.synthetic.main.frg_home.*
+import kotlinx.android.synthetic.main.item_yesornodialog.*
 import org.jetbrains.anko.doAsync
 import kotlin.math.abs
 
@@ -83,8 +85,8 @@ class HomeFragment : BaseFrg() {
     private val edialog: TimeDownDialog by lazy {
         TimeDownDialog(context!!)
     }
-    private val adialog: ErrorDialog by lazy {
-        ErrorDialog(context!!)
+    private val bdialog: YesOrNODialog by lazy {
+        YesOrNODialog(context!!)
     }
 
     var customStyleFilePath = ""
@@ -223,12 +225,22 @@ class HomeFragment : BaseFrg() {
         super.onClick(v)
         when (v.id) {
             R.id.btn_home_start -> {
-                if (mCurrentGroup < 0 && mCurrentChlid < 0) {
-                    Helper.toast("请选择地图")
+                if (Const.systemError) {
+                    bdialog.setSingleBtn("车体出现硬件故障")
+                    bdialog.setOnclickListener(View.OnClickListener { v ->
+                        if (v.id == R.id.tv_YesOrNo_center) {
+                            bdialog.dismiss()
+                            Helper.startActivity(context, FrgErrorList::class.java, TitleActSpecial::class.java)
+                        }
+                        if (v.id == R.id.iv_YesOrNo_close) {
+                            bdialog.dismiss()
+                        }
+                    })
+                    bdialog.show()
                     return
                 }
-                if (mGroupList[mCurrentGroup].greyPointList.size <= 0) {
-                    Helper.toast("该地图没有预置返回点")
+                if (mCurrentGroup < 0 && mCurrentChlid < 0) {
+                    Helper.toast("请选择地图")
                     return
                 }
 //                edialog.setOnDismissListener {
@@ -331,18 +343,6 @@ class HomeFragment : BaseFrg() {
 
                 }
             }
-            12028 -> {
-                val json = JsonUtils.fromJson(obj.toString(), GetErrorHistoryRes::class.java)?.getJson()
-                if (json?.error_msgs !== null && json.error_msgs.isNotEmpty()) {
-                    adialog.setErrorData(json.error_msgs)
-                    adialog.show()
-                    adialog.setOnclickListener(View.OnClickListener { v ->
-                        if (v.id == R.id.tv_Yes_center) {
-                            adialog.dismiss()
-                        }
-                    })
-                }
-            }
         }
     }
 
@@ -409,24 +409,28 @@ class HomeFragment : BaseFrg() {
             /*        绘制预置点      */
             if (mGetOXMapInfoModel2.map_info[groupPosition].greyPointList.isNotEmpty()) {
                 mGetOXMapInfoModel2.map_info[groupPosition].greyPointList.forEach {
-                    val drawMarker = drawMarker(mMap, R.mipmap.icon_map_point, 10, loadBaiDuData(LatLng(it.y, it.x)), true)
-                    drawMarker.isClickable = true
-                    it.mMarker = drawMarker
+                    if (it.id != -1) {
+                        val drawMarker = drawMarker(mMap, R.mipmap.icon_map_point, 10, loadBaiDuData(LatLng(it.y, it.x)), true)
+                        drawMarker.isClickable = true
+                        it.mMarker = drawMarker
+                    }
                 }
                 //默认第一个预置点选中
-                mGetOXMapInfoModel2.map_info[groupPosition].greyPointList[0].mSelectMarker =
-                    drawMarker2(
-                        mMap,
-                        R.mipmap.ic_map_todown,
-                        10,
-                        loadBaiDuData(
-                            LatLng(
-                                mGetOXMapInfoModel2.map_info[groupPosition].greyPointList[0].y,
-                                mGetOXMapInfoModel2.map_info[groupPosition].greyPointList[0].x
-                            )
-                        ),
-                        true
-                    )
+                if (mGetOXMapInfoModel2.map_info[groupPosition].greyPointList[0].id != -1) {
+                    mGetOXMapInfoModel2.map_info[groupPosition].greyPointList[0].mSelectMarker =
+                        drawMarker2(
+                            mMap,
+                            R.mipmap.ic_map_todown,
+                            10,
+                            loadBaiDuData(
+                                LatLng(
+                                    mGetOXMapInfoModel2.map_info[groupPosition].greyPointList[0].y,
+                                    mGetOXMapInfoModel2.map_info[groupPosition].greyPointList[0].x
+                                )
+                            ),
+                            true
+                        )
+                }
             }
 
             /*设置显示底部Textview Taskname*/

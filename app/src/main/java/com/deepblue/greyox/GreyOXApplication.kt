@@ -66,9 +66,9 @@ class GreyOXApplication : Application() {
                     if (webSocketClient!!.isConnected()) {
 //                        Thread.sleep(100)
 //                        webSocketClient!!.sendMessage(OXRealdataReq())
-                        Thread.sleep(100)
-                        webSocketClient!!.sendMessage(OXErrorListReq())
                         if (tims % 5 == 2) {
+                            Thread.sleep(100)
+                            webSocketClient!!.sendMessage(OXErrorListReq())
                             Thread.sleep(100)
                             webSocketClient!!.sendMessage(GetOxInfoReq())
                             Thread.sleep(100)

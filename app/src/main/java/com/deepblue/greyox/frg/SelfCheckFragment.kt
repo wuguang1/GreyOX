@@ -87,7 +87,12 @@ class SelfCheckFragment : BaseFrg() {
     }
 
     override fun loaddata() {
-        handler.post(runnable1)
+//        handler.post(runnable1)
+
+        handler.postDelayed({
+            Helper.startActivity(context, LoginFragment::class.java, IndexAct::class.java)
+            finish()
+        }, 2000)
     }
 
     private fun do100Percent() {
