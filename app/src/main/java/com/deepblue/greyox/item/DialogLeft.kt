@@ -23,6 +23,9 @@ import android.widget.TextView;
 import android.widget.LinearLayout;
 import com.deepblue.greyox.Const
 import com.deepblue.greyox.act.TitleActSpecial
+import com.deepblue.greyox.bean.GetMapInfoReq
+import com.deepblue.greyox.bean.KeySet
+import com.deepblue.greyox.bean.SetKeyReq
 import com.deepblue.greyox.frg.FrgErrorList
 import com.deepblue.greyox.frg.FrgReportList
 import com.deepblue.greyox.pop.PopShowSet
@@ -52,7 +55,10 @@ class DialogLeft(context: Context?) : BaseItem(context) {
             Helper.toast("开发中,请等待...")
         }
         mTextView_close.setOnClickListener {
-            Helper.toast("开发中,请等待...")
+            Helper.toast("请关闭电源")
+            var req = ArrayList<KeySet>()
+            req.add(KeySet("data_system_command","shutdown"))
+            sendwebSocket(SetKeyReq(req), context)
         }
 
     }

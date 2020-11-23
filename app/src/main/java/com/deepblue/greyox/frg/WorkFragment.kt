@@ -49,6 +49,10 @@ class WorkFragment : BaseFrg() {
         TimeDownDialog(context!!)
     }
 
+    private val cdialog: YesOrNODialog by lazy {
+        YesOrNODialog(context!!)
+    }
+
     override fun create(var1: Bundle?) {
         setContentView(R.layout.frg_work)
         Const.hasRunPosints.clear()
@@ -102,7 +106,7 @@ class WorkFragment : BaseFrg() {
         when (type) {
             12028 -> {
                 val json = JsonUtils.fromJson(obj.toString(), GetErrorHistoryRes::class.java)?.getJson()
-                if (json?.error_msgs !== null && json.error_msgs.isNotEmpty() && !isErrorStoped) {
+                if (!adialog.isShowing && json?.error_msgs !== null && json.error_msgs.isNotEmpty() && !isErrorStoped) {
                     isErrorStoped = true
                     adialog.setSingleBtn("车体出现硬件故障")
                     adialog.setOnclickListener(View.OnClickListener { v ->
@@ -114,7 +118,7 @@ class WorkFragment : BaseFrg() {
                             adialog.dismiss()
                         }
                     })
-                    bdialog.show()
+                    adialog.show()
                 } else {
                     if (isErrorStoped) {
                         sendwebSocket(OXChangeTaskStatusReq().resume(0), context)
@@ -207,6 +211,20 @@ class WorkFragment : BaseFrg() {
                 sendwebSocket(OXChangeTaskStatusReq().stop(0), context, true)
             }
             R.id.btn_work_start -> {
+                if (Const.systemError) {
+                    cdialog.setSingleBtn("车体出现硬件故障")
+                    cdialog.setOnclickListener(View.OnClickListener { v ->
+                        if (v.id == R.id.tv_YesOrNo_center) {
+                            cdialog.dismiss()
+                            Helper.startActivity(context, FrgErrorList::class.java, TitleActSpecial::class.java)
+                        }
+                        if (v.id == R.id.iv_YesOrNo_close) {
+                            cdialog.dismiss()
+                        }
+                    })
+                    cdialog.show()
+                    return
+                }
                 edialog.setOnDismissListener {
                     sendwebSocket(OXChangeTaskStatusReq().start(0), context, true)
                     btn_work_start.visibility = GONE

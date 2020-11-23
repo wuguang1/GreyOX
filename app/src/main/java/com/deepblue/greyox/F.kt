@@ -1,20 +1,19 @@
 package com.deepblue.greyox
 
-import android.app.Dialog
 import android.content.Context
 import android.content.res.AssetManager
 import android.media.MediaPlayer
 import android.net.Uri
+import android.os.Handler
 import android.preference.PreferenceManager
 import android.util.TypedValue
-import android.view.*
-import android.widget.LinearLayout
-import androidx.fragment.app.FragmentActivity
+import android.view.SurfaceHolder
+import android.view.SurfaceView
+import android.view.View
 import com.deepblue.greyox.item.DialogLeft
 import com.deepblue.greyox.pop.PopShowSet
 import com.google.gson.Gson
 import com.mdx.framework.Frame
-import com.mdx.framework.view.CallBackOnly
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
@@ -84,6 +83,36 @@ object F {
         })
     }
 
+    val mHandler = Handler()
+
+    fun playVoice(context: Context, mediaPlayer: MediaPlayer, path: String, playCnt: Int, playDelay: Int) {
+        if (path.isNotEmpty()) {
+            var playCnt_ = playCnt
+            if (mediaPlayer.isPlaying) {
+                mHandler.removeCallbacksAndMessages(null)
+                mediaPlayer.stop()
+            }
+            mediaPlayer.run {
+                reset()
+                setDataSource(context, Uri.parse(path))
+                setOnPreparedListener { start() }
+                setOnCompletionListener {
+                    playCnt_--
+                    if (playCnt_ > 0) {
+                        mHandler.postDelayed({
+                            start()
+                        }, (playDelay * 1000).toLong())
+                    }
+                }
+                prepare()
+            }
+        }else{
+            mHandler.removeCallbacksAndMessages(null)
+            mediaPlayer.stop()
+        }
+    }
+
+
     fun fileToJsonString(filename: String): String? {
         try {
             val assetManager: AssetManager = Frame.CONTEXT.assets //获得assets资源管理器（assets中的文件无法直接访问，可以使用AssetManager访问）
@@ -104,25 +133,6 @@ object F {
             e.printStackTrace()
             return ""
         }
-    }
-
-    private val distanceArr =
-        intArrayOf(20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 25000, 50000, 100000, 200000, 500000, 1000000, 2000000, 5000000, 10000000)
-    private val levelArr = intArrayOf(21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3)
-
-    /**
-     * 计算自适应缩放比例
-     */
-    private fun getLevel(distance: Int): Int {
-        var level = -1
-        var min = 10000000
-        for (i in distanceArr.indices) {
-            if (distanceArr[i] - distance in 1 until min) {
-                min = distanceArr[i] - distance
-                level = i
-            }
-        }
-        return levelArr[if (level == 0) 0 else level - 1]
     }
 
     //隐藏SystemUI

@@ -87,12 +87,7 @@ class SelfCheckFragment : BaseFrg() {
     }
 
     override fun loaddata() {
-//        handler.post(runnable1)
-
-        handler.postDelayed({
-            Helper.startActivity(context, LoginFragment::class.java, IndexAct::class.java)
-            finish()
-        }, 2000)
+        handler.post(runnable1)
     }
 
     private fun do100Percent() {
@@ -108,7 +103,7 @@ class SelfCheckFragment : BaseFrg() {
                     "ACU" -> {
                         iv_ACU.setImageResource(if (it.status) R.mipmap.icon_selfcheck_right else R.mipmap.icon_selfcheck_warn)
                     }
-                    "Autopilot algorithm" -> {
+                    "Algorithm" -> {
                         iv_aa.setImageResource(if (it.status) R.mipmap.icon_selfcheck_right else R.mipmap.icon_selfcheck_warn)
                     }
                     "Network" -> {

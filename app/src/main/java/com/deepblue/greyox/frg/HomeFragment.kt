@@ -225,20 +225,20 @@ class HomeFragment : BaseFrg() {
         super.onClick(v)
         when (v.id) {
             R.id.btn_home_start -> {
-                if (Const.systemError) {
-                    bdialog.setSingleBtn("车体出现硬件故障")
-                    bdialog.setOnclickListener(View.OnClickListener { v ->
-                        if (v.id == R.id.tv_YesOrNo_center) {
-                            bdialog.dismiss()
-                            Helper.startActivity(context, FrgErrorList::class.java, TitleActSpecial::class.java)
-                        }
-                        if (v.id == R.id.iv_YesOrNo_close) {
-                            bdialog.dismiss()
-                        }
-                    })
-                    bdialog.show()
-                    return
-                }
+//                if (Const.systemError) {
+//                    bdialog.setSingleBtn("车体出现硬件故障")
+//                    bdialog.setOnclickListener(View.OnClickListener { v ->
+//                        if (v.id == R.id.tv_YesOrNo_center) {
+//                            bdialog.dismiss()
+//                            Helper.startActivity(context, FrgErrorList::class.java, TitleActSpecial::class.java)
+//                        }
+//                        if (v.id == R.id.iv_YesOrNo_close) {
+//                            bdialog.dismiss()
+//                        }
+//                    })
+//                    bdialog.show()
+//                    return
+//                }
                 if (mCurrentGroup < 0 && mCurrentChlid < 0) {
                     Helper.toast("请选择地图")
                     return
@@ -308,8 +308,7 @@ class HomeFragment : BaseFrg() {
                     }
                     mDoubleAdapter.notifyDataSetChanged()
 
-                    mMoveMarker =
-                        drawMarker(mMap, R.drawable.ic_location, 10, loadBaiDuData(LatLng(Const.systemLatitude, Const.systemLongitude)), false)
+                    mMoveMarker =  drawMarker(mMap, R.drawable.ic_location, 10, loadBaiDuData(LatLng(Const.systemLatitude, Const.systemLongitude)), false)
                 }
             }
             17002 -> {

@@ -12,44 +12,41 @@
 package com.deepblue.greyox.frg;
 
 import android.content.Context
-import android.text.TextUtils
+import android.media.MediaPlayer
+import android.net.Uri
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.Switch
 import com.baidu.mapapi.model.LatLng
 import com.deepblue.greyox.Const
-import com.deepblue.greyox.Const.mInitData
 import com.deepblue.greyox.F
 import com.deepblue.greyox.F.getJson
-import com.deepblue.greyox.F.hideNavigation
 import com.deepblue.greyox.GreyOXApplication
+import com.deepblue.greyox.R
 import com.deepblue.greyox.bean.GetBatteryRes
 import com.deepblue.greyox.bean.GetRealDateRes
-import com.deepblue.greyox.item.DialogLeft
+import com.deepblue.greyox.bean.VoiceRes
 import com.deepblue.greyox.item.Head
-import com.deepblue.greyox.pop.PopShowSet
 import com.deepblue.greyox.util.BaiduMapUtil
 import com.deepblue.greyox.view.LoadingDialog
-import com.deepblue.greyox.websocket.WebSocketClient3.Companion.CONNECT_SUCCESS
 import com.deepblue.library.planbmsg.HeartbeatRes
 import com.deepblue.library.planbmsg.JsonUtils
 import com.deepblue.library.planbmsg.Request
 import com.deepblue.library.planbmsg.Response
 import com.deepblue.library.planbmsg.msg1000.GetNetworkRes
-import com.deepblue.library.planbmsg.msg2000.GetAllUsersRes
 import com.deepblue.library.planbmsg.msg2000.GetErrorHistoryRes
 import com.deepblue.library.planbmsg.msg2000.LoginReq
-import com.deepblue.library.planbmsg.msg2000.LoginRes
 import com.deepblue.library.planbmsg.push.InitDataRes
 import com.google.gson.Gson
 import com.mdx.framework.activity.MFragment
-import kotlinx.android.synthetic.main.frg_error_list.*
-import kotlinx.android.synthetic.main.frg_login.*
 import org.jetbrains.anko.doAsync
 
 abstract class BaseFrg : MFragment(), View.OnClickListener {
     val greyOXApplication by lazy { activity?.application as GreyOXApplication }
     val loadDialog by lazy { context?.let { LoadingDialog(it) } }
     var mHead: Head? = null
+    private var mediaPlayer: MediaPlayer = MediaPlayer()
+
     final override fun initV(view: View) {
         initView()
         loaddata()
@@ -128,8 +125,36 @@ abstract class BaseFrg : MFragment(), View.OnClickListener {
                     Const.mInitData = it.getJson()
                 }
             }
+            24012 -> {
+                if (mediaPlayer == null) {
+                    mediaPlayer = MediaPlayer()
+                }
+
+                val mVoiceRes = JsonUtils.fromJson(obj.toString(), VoiceRes::class.java)?.getJson()
+                mVoiceRes?.let {
+                    F.playVoice(
+                        context!!, mediaPlayer, when (it.voiceContext) {
+                            "请不要遮挡车顶的眼睛哦，谢谢" -> uri1
+                            "车辆启动啦，请注意" -> uri3
+                            "正在停车哦，请注意" -> uri4
+                            "车辆左转，请注意" -> uri5
+                            "车辆右转，请注意" -> uri6
+                            "倒车啦，请注意" -> uri2
+//                            "建议播放音乐" -> uri
+                            else -> ""
+                        }, it.playCnt.toInt(), it.playTime.toInt()
+                    )
+                }
+            }
         }
     }
+
+    val uri1 = "android.resource://" + "com.deepblue.greyox" + "/" + R.raw.voice_eye
+    val uri2 = "android.resource://" + "com.deepblue.greyox" + "/" + R.raw.voice_daoche
+    val uri3 = "android.resource://" + "com.deepblue.greyox" + "/" + R.raw.voice_start
+    val uri4 = "android.resource://" + "com.deepblue.greyox" + "/" + R.raw.voice_stoping
+    val uri5 = "android.resource://" + "com.deepblue.greyox" + "/" + R.raw.voice_left
+    val uri6 = "android.resource://" + "com.deepblue.greyox" + "/" + R.raw.voice_right
 
     fun sendwebSocket(request: Request, context: Context? = getContext(), isShowLoading: Boolean = false, isCanceledOnTouchOutside: Boolean = false) {
         greyOXApplication.webSocketClient?.sendMessage(request, context, isShowLoading, isCanceledOnTouchOutside)
